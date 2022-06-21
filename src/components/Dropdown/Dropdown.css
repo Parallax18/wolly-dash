@@ -1,0 +1,43 @@
+.dropdown {
+	@apply
+		cursor-auto
+		flex flex-col
+		items-stretch
+		fixed
+		bg-background-contrast
+		shadow-8
+		rounded
+		max-w-[calc(100%-16px)]
+		!z-[10000]
+		py-2
+		max-h-[min(calc(100vh-10rem),15rem)]
+		overflow-y-auto
+		pointer-events-none
+		opacity-0
+		transition-opacity
+}
+
+.dropdown.open {
+	@apply
+		pointer-events-auto
+		opacity-100
+}
+
+.dropdown > * {
+	@apply
+		flex items-center justify-between
+		px-6
+		py-3
+		text-left
+		hover:bg-action-hover
+		transition-colors
+		!text-base
+		font-primary
+}
+
+.dropdown > * > svg {
+	@apply
+		fill-current
+		text-primary-main
+		ml-2
+}

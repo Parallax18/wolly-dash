@@ -10,8 +10,7 @@ const CSSBaseline: React.FC = () => {
 
 	const themeStyle = useMemo(() => {
 		return getThemeStyleCSS(theme)
-	}, [theme.label]);
-
+	}, [theme]);
 	const addScreenVariables = () => {
 		const vh = window.innerHeight / 100;
 		document.documentElement.style.setProperty("--vh", `${vh}px`)

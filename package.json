@@ -5,14 +5,27 @@
   "scripts": {
     "dev": "vite --port 4050",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "serve": "vite preview",
+    "create": "node dev_scripts/create",
+    "rename": "node dev_scripts/rename"
   },
   "dependencies": {
+    "@types/react-helmet": "^6.1.5",
     "@unocss/transformer-directives": "^0.39.3",
     "@unocss/vite": "^0.39.3",
+    "axios": "^0.27.2",
+    "clsx": "^1.1.1",
+    "country-flags-svg": "^1.1.6",
+    "country-list-with-dial-code-and-flag": "^1.0.3",
+    "object-deep-update": "^1.0.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "unocss": "^0.39.3"
+    "react-helmet": "^6.1.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0",
+    "unocss": "^0.39.3",
+    "vite-plugin-svgr": "^2.1.1",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

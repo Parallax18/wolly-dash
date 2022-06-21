@@ -1,0 +1,72 @@
+.sidebar {
+	@apply
+		sticky
+		top-0
+		left-0
+		rounded-none
+		flex flex-col
+		min-w-80
+		h-[var(--screen-height)]
+
+		<md:h-16
+		<md:top-initial
+		<md:bottom-0
+}
+
+.sidebar .card-title {
+	@apply
+		<md:hidden
+}
+
+.sidebar .card-body {
+	@apply
+		flex flex-col
+		flex-1
+
+		<md:p-0
+		<md:flex-row
+}
+
+.sidebar .separator {
+	@apply
+		flex-1
+		flex
+		justify-center
+		items-center
+
+		<md:hidden
+}
+
+.sidebar .list {
+	@apply
+		flex flex-col
+		<md:flex-row
+		<md:justify-evenly
+		<md:flex-1
+}
+
+.sidebar .bottom-list {
+	@apply
+		<md:hidden
+}
+
+.sidebar .list > .button {
+	@apply
+		<md:h-full
+		<md:flex <md:flex-col
+		<md:!items-center <md:!justify-center
+		<md:text-sm
+		<md:!py-0
+}
+
+.sidebar .list > .button .icon-container {
+	@apply
+		<md:mr-0
+		<md:mb-0.5
+}
+
+.sidebar .list > .button .icon-container svg {
+	@apply
+		<md:w-7
+		<md:h-7
+}

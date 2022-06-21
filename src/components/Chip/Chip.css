@@ -1,0 +1,18 @@
+.chip {
+	@apply
+		relative
+		inline-flex items-center
+		bg-[rgba(255,255,255,0.2)]
+		text-text-primary
+		inline-block
+		py-2.5 px-4 rounded-full
+		<sm:py-1.5
+		<sm:px-2.5
+}
+
+.chip.compact {
+	@apply
+		py-1.75
+		px-3.5
+
+}

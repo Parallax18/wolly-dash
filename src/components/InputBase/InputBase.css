@@ -1,0 +1,141 @@
+.input-root {
+	--label-width: 0rem;
+	--input-root-bg: var(--theme-background-contrast);
+	--outline-col: var(--theme-primary-main);
+	@apply
+		relative
+		inline-flex
+		items-center
+		h-14
+		rounded-input
+		min-w-[calc(var(--label-width)+3.25rem)]
+		min-h-[2rem]
+		transition-all
+		outline-offset-0
+		outline-0 outline-[var(--outline-col)] outline-solid
+		z-[4]
+		text-base
+}
+
+.input-root.contrast {
+	--input-root-bg: var(--theme-background-paper);	
+}
+
+.input-root.light {
+	--input-root-bg: var(--theme-background-paperLight);	
+}
+
+.input-root > * {
+	@apply
+		z-[2]
+}
+
+.input-root::before {
+	content: " ";
+	@apply
+		z-[0]
+		absolute
+		top-0
+		left-0
+		w-full
+		h-full
+		rounded-input
+		pointer-events-none
+		transition-colors
+		bg-[var(--input-root-bg)]
+}
+
+.input-root.active, .input-root:focus-visible {
+	@apply
+		outline-4
+}
+
+.input-root.error {
+	--outline-col: var(--theme-error-main);
+	@apply
+		outline-4
+}
+
+.input-root.has-hint {
+	@apply
+		!mb-8
+}
+
+.input-root .hint-text {
+	@apply
+		absolute
+		left-0
+		-bottom-1
+		!translate-y-[100%]
+		!translate-x-[0.5rem]
+		text-sm
+		font-semibold
+}
+
+.input-root.error .hint-text {
+	@apply
+		text-[var(--theme-error-light)]
+}
+
+.input-root .icon-container {
+	@apply
+		relative
+		flex items-center justify-center
+		p-4
+}
+
+.input-root .icon-container svg {
+	@apply
+		ml-1
+}
+
+.input-root .icon-container::after {
+	content: " ";
+	@apply
+		absolute
+		right-[-1px]
+		top-1/2
+		transform !-translate-y-1/2
+		w-[2px]
+		bg-action-unselected
+		h-10
+		transition-background-color
+}
+
+.input-root.input-root svg {
+	@apply
+		fill-current
+		text-action-unselected
+		transition-all
+}
+
+.input-root.light svg {
+	@apply
+		text-text-primary
+}
+
+.input-root.active svg {
+	@apply
+		text-text-primary
+}
+
+.input-root button:hover svg {
+	@apply
+		text-text-primary
+}
+
+.input-root.active .icon-container::after {
+	@apply
+		bg-text-primary
+}
+
+.input-root .child-container {
+	@apply
+		flex-1
+		relative
+}
+
+.input-root.flush-top, .input-root.flush-top::before {@apply !rounded-t-0}
+.input-root.flush-left, .input-root.flush-left::before {@apply !rounded-l-0}
+.input-root.flush-bottom, .input-root.flush-bottom::before {@apply !rounded-b-0}
+.input-root.flush-right, .input-root.flush-right::before {@apply !rounded-r-0}

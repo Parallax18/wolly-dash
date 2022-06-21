@@ -1,116 +1,117 @@
-.background {
+/* @layer utilities {
+	.pt-full {
+		padding-top: 100%;
+	}
+	.items-center {
+		align-items: center;
+	}
+	.f-center {
+		align-items: center;
+		justify-content: center;
+	}
+	.no-select {
+		user-drag: none;
+		user-select: none;
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+} */
+
+.-translate-x-1\/2 {
+	--un-translate-x: -50% !important;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+p {
 	@apply
-		w-full
-		h-full
-		absolute
-		top-0
-		left-0
-		z-[-1]
+		m-0
+		p-0
+}
+
+a {
+	@apply
+		text-primary-main
+		no-underline
+		hover:underline
+}
+
+.tooltip {
+	transform: translate(-50%, -100%);
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	@apply
+		fixed
+		transition-all
+		bg-background-contrast
+		max-w-64
+		p-2
+		rounded
 		pointer-events-none
-
+		opacity-100
+		text-sm
 }
 
-.image-center {
+.tooltip::after {
+	content: " ";
+	border-style: solid;
+	border-width: 10px 10px 0 10px;
+	border-color: var(--theme-background-contrast) transparent transparent transparent;
+	transform: translate(-50%, 100%);
 	@apply
-		object-cover
-		object-center
+		absolute
+		bottom-0
+		left-1/2
+
 }
 
-.bg-image {
+.tooltip.hidden {
 	@apply
-		background
-		image-center
+		opacity-0
 }
 
-.bg-gradient {
+.page {
 	@apply
-		background
-}
-
-body {
-	--clip-size-x: 40px;
-	--clip-size-y: 40px;
-	--clip-border-width: 2px;
-	--border-width: 1px;
-	@apply
-		h-full
-}
-
-#root {
-	@apply
-		h-full
-}
-
-.clip-top-left {
-	clip-path: polygon(var(--clip-size-x) 0, 100% 0, 100% 100%, 0 100%, 0 var(--clip-size-y));
-}
-
-.clip-top-right {
-	clip-path: polygon(0 0, calc(100% - var(--clip-size-x)) 0, 100% var(--clip-size-y), 100% 100%, 0 100%);
-}
-
-.clip-bottom-left {
-	clip-path: polygon(0 0, 100% 0, 100% 100%, var(--clip-size-x) 100%, 0 calc(100% - var(--clip-size-y)));
-}
-
-.clip-bottom-right {
-	clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--clip-size-y)), calc(100% - var(--clip-size-x)) 100%, 0 100%);
-}
-
-.clip-border-top-left {
-	clip-path: polygon(var(--clip-size-x) 0%, 0% var(--clip-size-y) , 0% 100%, var(--clip-border-width) 100%, var(--clip-border-width) calc(var(--clip-border-width)/2 + var(--clip-size-y)), calc(var(--clip-border-width)/2 + var(--clip-size-x)) var(--clip-border-width), calc(100% - var(--clip-border-width)) var(--clip-border-width), calc(100% - var(--clip-border-width)) calc(100% - var(--clip-border-width)), var(--clip-border-width) calc(100% - var(--clip-border-width)), var(--clip-border-width) 100%, 100% 100%, 100% 0%)
-}
-
-.clip-border-top-right {
-	clip-path: polygon(0% 0%, 0% var(--clip-size-y) , 0% 100%, var(--clip-border-width) 100%, var(--clip-border-width) var(--clip-border-width), var(--clip-border-width) var(--clip-border-width), calc(100% - var(--clip-border-width)/2 - var(--clip-size-x)) var(--clip-border-width), calc(100% - var(--clip-border-width)) calc(var(--clip-size-y) + var(--clip-border-width)/2), calc(100% - var(--clip-border-width)) calc(100% - var(--clip-border-width)), var(--clip-border-width) calc(100% - var(--clip-border-width)), var(--clip-border-width) 100%, 100% 100%, 100% var(--clip-size-y), calc(100% - var(--clip-size-x)) 0%, 100% 0%);
-}
-
-.clip-border-bottom-right {
-	transform: rotateX(180deg);
-	clip-path: polygon(0% 0%, 0% var(--clip-size-y) , 0% 100%, var(--clip-border-width) 100%, var(--clip-border-width) var(--clip-border-width), var(--clip-border-width) var(--clip-border-width), calc(100% - var(--clip-border-width)/2 - var(--clip-size-x)) var(--clip-border-width), calc(100% - var(--clip-border-width)) calc(var(--clip-size-y) + var(--clip-border-width)/2), calc(100% - var(--clip-border-width)) calc(100% - var(--clip-border-width)), var(--clip-border-width) calc(100% - var(--clip-border-width)), var(--clip-border-width) 100%, 100% 100%, 100% var(--clip-size-y), calc(100% - var(--clip-size-x)) 0%, 100% 0%);
-}
-
-.clip-border-bottom-left {
-	transform: rotateX(180deg);
-	clip-path: polygon(var(--clip-size-x) 0%, 0% var(--clip-size-y) , 0% 100%, var(--clip-border-width) 100%, var(--clip-border-width) calc(var(--clip-border-width)/2 + var(--clip-size-y)), calc(var(--clip-border-width)/2 + var(--clip-size-x)) var(--clip-border-width), calc(100% - var(--clip-border-width)) var(--clip-border-width), calc(100% - var(--clip-border-width)) calc(100% - var(--clip-border-width)), var(--clip-border-width) calc(100% - var(--clip-border-width)), var(--clip-border-width) 100%, 100% 100%, 100% 0%);
-}
-
-.short-1px {
-	@apply
-		left-[1px]
-		top-[1px]
-		h-[calc(100%-2px)]
-		w-[calc(100%-2px)]
-}
-
-.short-2px {
-	@apply
-		left-[2px]
-		top-[2px]
-		h-[calc(100%-4px)]
-		w-[calc(100%-4px)]
+		p-8
+		<md:p-6
+		<sm:p-4
+		<xs:p-3
 }
 
 .divider {
 	@apply
-		bg-divider
 		h-[1px]
 		w-full
+		bg-divider
 }
 
-@media (min-width: 1600px) {
-	html {
-		--shf: 4.9406564584124654e-324;
-		font-size: calc(1vw * var(--shf) / var(--sh))
-	}
+.thin-scroll {
+	scrollbar-width: 6px !important;
+}
+
+.thin-scroll::-webkit-scrollbar {
+	width: 6px !important;
+	height: 6px !important;
+}
+
+.thin-scroll::-webkit-scrollbar-track {
+	box-shadow: none
+}
+
+.thin-scroll::-webkit-scrollbar-thumb {
+	background-color: var(--theme-background-default);
+	border-radius: 1000px;
 }
 
 .loader {
-	animation: loader 1000ms infinite both ease-out alternate-reverse;
+	animation: loader 1000ms infinite both ease-out alternate-reverse !important;
 	@apply
 		h-[1rem]
 		w-[1rem]
-		bg-action-loading
+		opacity-100
+		!bg-action-loading
 		rounded-md
 		inline-block
 }
@@ -121,6 +122,11 @@ body {
 		w-[7em]
 }
 
+img {
+	color: transparent;
+}
+
+
 @keyframes loader {
 	0% {
 		opacity: 1;
@@ -130,17 +136,30 @@ body {
 	}
 }
 
-.private {
-	@apply
-		inline-block
-		bg-action-redacted
-		h-[1em]
-		w-[6em]
-		rounded-md
-
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 
-.form-group {
+.right-divider {
 	@apply
-		flex items-center
+		relative
+		mr-6
+}
+
+.right-divider::after {
+	content: " ";
+	@apply
+		absolute
+		-right-6
+		top-1/2
+		transform !-translate-y-1/2
+		w-[2px]
+		bg-action-unselected
+		h-10
+		transition-background-color
 }

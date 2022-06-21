@@ -1,0 +1,65 @@
+.icon-button {
+	@apply
+		flex
+		items-center justify-center
+		relative
+		h-8 w-8
+		border-none
+		bg-transparent
+		p-0
+}
+
+.icon-button::before {
+	content: " ";
+	@apply
+		h-12 w-12
+		absolute
+		top-1/2 left-1/2
+		transform
+		!-translate-x-1/2 !-translate-y-1/2
+		transition-colors
+		rounded-full
+}
+
+.icon-button:not(.disabled,.loading):hover::before {
+	@apply
+		bg-action-hover
+}
+
+.icon-button svg {
+	@apply
+		text-text-primary
+		fill-current
+}
+
+.icon-button.disabled, .icon-button.loading {
+	@apply
+		cursor-default
+}
+
+.icon-button.disabled svg {
+	@apply
+		text-action-disabled
+}
+
+.icon-button:focus-visible::before {
+	animation: focus-pulse infinite alternate 800ms cubic-bezier(.82,.07,.31,.9);
+	@apply
+		bg-action-hover
+}
+
+.icon-button:focus-visible svg {
+	@apply
+		text-text-primary
+}
+
+@keyframes focus-pulse {
+	0% {
+		@apply
+			w-12 h-12
+	}
+	100% {
+		@apply
+			w-10 h-10
+	}
+}

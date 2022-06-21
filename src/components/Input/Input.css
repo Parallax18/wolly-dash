@@ -1,0 +1,49 @@
+
+.input-container {
+	@apply
+		inline-flex
+}
+
+.input-container.round {
+	@apply
+		!px-6
+}
+
+.input-container.round, .input-container.round::before, .input-container.round label, .input-container.round .label-background {
+	@apply
+		!rounded-full
+}
+
+.input-container.round label, .input-container.round .label-background  {
+	@apply
+		left-6
+}
+
+.input-container input {
+	@apply
+		bg-transparent
+		outline-none
+		appearance-none
+		border-none
+		flex-1
+		text-base
+		font-primary
+}
+
+.input-container input::placeholder {
+	@apply
+		text-action-unselected
+		opacity-100
+}
+
+.input-wrapper {
+	@apply
+		flex-1 flex p-4
+}
+
+.input-container input:-webkit-autofill,
+.input-container input:-webkit-autofill:hover, 
+.input-container input:-webkit-autofill:focus, 
+.input-container input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px var(--input-root-bg) inset !important;
+}

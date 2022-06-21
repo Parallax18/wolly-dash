@@ -1,4 +1,4 @@
-import { JSX } from "solid-js";
+import React, { ReactNode } from "react";
 
 export interface Serializer<T> {
 	serialize: (value: T) => string,
@@ -15,7 +15,9 @@ export type Primitive = number | string | boolean | null | undefined
 
 export type WatchListSortType = "WATCH_STATUS" | "LAST_UPDATED" | "USER_SCORE" | "DATE_STARTED"
 
-export declare type PropsWithChildren<P = {}> = P & {
-    children?: JSX.Element;
-};
-export type Component<P = {}> = (props: PropsWithChildren<P>) => JSX.Element;
+
+type PropsWithChildren<P = unknown> = P & { children?: ReactNode | undefined };
+
+export type Component<P = {}> = React.FC<PropsWithChildren<P>>;
+
+export type ComponentType = React.FC<any> | string

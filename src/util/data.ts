@@ -97,7 +97,7 @@ export const deserializeValue = (serializedValue: string): any => {
 	if (!parsed) return null
 	if (parsed.__serialized === true) {
 		if (parsed.__type === "number") return Number.parseFloat(parsed.value)
-		if (parsed.__type === "boolean") return parsed.value
+		if (parsed.__type === "bool") return parsed.value
 		return parsed.value.toString()
 	}
 	return parsed

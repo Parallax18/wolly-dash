@@ -1,0 +1,76 @@
+.card {
+	@apply
+		rounded-card
+		shadow-card
+		bg-background-paper
+		inline-block
+}
+
+.card-title {
+	@apply
+		relative
+		flex flex-col items-start
+		font-bold
+		text-2xl
+}
+
+.card-title-text-container {
+	@apply
+		inline-flex flex-col
+}
+
+.card-title h1 {
+	@apply
+		font-semibold
+		text-card-title
+		uppercase
+}
+
+.card-title .figure-container {
+	@apply
+		flex
+		mt-4
+}
+
+.card-title .figure-label {
+	@apply
+		inline-block
+		text-figure
+		font-semibold
+}
+
+.card .change-container {
+	@apply
+		inline-flex
+		items-center
+		ml-2
+}
+
+.card .positive .change-container {@apply text-success-main}
+.card .negative .change-container {@apply text-error-main}
+.card .negative .change-container svg {@apply transform rotate-180}
+
+.card .change {@apply font-bold}
+.card .change-icon {@apply fill-current}
+
+.card-body, .card-title {
+	@apply
+		px-8
+		py-10
+		<md:flex
+		<md:flex-col
+}
+
+.card .card-buttons {
+	@apply
+		absolute
+		top-4
+		right-4
+		<md:static
+		<md:mt-4
+}
+
+.card-title + .card-body {
+	@apply
+		!pt-0
+}

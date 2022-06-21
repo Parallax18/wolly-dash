@@ -1,0 +1,186 @@
+.button {
+	-webkit-appearance: none;
+	--bg-color: #fff;
+	--bg-hover-color: #ccc;
+	--text-color: #000;
+	@apply
+		relative
+		flex
+		text-center
+		justify-center
+		items-center
+		outline-0
+		border-0
+		px-4
+		py-4
+		text-button
+		rounded-button
+		font-primary
+		cursor-pointer
+		!no-underline
+		outline-0 outline-solid outline-[var(--outline-color)]
+		outline-offset-1
+
+		transition-all
+}
+
+.button.compact {
+	@apply
+		px-2 py-2
+}
+
+.button.base {
+	--bg-color: #fff;
+	--bg-hover-color: var(--theme-action-hoverBackground);
+	--text-color: #000;
+}
+
+.button.transparent {
+	--bg-color: transparent;
+	--bg-hover-color: var(--theme-action-hover);
+	--text-color: var(--theme-text-primary);
+}
+
+.button.primary {
+	--bg-color: var(--theme-primary-main);
+	--bg-hover-color: var(--theme-primary-dark);
+	--text-color: var(--theme-primary-contrastText);
+}
+
+.button.secondary {
+	--bg-color: var(--theme-secondary-main);
+	--bg-hover-color: var(--theme-secondary-dark);
+	--text-color: var(--theme-secondary-contrastText);
+}
+
+.button.accent {
+	--bg-color: var(--theme-accent-main);
+	--bg-hover-color: var(--theme-accent-dark);
+	--text-color: var(--theme-accent-contrastText);
+}
+
+.button.text-col-unselected {
+	--text-color: var(--theme-action-unselected);
+}
+
+.button.text-col-secondary {
+	--text-color: var(--theme-text-secondary);
+}
+
+
+.button.disabled:not(.loading) {
+	--bg-color: var(--theme-action-disabled);
+	--bg-hover-color: var(--theme-action-disabled);
+	--text-color: var(--theme-text-primary);
+	@apply
+		cursor-default
+}
+
+.button {
+	--outline-color: var(--bg-color)
+}
+
+.button.transparent {
+	--outline-color: var(--theme-primary-main)
+}
+
+.button.disabled {
+	@apply
+		cursor-default
+		pointer-events-none
+}
+
+.button.contained {
+	@apply
+		bg-[var(--bg-color)]
+		text-[var(--text-color)]
+}
+
+.button.contained:not(.loading, .disabled):hover {
+	@apply
+		bg-[var(--bg-hover-color)]
+}
+
+.button.outlined {
+	--text-color: var(--bg-color);
+	@apply
+		bg-transparent
+		border-2 border-[var(--bg-color)]
+		text-[var(--text-color)]
+}
+
+.button.outlined:not(.loading, .disabled):hover {
+	@apply
+		bg-[var(--theme-action-hover)]
+		border-[var(--bg-hover-color)]
+		text-[var(--bg-hover-color)]
+}
+
+.button.fluid {
+	@apply rounded-none
+}
+
+.button.text-fill span {
+	@apply
+		inline-block
+		w-full
+		text-left
+}
+
+.button svg {
+	@apply
+		fill-current
+}
+
+.button .icon-container {
+	@apply
+		inline-flex items-center
+}
+
+.button:not(.empty) .icon-container {
+	@apply
+		mr-4
+}
+
+.button:not(.empty).icon {
+	@apply
+		pl-4
+		py-3
+}
+
+.button.empty.icon {
+	@apply
+		px-2
+		w-11 h-11
+}
+
+.button span {
+	@apply
+		align-top
+}
+
+.button.loading {
+	@apply
+		cursor-initial
+}
+
+.button .spinner-container {
+	@apply
+		absolute
+		left-1/2
+		top-1/2
+		transform
+		transform-center
+		!-translate-x-1/2
+		!-translate-y-1/2
+}
+
+.button .spinner-container circle {
+	@apply
+		stroke-[var(--text-color)]
+}
+
+.button:focus-visible {
+	@apply
+		outline-4
+}

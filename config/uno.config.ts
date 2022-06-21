@@ -114,11 +114,7 @@ const unoConfig: VitePluginConfig = {
 		borderRadius: {
 			...generateThemeObj("radius")
 		},
-		fontFamily: {
-			primary: baseTheme.font.primary,
-			navbar: baseTheme.font.navbar,
-			display: baseTheme.font.display,
-		},
+		fontFamily: baseTheme.font,
 		fontSize: {
 			"button": ["1.25rem", "1em"],
 			"2xs": ["0.625rem", "1.2em"],

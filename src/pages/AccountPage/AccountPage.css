@@ -1,0 +1,5 @@
+.account-page {
+	@apply
+		flex flex-1
+		items-start
+}

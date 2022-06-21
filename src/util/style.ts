@@ -1,7 +1,7 @@
-import baseTheme, { Theme, ThemeBreakpoint } from "../styles/themes/baseTheme"
+import baseTheme from "../styles/themes/baseTheme"
 import updateObj from "object-deep-update"
 
-export const createTheme = (themeObj: Theme): Theme => {
+export const createTheme = (themeObj: Record<string, any>): Record<string, any> => {
 	return updateObj(baseTheme, themeObj)
 }
 
@@ -34,8 +34,7 @@ export const getStyleString = (key: string, val: any) => {
 	return addKeyStr(key, val) + "\n";
 }
 
-
-export const getThemeStyleCSS = (themeObj: Theme) => {
+export const getThemeStyleCSS = (themeObj: Record<string, any>) => {
 	let str = `:root {\n${getStyleString("theme", themeObj)}}`
 	return str
 }
@@ -51,7 +50,7 @@ export const getTextLengthPixels = (string: string, fontSize: string) => {
 	return width;
 };
 
-export const getMediaQueryFromBreakpoint = (breakpoint: string | number, max?: boolean = false) => {
+export const getMediaQueryFromBreakpoint = (breakpoint: string | number, max: boolean = false) => {
 	let value: string
 	if (typeof breakpoint === "number") value = `${breakpoint}px`
 	else value = breakpoint
@@ -62,7 +61,7 @@ export const getMediaQueryFromBreakpoint = (breakpoint: string | number, max?: b
 
 export const getCurrentBreakpoint = (): string | null => {
 	let breakpoint: string | null = null;
-	Object.entries(baseTheme.breakpoints).reverse().forEach(([breakpointStr, themeBreakpoint]: [string, ThemeBreakpoint]) => {
+	Object.entries(baseTheme.breakpoints).reverse().forEach(([breakpointStr, themeBreakpoint]: [string, any]) => {
 		if (breakpoint !== null) return
 		let max: boolean = false
 		let breakpointValue: string | number = "";

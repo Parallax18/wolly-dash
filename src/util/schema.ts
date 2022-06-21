@@ -8,7 +8,9 @@ export const userSchema =  Yup.object().shape({
 		.matches(/([a-zA-Z]\d)|(\d[a-zA-Z])/, "Must have at least 1 number and 1 letter")
 		.max(32, "Maximum 32 character")
 		.min(8, "Minimum 8 character"),
-	nationality: Yup.string().required("Can't be empty")
+	nationality: Yup.string().required("Can't be empty"),
+	phone_number: Yup.string().required("Can't be empty"),
+	country_code: Yup.string().required("")
 })
 
 export const userUpdateSchema =  Yup.object().shape({

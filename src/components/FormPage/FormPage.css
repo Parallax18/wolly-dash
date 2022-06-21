@@ -1,0 +1,30 @@
+.form-page {
+	@apply
+		flex flex-col
+		w-full
+		flex-1
+		h-full
+		items-center justify-center
+		text-left
+}
+
+.form-background {
+	@apply
+		z-[-1]
+		w-full
+		h-full
+		absolute
+		top-0
+		left-0
+		object-center
+		object-cover
+		<xs:hidden
+}
+
+.form-card {
+	@apply
+		<xs:w-full
+		<xs:flex-1
+		<xs:rounded-none
+		+xs:min-w-110
+}

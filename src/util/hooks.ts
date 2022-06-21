@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { deserializeValue } from "../util";
 import { serializeValue } from "./data";
 
@@ -67,13 +67,18 @@ export const useBreakPoints = () => {
 	return currentActive;
 }
 
-export const useStateRef = <T>(defaultValue: T): [T, (newValue: T) => void, MutableRefObject<T>] => {
-	const [ value, setValue ] = useState(defaultValue)
-	const valueRef = useRef(defaultValue)
+export const useStateRef = <T>(defaultValue: T): [T, React.Dispatch<React.SetStateAction<T>>, MutableRefObject<T>] => {
+	const [ value, setValue ] = useState<T>(defaultValue)
+	const valueRef = useRef<T>(defaultValue)
 
-	const newSetValue = (newValue: T) => {
-		valueRef.current = newValue
-		setValue(newValue)
+	const newSetValue: React.Dispatch<React.SetStateAction<T>> = (newValue: React.SetStateAction<T>) => {
+		let val;
+		if (typeof(newValue) === "function") {
+			val = (newValue as Function)(valueRef.current)
+		} else val = newValue;
+
+		valueRef.current = val;
+		setValue(val)
 	}
 
 	return [value, newSetValue, valueRef]
@@ -131,12 +136,12 @@ export const useClickAway = (
 	});
 };
 
-export const useRandoms = (numOfRandoms: number): number[] => {
+export const useRandoms = (numOfRandoms: number, min: number = 0, max: number = 1): number[] => {
 	const [ randoms, setRandoms ] = useState<number[]>([])
 	useEffect(() => {
 		let newRandoms: number[] = []
 		new Array(numOfRandoms).fill(0).forEach(() => {
-			newRandoms.push(Math.random())
+			newRandoms.push(Math.random() * (max - min) + min)
 		})
 		setRandoms(newRandoms)
 	}, [])
@@ -149,4 +154,9 @@ export const useInterval = (callback: Function, timeMs: number, runFirst: boolea
 		const interval = setInterval(callback, timeMs)
 		return () => clearInterval(interval)
 	}, [callback, runFirst, timeMs])
+}
+
+export const useRandom = (min: number, max: number): number => {
+	let rands = useRandoms(1, min, max)
+	return rands[0]
 }

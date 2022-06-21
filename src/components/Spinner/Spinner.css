@@ -1,0 +1,42 @@
+.spinner {
+	animation: spinner-spin 1800ms infinite linear;
+	@apply
+		inline-block
+		origin-center
+		text-inherit
+}
+
+.spinner-container.primary svg {@apply text-primary-main}
+.spinner-container.contrast svg {@apply text-primary-contrastText}
+
+@keyframes spinner-spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(270deg);
+	}
+}
+
+.spinner circle {
+	transform-origin: center;
+	stroke-dasharray: 187;
+	stroke-dashoffset: 0;
+	animation: spinner-dash 1800ms infinite ease-in-out;
+	@apply
+		stroke-current
+}
+
+@keyframes spinner-dash {
+	0% {
+		stroke-dashoffset: 187;
+	}
+	50% {
+		stroke-dashoffset: 46.75;
+		transform: rotate(135deg);
+	}
+	100% {
+		stroke-dashoffset: 187;
+		transform: rotate(450deg);
+	}
+}

@@ -1,0 +1,48 @@
+.loadable {
+	@apply
+		block
+}
+
+.loadable:not(.none) {
+	animation: load-pulse 1000ms infinite alternate ease-in-out;
+}
+
+.loadable.text {
+	@apply
+		inline-block
+		rounded
+		h-[1em]
+		w-[var(--length,12em)]
+}
+
+.loadable.invisible {
+	animation: none;
+}
+
+.loadable.full {
+	@apply
+		w-full
+		h-full
+}
+
+.loadable.block {
+	@apply
+		block
+		rounded
+}
+
+.loadable.paragraph-container {
+	@apply
+		overflow-x-hidden
+}
+
+@keyframes load-pulse {
+	from {
+		@apply
+			bg-action-loading
+	}
+	to {
+		@apply
+			bg-action-loadingTo
+	}
+}

@@ -14,10 +14,11 @@ export * from "./%name%"`,
       "%name%.tsx": {
         renameContents: true,
         createStr: `import React from "react"
+import { Component } from "../../types/Util"
 
 import "./%name%.css"
 
-const %name%: React.FC = () => {
+const %name%: Component = () => {
 	return (
 		<>
 		</>
