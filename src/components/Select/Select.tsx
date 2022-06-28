@@ -34,11 +34,14 @@ export type SelectProps = {
 	inputStyle?: InputBaseProps["inputStyle"],
 	flush?: InputBaseProps["flush"],
 	error?: boolean,
-	hintText?: string
+	hintText?: string,
+	searchable?: boolean,
+	searchFilter?: (search: string, item: ComponentItem) => boolean
 }
 
 const Select: Component<SelectProps> = (props) => {
 	const [ dropdownOpen, setDropdownOpen ] = useState(false)
+
 	const loadingValue = useContext(LoaderContext)
 
 	const containerRef = useRef<HTMLButtonElement>()
@@ -117,6 +120,8 @@ const Select: Component<SelectProps> = (props) => {
 						}
 					</>
 				)}
+				searchable={props.searchable}
+				searchFilter={props.searchFilter}
 				itemStyle={props.itemStyle}
 				onClick={(item, e) => {
 					if (props.multiple) e.stopPropagation()

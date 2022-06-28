@@ -15,44 +15,99 @@ export interface DropdownProps {
 	renderFunction?: RenderFunction,
 	open: boolean,
 	containerRef: MutableRefObject<HTMLElement | null | undefined>,
-	itemStyle?: (value: string | null) => Record<string, any>
+	itemStyle?: (value: string | null) => Record<string, any>,
+	searchable?: boolean;
+	searchFilter?: (search: string, item: ComponentItem) => boolean
+	resetSearchOnClose?: boolean
 }
 
 const Dropdown: Component<DropdownProps> = (props) => {
 	const [ position, setPosition ] = useState({ x: 0, y: 0 })
+	const [ width, setWidth ] = useState(100)
+
+	const [ search, setSearch ] = useState("")
+
 	let dropdownRef = useRef<HTMLDivElement | null>();
 
 	useClickAway(dropdownRef, () => props.onClose(), [props.containerRef])
 
-	const offset = 8
-
 	const updatePosition = useCallback(() => {
 		if (!dropdownRef.current || !props.containerRef.current) return;
-		let containerBounds = props.containerRef.current.getBoundingClientRect();
-		let dropdownBounds = dropdownRef.current.getBoundingClientRect();
+
+		const containerBounds = props.containerRef.current.getBoundingClientRect();
+		const dropdownBounds = dropdownRef.current.getBoundingClientRect();
+		
+		const cs = getComputedStyle(props.containerRef.current)
+		const paddingX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+
+		const offsetX = paddingX / 2
+		const offsetY = 8
 
 		setPosition({
-			x: minMax(containerBounds.x + offset, offset, window.innerWidth - dropdownBounds.width - offset),
-			y: minMax(containerBounds.y + containerBounds.height - offset, offset, window.innerHeight - dropdownBounds.height - offset)
+			x: minMax(containerBounds.x + offsetX, offsetX, window.innerWidth - dropdownBounds.width - offsetX),
+			y: minMax(containerBounds.y + containerBounds.height - offsetY, offsetY, window.innerHeight - dropdownBounds.height - offsetY)
 		})
 	}, [dropdownRef, props.containerRef])
 
-	useEffect(updatePosition, [dropdownRef, props.containerRef])
-	useEventListener(window, ["resize", "scroll"], updatePosition)
+	const updateSize = useCallback(() => {
+		if (!dropdownRef.current || !props.containerRef.current) return;
+		const containerBounds = props.containerRef.current.getBoundingClientRect();
+		const cs = getComputedStyle(props.containerRef.current)
+
+		const paddingX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+
+		setWidth(containerBounds.width - paddingX)
+	}, [props.containerRef])
+
+	useEffect(() => {
+		updateSize()
+		updatePosition()
+	}, [dropdownRef, props.containerRef])
+
+	useEventListener(window, ["resize", "scroll"], () => {
+		updateSize()
+		updatePosition()
+	})
 
 	const renderFunction = (): RenderFunction => {
 		if (props.renderFunction) return props.renderFunction;
 		return (item: ComponentItem) => item.label
 	}
 
+	const items = !props.searchable ?
+		props.items : props.items.filter(
+			(value) => props.searchFilter ?
+				props.searchFilter(search, value) :
+				value.label.toLowerCase().includes(search.toLowerCase())
+		)
+
 	return ReactDOM.createPortal(
 		<div
-			className={clsx("dropdown", {open: props.open})}
-			style={{left: `${position.x}px`, top: `${position.y}px`}}
+			className={clsx("dropdown", {open: props.open, searchable: props.searchable})}
+			style={{
+				left: `${position.x}px`,
+				top: `${position.y}px`,
+				width: `${width}px`
+			}}
 			ref={(el) => dropdownRef.current = el}
 		>
-			{props.items.map((item: ComponentItem) => (
+			{props.children}
+			
+			{props.searchable && (
+				<div className="search-input-container">
+					<input
+						placeholder="Search"
+						size={0}
+						className="search-input"
+						onChange={(e) => setSearch(e.target.value)}
+						onClick={(e) => e.stopPropagation()}
+					/>
+				</div>
+			)}
+
+			{(items || []).map((item: ComponentItem) => (
 				<button
+					className="dropdown-item"
 					key={item.value}
 					style={props.itemStyle?.(item.value) || {}}
 					onClick={(e) => {

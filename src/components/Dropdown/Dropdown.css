@@ -8,6 +8,7 @@
 		shadow-8
 		rounded
 		max-w-[calc(100%-16px)]
+		min-w-[16rem]
 		!z-[10000]
 		py-2
 		max-h-[min(calc(100vh-10rem),15rem)]
@@ -23,7 +24,7 @@
 		opacity-100
 }
 
-.dropdown > * {
+.dropdown > .dropdown-item {
 	@apply
 		flex items-center justify-between
 		px-6
@@ -35,9 +36,36 @@
 		font-primary
 }
 
-.dropdown > * > svg {
+.dropdown > .dropdown-item > svg {
 	@apply
 		fill-current
 		text-primary-main
 		ml-2
+}
+
+.dropdown.searchable {
+	@apply
+		pt-0
+		max-h-[min(calc(100vh-8rem),20rem)]
+}
+
+.dropdown .search-input-container {
+	@apply
+		sticky
+		top-0
+		bg-background-contrast
+		px-4
+		py-3
+}
+
+.dropdown .search-input {
+	@apply
+		bg-background-contrast
+		text-base
+		border-1
+		rounded
+		px-4
+		py-2
+		w-full
+		outline-primary-main
 }

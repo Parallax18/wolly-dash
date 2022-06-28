@@ -13,6 +13,7 @@ const NationalityInput: Component<NationalityInputProps> = (props) => {
 
 	return (
 		<FormSelect
+			searchable
 			field={props.field}
 			compact
 			valueComponent={(props) => (

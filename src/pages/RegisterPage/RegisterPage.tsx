@@ -12,7 +12,7 @@ import EmailIcon from "../../svg/icons/email-outline.svg"
 import PasswordIcon from "../../svg/icons/lock-outline.svg"
 import NameIcon from "../../svg/icons/account-circle-outline.svg"
 
-import { useRegisterRequest, UserArgs, userSchema, pick, getDialCodeFromCountryCode } from "../../util"
+import { useRegisterRequest, UserArgs, registerSchema, pick, getDialCodeFromCountryCode } from "../../util"
 import NationalityInput from "../../components/NationalityInput"
 import Form from "../../components/Form"
 import FormInput from "../../components/FormInput"
@@ -23,6 +23,9 @@ import { AlertContext } from "../../context/AlertContext"
 import { User } from "../../types/Api"
 import PhoneInput from "../../components/PhoneInput"
 import { useContext } from "react"
+import FormCheckbox from "../../components/FormCheckbox"
+import TokenSelect from "../../components/TokenSelect"
+import FormNumberInput from "../../components/FormNumberInput"
 
 const RegisterPage: Component = () => {
 	const authContext = useContext(AuthContext)
@@ -38,11 +41,15 @@ const RegisterPage: Component = () => {
 		nationality: "",
 		phone_number: "",
 		country_code: "GB",
+		terms_accepted: false,
+		token: "",
+		usd_amount: null
 	}
 
 	const onSubmit = (vals: Record<string, any>) => {
 		const dialCode = getDialCodeFromCountryCode(vals.country_code)
-		const mobile = `${dialCode} ${vals.phone_number}`
+		let mobile: string | undefined = `${dialCode} ${vals.phone_number}`
+		if (!vals.phone_number) mobile = undefined;
 
 		registerRequest.sendRequest({
 			...pick(vals, ["first_name", "last_name", "email", "nationality", "password"]),
@@ -69,7 +76,7 @@ const RegisterPage: Component = () => {
 					className="flex flex-col flex-gap-y-4"
 					initialValues={initialValues}
 					onSubmit={onSubmit}
-					validationSchema={userSchema}
+					validationSchema={registerSchema}
 				>
 					<FormInput
 						field="first_name"
@@ -104,7 +111,25 @@ const RegisterPage: Component = () => {
 						codeField="country_code"
 					/>
 					<NationalityInput field="nationality" />
-					<div className="login-footer flex-gap-y-4 flex flex-col mt-10 <xs:mt-8">
+					<div className="flex flex-col flex-gap-y-4">
+						<h2 className="text-lg">Purchase Details</h2>
+						<TokenSelect
+							field="token"
+						/>
+						<FormNumberInput
+							field="usd_amount"
+							placeholder="Purchase Amount $"
+							autoCapitalize="off"
+						/>
+					</div>
+					<div className="flex items-center">
+						<FormCheckbox
+							field="terms_accepted"
+							className="inline-block"
+						/>
+						<span className="ml-3">I agree to the Terms and Conditions and Privacy Policy</span>
+					</div>
+					<div className="login-footer flex-gap-y-4 flex flex-col mt-2 <xs:mt-2">
 						<Button color="primary" loading={registerRequest.fetching}>
 							Create Account
 						</Button>

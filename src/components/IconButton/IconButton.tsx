@@ -23,7 +23,7 @@ const IconButton: Component<IconButtonProps> = ({
 		<Comp
 			{...others}
 			component={component || "button"}
-			className={clsx("icon-button", others.class, {
+			className={clsx("icon-button", others.className, {
 				disabled,
 				loading
 			})}

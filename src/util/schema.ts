@@ -1,6 +1,6 @@
 import * as Yup from "yup"
 
-export const userSchema =  Yup.object().shape({
+export const registerSchema =  Yup.object().shape({
 	first_name: Yup.string().required("Can't be empty"),
 	last_name: Yup.string().required("Can't be empty"),
 	email: Yup.string().email("Email is invalid").required("Can't be empty"),
@@ -9,8 +9,15 @@ export const userSchema =  Yup.object().shape({
 		.max(32, "Maximum 32 character")
 		.min(8, "Minimum 8 character"),
 	nationality: Yup.string().required("Can't be empty"),
-	phone_number: Yup.string().required("Can't be empty"),
-	country_code: Yup.string().required("")
+	phone_number: Yup.string(),
+	country_code: Yup.string(),
+	terms_accepted: Yup.bool()
+		.required("Must accept terms and conditions")
+		.oneOf([true], "Must accept terms and conditions"),
+	token: Yup.string().required("Can't be empty"),
+	usd_amount: Yup.number()
+		.required("Can't be empty")
+		.min(0, "Can't be less than 0")
 })
 
 export const userUpdateSchema =  Yup.object().shape({

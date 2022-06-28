@@ -13,7 +13,8 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 	error?: boolean,
 	icon?: ComponentType,
 	visibilityToggle?: boolean,
-	leftContent?: JSX.Element
+	leftContent?: JSX.Element,
+	rightContent?: JSX.Element
 }
 
 import VisibilityIcon from "../../svg/icons/visibility-outline.svg"
@@ -24,7 +25,8 @@ import { useMemo, useState } from "react"
 const Input: Component<InputProps> = ({
 	label, className, value, round,
 	inputStyle, children, error, hintText,
-	icon, visibilityToggle, leftContent, ...others
+	icon, visibilityToggle, leftContent,
+	rightContent, ...others
 }) => {
 	const [ selected, setSelected ] = useState(false)
 	const [ _value, _setValue ] = useState("")
@@ -50,6 +52,7 @@ const Input: Component<InputProps> = ({
 			hintText={hintText}
 			icon={icon}
 			leftContent={leftContent}
+			rightContent={rightContent}
 		>
 			<div className="input-wrapper">
 				<input

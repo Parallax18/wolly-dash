@@ -25,6 +25,7 @@ const PhoneInput: Component<PhoneInputProps> = (props) => {
 			placeholder="Phone Number"
 			leftContent={(
 				<FormSelect
+					searchable
 					field={props.codeField}
 					compact
 					flush="right"

@@ -24,6 +24,7 @@ export type InputBaseProps = React.HTMLAttributes<HTMLDivElement> & {
 	hintText?: string
 	icon?: ComponentType;
 	leftContent?: JSX.Element
+	rightContent?: JSX.Element
 	flush?: "top" | "left" | "bottom" | "right";
 	component?: ComponentType,
 	[key: string]: any
@@ -33,7 +34,7 @@ const InputBase: Component<InputBaseProps> = React.forwardRef(({
 	classes, id, label, labelFixed, active,
 	selected, children, className,
 	inputStyle, hintText, error, icon, leftContent,
-	flush, component, ...others
+	flush, component, rightContent, ...others
 }, ref) => {
 
 	const [ labelWidth, setLabelWidth ] = useState("0px")
@@ -75,6 +76,9 @@ const InputBase: Component<InputBaseProps> = React.forwardRef(({
 				leftContent
 			)}
 			{children}
+			{rightContent && (
+				rightContent
+			)}
 			{hintText && (
 				<Loadable
 					component="p"
