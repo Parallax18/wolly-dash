@@ -1,5 +1,7 @@
 import React from "react"
+import { useSearchParams } from "react-router-dom"
 import { Component } from "../../types/Util"
+import { deserializeObjFromQuery } from "../../util"
 import Button from "../Button"
 import Form from "../Form"
 import FormInput from "../FormInput"
@@ -11,9 +13,15 @@ import TokenSelect from "../TokenSelect"
 import "./BuyPage.css"
 
 const BuyPage: Component = () => {
+	const [ searchParams, setSearchParams ] = useSearchParams()
+	const params = deserializeObjFromQuery(
+		new URLSearchParams(searchParams),
+		["usd_amount", "token"]
+	)
+
 	const initialValues = {
-		usd_amount: 100,
-		buy_token: "ETH",
+		usd_amount: params.usd_amount || 1000,
+		buy_token: params.token,
 		buy_token_amount: 1
 	}
 

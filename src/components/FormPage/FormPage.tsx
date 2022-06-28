@@ -4,13 +4,13 @@ import "./FormPage.css"
 
 export interface FormPageProps {
 	title: string
-	background: string
+	background?: string
 }
 
 const FormPage: Component<FormPageProps> = (props) => {
 	return (
 		<div className="form-page">
-			<img className="form-background" src={props.background} />
+			{props.background && <img className="form-background" src={props.background} />}
 			<Card className="form-card">
 				<CardTitle center>
 					{props.title}

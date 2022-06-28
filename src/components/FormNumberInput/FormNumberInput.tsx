@@ -34,6 +34,12 @@ const FormNumberInput: Component<FormNumberInputProps> = ({ field, ...others }) 
 		setStrValue(formContext.values[field].toString())
 	}
 
+	useEffect(() => {
+		let newValue = 0;
+		if (strValue && partialNumberRegex.test(strValue)) newValue = Number.parseFloat(strValue)
+		formContext.updateValue(field, newValue)
+	}, [])
+
 	return (
 		<Input
 			{...others}

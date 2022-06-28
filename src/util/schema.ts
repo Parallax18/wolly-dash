@@ -17,7 +17,7 @@ export const registerSchema =  Yup.object().shape({
 	token: Yup.string().required("Can't be empty"),
 	usd_amount: Yup.number()
 		.required("Can't be empty")
-		.min(0, "Can't be less than 0")
+		.min(0.01, "Must be more than 0.01")
 })
 
 export const userUpdateSchema =  Yup.object().shape({
