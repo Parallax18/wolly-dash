@@ -7,6 +7,7 @@
 		flex flex-col
 		min-w-80
 		h-[var(--screen-height)]
+		z-10
 
 		<md:h-16
 		<md:top-initial
