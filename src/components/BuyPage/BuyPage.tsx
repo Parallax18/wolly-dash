@@ -27,7 +27,7 @@ const BuyPage: Component = () => {
 
 	return (
 		<Page path="/buy" title="Buy">
-			<FormPage title="Buy Tokens" background={"/image/background/hexagons.svg"}>
+			<FormPage title="Buy Tokens">
 				<Form
 					className="flex flex-col flex-gap-y-8"
 					initialValues={initialValues}
