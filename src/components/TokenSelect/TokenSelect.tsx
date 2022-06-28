@@ -5,7 +5,7 @@ import FormSelect, { FormSelectProps } from "../FormSelect"
 
 import "./TokenSelect.css"
 
-export type TokenSelectProps = FormSelectProps & {
+export type TokenSelectProps = Omit<FormSelectProps, "items"> & {
 	field: string
 }
 

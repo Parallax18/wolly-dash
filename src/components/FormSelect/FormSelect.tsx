@@ -4,7 +4,7 @@ import { FormContext } from "../Form/Form"
 import Select, { SelectProps } from "../Select"
 import "./FormSelect.css"
 
-export type FormSelectProps = Omit<SelectProps, "value" | "onChange" | "items"> & {
+export type FormSelectProps = Omit<SelectProps, "value" | "onChange"> & {
 	field: string
 }
 

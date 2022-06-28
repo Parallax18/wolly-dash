@@ -1,7 +1,7 @@
 import { Component, ComponentItem } from "../../types/Util"
 import "./Select.css"
 
-import ArrowDropdownIcon from "../../svg/icons/down-chevron.svg"
+import DownChevron from "../../svg/icons/down-chevron.svg"
 import CloseIcon from "../../svg/icons/close.svg"
 import CheckBoxIcon from "../../svg/icons/checkbox.svg"
 import CheckBoxEmptyIcon from "../../svg/icons/checkbox-outline.svg"
@@ -13,6 +13,8 @@ import InputBase, { InputBaseProps } from "../InputBase"
 import clsx from "clsx"
 import { Loadable, LoaderContext } from "../Loader"
 import { useContext, useMemo, useRef, useState } from "react"
+
+const ArrowDropdownIcon = DownChevron as unknown as React.FC<any>
 
 export type ValueComponent = Component<{
 	style?: Record<string, any>,
