@@ -62,7 +62,7 @@ const Dropdown: Component<DropdownProps> = (props) => {
 	useEffect(() => {
 		updateSize()
 		updatePosition()
-	}, [dropdownRef, props.containerRef])
+	}, [dropdownRef, props.containerRef, props.open])
 
 	useEventListener(window, ["resize", "scroll"], () => {
 		updateSize()

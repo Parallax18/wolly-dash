@@ -1,5 +1,5 @@
 import type { Component } from "../../types/Util"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 import FormPage from "../../components/FormPage"
 import Page from "../../components/Page"
@@ -12,7 +12,7 @@ import EmailIcon from "../../svg/icons/email-outline.svg"
 import PasswordIcon from "../../svg/icons/lock-outline.svg"
 import NameIcon from "../../svg/icons/account-circle-outline.svg"
 
-import { useRegisterRequest, UserArgs, registerSchema, pick, getDialCodeFromCountryCode } from "../../util"
+import { useRegisterRequest, UserArgs, registerSchema, pick, getDialCodeFromCountryCode, errorToString } from "../../util"
 import NationalityInput from "../../components/NationalityInput"
 import Form from "../../components/Form"
 import FormInput from "../../components/FormInput"
@@ -28,6 +28,7 @@ import TokenSelect from "../../components/TokenSelect"
 import FormNumberInput from "../../components/FormNumberInput"
 
 const RegisterPage: Component = () => {
+	const navigate = useNavigate()
 	const authContext = useContext(AuthContext)
 	const alertContext = useContext(AlertContext)
 
@@ -56,7 +57,7 @@ const RegisterPage: Component = () => {
 			mobile
 		} as UserArgs).then((res) => {
 			authContext.login(res.data.user, res.data.tokens)
-
+			navigate(`/buy?usd_amount=${vals.usd_amount}&token=${vals.token}`, {replace: true})
 			alertContext.addAlert({
 				type: "success",
 				label: "Successfully registered"
@@ -64,7 +65,7 @@ const RegisterPage: Component = () => {
 		}).catch((err) => {
 			alertContext.addAlert({
 				type: "error",
-				label: "Error while registering"
+				label: errorToString(err, "Error while registering")
 			})
 		})
 	}

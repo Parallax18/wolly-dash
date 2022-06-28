@@ -12,9 +12,12 @@ import { routeMatchesExact } from "../../util"
 import { AuthContext } from "../../context/AuthContext"
 import { useContext } from "react"
 
+import BuyIcon from "../../svg/icons/shopping-cart.svg"
+
 const navList = [
 	{label: "Dashboard", path: "/", icon: DashboardIcon},
-	{label: "Account", path: "/account", icon: AccountIcon}
+	{label: "Account", path: "/account", icon: AccountIcon},
+	{label: "Buy", path: "/buy", icon: BuyIcon}
 ]
 
 const bottomList = [

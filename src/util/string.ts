@@ -148,3 +148,8 @@ export const downloadString = (text: string, fileType: string, fileName: string)
 export const toDisplayString = (str: string): string => {
 	return str.split("_").map((str) => capitalize(str)).join(" ")
 }
+
+export const errorToString = (err: any, defaultString: string): string => {
+	if (!err.code || !err.message) return defaultString;
+	return err.message;
+}
