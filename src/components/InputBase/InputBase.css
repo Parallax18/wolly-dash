@@ -134,8 +134,3 @@
 		flex-1
 		relative
 }
-
-.input-root.flush-top, .input-root.flush-top::before {@apply !rounded-t-0}
-.input-root.flush-left, .input-root.flush-left::before {@apply !rounded-l-0}
-.input-root.flush-bottom, .input-root.flush-bottom::before {@apply !rounded-b-0}
-.input-root.flush-right, .input-root.flush-right::before {@apply !rounded-r-0}

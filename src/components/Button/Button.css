@@ -59,6 +59,12 @@
 	--text-color: var(--theme-accent-contrastText);
 }
 
+.button.bg-light {
+	--bg-color: var(--theme-background-paperLight);
+	--bg-hover-color: var(--theme-background-paperHighlight);
+	--text-color: var(--theme-text-primary);
+}
+
 .button.text-col-unselected {
 	--text-color: var(--theme-action-unselected);
 }

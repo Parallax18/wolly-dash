@@ -163,3 +163,8 @@ img {
 		h-10
 		transition-background-color
 }
+
+.flush-top, .flush-top::before {@apply !rounded-t-0}
+.flush-left, .flush-left::before {@apply !rounded-l-0}
+.flush-bottom, .flush-bottom::before {@apply !rounded-b-0}
+.flush-right, .flush-right::before {@apply !rounded-r-0}

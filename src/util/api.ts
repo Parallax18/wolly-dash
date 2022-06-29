@@ -33,7 +33,7 @@ export type DataHistoryItem<T> = {
 	data: T
 }
 
-const baseUrl = import.meta.env.APP_API_BASE_URL;
+const baseUrl = import.meta.env.REACT_APP_API_BASE_URL;
 
 export const useRequest = <T = Record<string, unknown>>(url: URLString, options?: CreateRequestOptions): CreateRequestResponse<T, (options: AxiosRequestConfig) => Promise<AxiosResponse<T>>> => {
 	const unmountedRef = useRef(false)

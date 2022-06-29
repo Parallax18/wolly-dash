@@ -19,5 +19,5 @@ export default defineConfig({
     react(),
     Unocss(unoConfig)
   ],
-	envPrefix: "APP_"
+	envPrefix: "REACT_APP_"
 })

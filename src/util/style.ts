@@ -2,7 +2,7 @@ import baseTheme from "../styles/themes/baseTheme"
 import updateObj from "object-deep-update"
 
 export const createTheme = (themeObj: Record<string, any>): Record<string, any> => {
-	return updateObj(baseTheme, themeObj)
+	return updateObj({...baseTheme}, {...themeObj})
 }
 
 export const getValueStr = (key: string, val: any) => {

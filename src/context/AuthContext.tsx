@@ -58,7 +58,8 @@ export const AuthContextWrapper: Component = ({ children }) => {
 			.then((res) => {
 				setUser((res as AxiosResponse).data as User)
 			}).catch((err) => {
-				if (err.message === "Email must be verified" || err.message === "Password change required") return
+				console.log("ERR", err)
+				if (err?.message === "Email must be verified" || err?.message === "Password change required") return
 				logout()
 			})
 	}, [loggedIn, user])
@@ -95,6 +96,7 @@ export const AuthContextWrapper: Component = ({ children }) => {
 						resolve(res)
 					})
 					.catch((err) => {
+
 						AuthData.logout()
 						console.error(err)
 						reject(err)

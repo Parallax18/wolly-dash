@@ -14,7 +14,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 	icon?: ComponentType;
 	class?: string;
 	classes?: ButtonClasses;
-	color?: "base" | "primary" | "secondary" | "accent" | "transparent",
+	color?: "base" | "primary" | "secondary" | "accent" | "transparent" | "bg-light",
 	textColor?: "unselected" | "secondary" | "default"
 	buttonStyle?: "contained" | "outlined",
 	component?: ComponentType,
@@ -22,6 +22,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 	compact?: boolean,
 	loading?: boolean,
 	fluid?: boolean,
+	flush?: "top" | "left" | "bottom" | "right";
 	textFill?: boolean
 	[key: string]: any
 }
@@ -29,11 +30,13 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 const Button: Component<ButtonProps> = ({
 	icon, className, classes, color = "base",
 	children, component, disabled, buttonStyle = "contained",
-	compact, loading, fluid, textFill, textColor,
+	compact, loading, fluid, textFill, textColor, flush,
 	...others
 }) => {
 	const Comp = (component || "button") as Component<any>
 	const Icon = icon
+
+	console.log("FLUSH", flush)
 
 	return (
 		<Comp
@@ -52,7 +55,8 @@ const Button: Component<ButtonProps> = ({
 				icon: icon !== undefined,
 				disabled, compact,
 				loading, fluid,
-				"text-fill": textFill
+				"text-fill": textFill,
+				[`flush-${flush}`]: flush
 			})}
 		>
 			{Icon && (
@@ -60,9 +64,10 @@ const Button: Component<ButtonProps> = ({
 					<Icon />
 				</div>
 			)}
-			{children !== undefined && !loading && (
+			{children !== undefined && typeof(children) === "string" && !loading && (
 				<span>{children}</span>
 			)}
+			{children !== undefined && typeof(children) !== "string" && !loading && (children)}
 			{loading && <>
 				<span className="opacity-0">{children}</span>
 				<Spinner size={6} />

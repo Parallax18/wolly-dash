@@ -36,7 +36,7 @@ const PhoneInput: Component<PhoneInputProps> = (props) => {
 							<p style={props.style}>{props.item?.data.dial_code}</p>
 						</div>
 					)}
-					class="right-divider !rounded-r-none !min-w-35 !pl-3"
+					class="!rounded-r-none !min-w-10 !pl-3"
 					items={countryList.map((countryItem) => ({
 						label: `${countryItem.flag} ${countryItem.name} ${countryItem.dial_code}`,
 						value: countryItem.code,

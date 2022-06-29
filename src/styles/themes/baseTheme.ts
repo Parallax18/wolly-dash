@@ -72,6 +72,7 @@ const baseTheme: Record<string, any> = {
 	favourite: "#f6b702",
 	divider: "rgba(255, 255, 255, 0.12)",
 	background: {
+		paperHighlight: "#484c52",
 		paperLight: "#393c40",
 		paper: "#292B30",
 		paperDark: "#181818",

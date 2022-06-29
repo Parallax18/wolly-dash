@@ -79,20 +79,23 @@ const RegisterPage: Component = () => {
 					onSubmit={onSubmit}
 					validationSchema={registerSchema}
 				>
-					<FormInput
-						field="first_name"
-						icon={NameIcon}
-						placeholder="First Name"
-						autoComplete="given-name"
-						autoCapitalize="words"
-					/>
-					<FormInput
-						field="last_name"
-						icon={NameIcon}
-						placeholder="Last Name"
-						autoComplete="family-name"
-						autoCapitalize="words"
-					/>
+					<div className="flex flex-gap-x-2">
+						<FormInput
+							field="first_name"
+							icon={NameIcon}
+							placeholder="First Name"
+							autoComplete="given-name"
+							autoCapitalize="words"
+							className="flex-1"
+						/>
+						<FormInput
+							field="last_name"
+							placeholder="Last Name"
+							autoComplete="family-name"
+							autoCapitalize="words"
+							className="flex-1"
+						/>
+					</div>
 					<FormInput
 						field="email"
 						icon={EmailIcon}
