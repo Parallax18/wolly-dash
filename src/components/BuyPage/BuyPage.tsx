@@ -47,7 +47,7 @@ const BuyPage: Component = () => {
 	const initialValues = {
 		usd_amount: params.usd_amount as number || 1000,
 		buy_token_amount: 1,
-		token: tokenList.find((token) => token.symbol === (params.token || "ETH"))
+		token: tokenList.find((token) => token.id === params.token_id || "ETH")
 	}
 
 	const [ values, setValues, valuesRef ] = useStateRef(initialValues)
@@ -258,6 +258,9 @@ const BuyPage: Component = () => {
 export default BuyPage
 
 export type CurrencyItemDisplayProps = React.HTMLAttributes<HTMLDivElement> & {
+	classes?: {
+		bonusChip?: string
+	},
 	currencyItem?: CurrencyItem,
 	component?: ComponentType,
 	currencyList?: CurrencyItem[],
@@ -267,10 +270,9 @@ export type CurrencyItemDisplayProps = React.HTMLAttributes<HTMLDivElement> & {
 
 export const CurrencyItemDisplay: Component<CurrencyItemDisplayProps> = ({
 	currencyItem, component = "div", children, currencyList,
-	bonuses, ...others
+	bonuses, classes, ...others
 }) => {
 	const bonusItem = bonuses ? bonuses.find((bonus) => bonus.token_id.toLowerCase() === currencyItem?.symbol.toLowerCase()) : undefined;
-	console.log("BONUS ITEM", bonusItem)
 
 	const Comp = (component || "div") as Component<any>
 	
@@ -285,7 +287,7 @@ export const CurrencyItemDisplay: Component<CurrencyItemDisplayProps> = ({
 			className={
 				clsx(
 					"currency-display-item",
-					others.className
+					others.className,
 				)
 			}>
 			<div className="relative">
@@ -300,7 +302,7 @@ export const CurrencyItemDisplay: Component<CurrencyItemDisplayProps> = ({
 			</div>
 			<span className="text-container">
 				{currencyItem?.symbol}
-				{bonusItem && <span className="text-2xs text-success-light font-bold bg-background-contrast py-0.5 px-1.5 rounded-full">
+				{bonusItem && <span className={clsx("text-2xs text-success-light font-bold bg-background-contrast py-0.5 px-1.5 rounded-full", classes?.bonusChip)}>
 					+{bonusItem.percentage}%
 				</span>}
 			</span>

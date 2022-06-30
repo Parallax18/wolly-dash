@@ -116,6 +116,7 @@ const AccountPage: Component = () => {
 								color="primary"
 								buttonStyle="outlined"
 								className="mt-8"
+								onClick={() => authContext.logout()}
 							>
 								Logout
 							</Button>

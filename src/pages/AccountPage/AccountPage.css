@@ -2,4 +2,10 @@
 	@apply
 		flex flex-1
 		items-start
+		p-2
+}
+
+.account-page .input-root .left-container {
+	@apply
+		w-18
 }

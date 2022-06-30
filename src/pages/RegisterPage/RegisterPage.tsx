@@ -30,6 +30,8 @@ import { SelectModalWrapper } from "../../components/SelectModal"
 import TokenSelectModal, { FormTokenSelectModal, TokenSelectItem } from "../../components/TokenSelectModal"
 
 import _DropdownIcon from "../../svg/icons/down-chevron.svg"
+import { CurrencyItemDisplay } from "../../components/BuyPage"
+import { StageContext } from "../../context/StageContext"
 
 const DropdownIcon = _DropdownIcon as unknown as Component<any>
 
@@ -37,6 +39,7 @@ const RegisterPage: Component = () => {
 	const navigate = useNavigate()
 	const authContext = useContext(AuthContext)
 	const alertContext = useContext(AlertContext)
+	const { activeStage } = useContext(StageContext)
 
 	const registerRequest = useRegisterRequest()
 
@@ -52,7 +55,7 @@ const RegisterPage: Component = () => {
 		country_code: "GB",
 		terms_accepted: false,
 		token: tokenList[0],
-		usd_amount: null
+		usd_amount: 0
 	}
 
 	const onSubmit = (vals: Record<string, any>) => {
@@ -65,7 +68,7 @@ const RegisterPage: Component = () => {
 			mobile
 		} as UserArgs).then((res) => {
 			authContext.login(res.data.user, res.data.tokens)
-			navigate(`/buy?usd_amount=${vals.usd_amount}&token=${vals.token}`, {replace: true})
+			navigate(`/buy?usd_amount=${vals.usd_amount}&token_id=${vals.token.id}`, {replace: true})
 			alertContext.addAlert({
 				type: "success",
 				label: "Successfully registered"
@@ -96,6 +99,7 @@ const RegisterPage: Component = () => {
 								field="token"
 								open={tokenModalOpen}
 								onClose={() => setTokenModalOpen(false)}
+								bonuses={activeStage?.bonuses.payment_tokens}
 							/>
 						</SelectModalWrapper>
 					)}
@@ -140,15 +144,18 @@ const RegisterPage: Component = () => {
 						<h2 className="text-lg">Purchase Details</h2>
 						<FormRender>
 							{(formContext) => (
-								<Button
-									className="token-item py-3 !justify-start"
+								<CurrencyItemDisplay
+									component={Button}
+									className="py-3 !justify-start w-full group"
 									color="bg-contrast"
 									type="button"
 									onClick={() => setTokenModalOpen(true)}
+									currencyItem={formContext.values.token}
+									bonuses={activeStage?.bonuses.payment_tokens}
+									classes={{bonusChip: "bg-background-paperLight group-hover:bg-background-paperHighlight transition-background-color"}}
 								>
-									<TokenSelectItem compact token={formContext.values.token} />
-									<DropdownIcon className="h-3 w-3 ml-auto" />
-								</Button>
+									<DropdownIcon className="h-3 w-3 ml-auto text-action-unselected group-hover:text-text-primary transition-color" />
+								</CurrencyItemDisplay>
 							)}
 						</FormRender>
 						<FormNumberInput

@@ -1,0 +1,20 @@
+.banner {
+	@apply
+		fixed
+		top-0
+		left-80
+		pr-80
+		w-full
+		z-[5]
+		px-2
+		bg-primary-dark
+		text-primary-contrastText
+		text-sm
+		py-0.5
+		text-center
+		
+		<md:left-0
+		<md:bottom-16
+		<md:top-[initial]
+		<md:pr-0
+}

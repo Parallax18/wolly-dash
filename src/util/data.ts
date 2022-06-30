@@ -106,3 +106,26 @@ export const deserializeValue = (serializedValue: string): any => {
 export const isDuplicate = <T>(value: T, list: T[], matchFunction = ((item: T) => item === value)): boolean => {
 	return !!list.find((currItem) => matchFunction(currItem) && currItem !== value)
 }
+
+export const getTimeString = (ms: number) => {
+	let map: Record<string, number> = {
+		"ms": 1,
+		"seconds": 1000,
+		"minutes": 60 * 1000,
+		"hours": 60 * 60 * 1000,
+		"days": 24 * 60 * 60 * 1000
+	}
+
+	let timeLabel = ""
+	let entries = Object.entries(map)
+	entries.forEach(([label, divisor], i) => {
+		if (label) return;
+		if (ms / divisor < 1) {
+			if (i-1 < 0) timeLabel = entries[0][0];
+			else timeLabel = entries[i-1][0];
+		}
+	})
+
+	if (!timeLabel) timeLabel = entries[entries.length - 1][0];
+	return `${Math.floor(ms / map[timeLabel])} ${timeLabel}`
+}

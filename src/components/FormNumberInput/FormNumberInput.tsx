@@ -44,6 +44,7 @@ const FormNumberInput: Component<FormNumberInputProps> = ({ field, maxDecimals =
 	}
 
 	const updateStrValue = () => {
+		console.log(formContext.values, field)
 		setStrValue(
 			roundToDP(formContext.values[field].toString(), maxDecimals)
 		)

@@ -2,6 +2,7 @@ import { countries } from "country-flags-svg"
 import { isDuplicate } from "./data"
 
 export interface CurrencyItem {
+	id?: string,
 	name: string,
 	symbol: string,
 	imageUrl: string,
@@ -10,16 +11,25 @@ export interface CurrencyItem {
 
 export const tokenList: CurrencyItem[] = [
 	{
+		id: "1234",
 		name: "Ethereum",
 		symbol: "ETH",
 		imageUrl: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzYyN0VFQSIvPjxnIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDR2OC44N2w3LjQ5NyAzLjM1eiIvPjxwYXRoIGQ9Ik0xNi40OTggNEw5IDE2LjIybDcuNDk4LTMuMzV6Ii8+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDIxLjk2OHY2LjAyN0wyNCAxNy42MTZ6Ii8+PHBhdGggZD0iTTE2LjQ5OCAyNy45OTV2LTYuMDI4TDkgMTcuNjE2eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjIiIGQ9Ik0xNi40OTggMjAuNTczbDcuNDk3LTQuMzUzLTcuNDk3LTMuMzQ4eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjYwMiIgZD0iTTkgMTYuMjJsNy40OTggNC4zNTN2LTcuNzAxeiIvPjwvZz48L2c+PC9zdmc+",
 		chain: "ERC20"
 	},
 	{
+		id: "123456",
 		name: "Bitcoin",
 		symbol: "BTC",
 		imageUrl: "https://assets.coingecko.com/coins/images/1/small/bitcoin.png",
 		chain: "ERC20"
+	},
+	{
+		id: "335910336041321033",
+		name: "Binance Coin",
+		symbol: "BNB",
+		imageUrl: "https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png",
+		chain: "BEP20"
 	},
 	{
 		name: "Tether",

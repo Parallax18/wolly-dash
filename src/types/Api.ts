@@ -54,7 +54,7 @@ export interface Stage {
 		},
 		signup?: {
 			first_purchase_percentage?: 100,
-			limited_time: {
+			limited_time?: {
 				minutes_after_signup: 15,
 				percentage: 100
 			}
@@ -90,5 +90,5 @@ export interface Project {
 		symbol: string,
 	},
 	payment_tokens: PaymentToken[],
-	
+
 }

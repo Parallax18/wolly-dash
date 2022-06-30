@@ -8,18 +8,26 @@ import { CurrencyItem, getTokenLabelString, tokenList as fullTokenList } from ".
 import { FormContext } from "../Form";
 import SelectModal, { SelectModalProps } from "../SelectModal";
 import { TokenBonus } from "../../types/Api";
+import { ProjectContext } from "../../context/ProjectContext";
 
 export type TokenSelectModalProps = Omit<SelectModalProps<CurrencyItem>, "items"> & {
 	bonuses?: TokenBonus[]
 }
 
 const TokenSelectModal = ({ bonuses, ...others }: TokenSelectModalProps): JSX.Element => {
+	const { currentProject } = useContext(ProjectContext)
+
+	const listTokens = useMemo(() => {
+		return (currentProject?.payment_tokens || [])
+			.map((apiToken) => fullTokenList.find((listToken) => apiToken.id === listToken.id) as CurrencyItem)
+			.filter((token) => token !== undefined)
+	}, [currentProject?.payment_tokens])
 
 	return (
 		<SelectModal<CurrencyItem>
 			{...others}
 			className="token-modal"
-			items={fullTokenList}
+			items={listTokens}
 			searchStringFunction={(token) => token.name + token.chain + token.symbol}
 			itemComponentGenerator={(token) => (
 				<TokenSelectItem token={token} bonuses={bonuses} />
