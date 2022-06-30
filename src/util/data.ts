@@ -102,3 +102,7 @@ export const deserializeValue = (serializedValue: string): any => {
 	}
 	return parsed
 }
+
+export const isDuplicate = <T>(value: T, list: T[], matchFunction = ((item: T) => item === value)): boolean => {
+	return !!list.find((currItem) => matchFunction(currItem) && currItem !== value)
+}

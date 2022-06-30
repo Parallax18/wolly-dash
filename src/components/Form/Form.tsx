@@ -104,3 +104,13 @@ const Form: Component<FormProps> = ({
 }
 
 export default Form
+
+export interface FormRenderProps {
+	children: (formContext: FormContextValue) => JSX.Element
+}
+
+export const FormRender: React.FC<FormRenderProps> = (props) => {
+	const formContext = useContext(FormContext)
+
+	return props.children(formContext)
+}

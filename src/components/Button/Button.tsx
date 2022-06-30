@@ -36,8 +36,6 @@ const Button: Component<ButtonProps> = ({
 	const Comp = (component || "button") as Component<any>
 	const Icon = icon
 
-	console.log("FLUSH", flush)
-
 	return (
 		<Comp
 			{...others}

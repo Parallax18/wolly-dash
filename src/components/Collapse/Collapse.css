@@ -1,0 +1,64 @@
+.collapse {
+	@apply
+		bg-background-contrast
+		rounded-item
+}
+
+.collapse-header {
+	@apply
+		flex w-full
+		!justify-start
+		hover:bg-transparent
+}
+
+.collapse .title-container {
+	@apply
+		flex
+		flex-1
+		text-base
+}
+
+.collapse .dropdown-icon {
+	@apply
+		fill-current
+		w-4
+		h-4
+		transition-transform
+		duration-300
+}
+
+.collapse.open .dropdown-icon {
+	@apply
+		!rotate-180
+}
+
+.collapse-inner {
+	@apply
+		p-4
+}
+
+.collapse-body {
+	@apply
+		border-box
+		relative
+		max-h-0
+		overflow-hidden
+		transition-max-height
+}
+
+.collapse.open .collapse-body {
+	@apply
+		max-h-[var(--height)]
+}
+
+.collapse-body::before {
+	content: " ";
+	@apply
+		absolute
+		top-1
+		left-1/2
+		h-[2px]
+		w-[calc(100%-2rem)]
+		bg-divider
+		-translate-x-1/2
+}
