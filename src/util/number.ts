@@ -5,7 +5,7 @@ export const minMax = (num: number, min: number, max: number) => {
 }
 
 const minDecimalPlaces = 0
-const maxDecimalPrecision = 4
+const maxDecimalPrecision = 6
 
 export const removeTrailingZeros = (numStr: string | number, minDecimals: number = minDecimalPlaces): string => {
 	numStr = numStr.toString()
@@ -61,9 +61,9 @@ export const numberWithCommas = (x: number | string): string => {
     return parts.join(".");
 }
 
-export const formatNumber = (num: number): string => {
+export const formatNumber = (num: number, minDP?: number, maxDP?: number): string => {
 
-	return numberWithCommas(formatPrecision(num))
+	return numberWithCommas(formatPrecision(num, minDP, maxDP))
 }
 
 export const formatNumberWithSign = (num: number): string => {
@@ -101,4 +101,15 @@ export const getDecimalPlaces = (num: number): number => {
 	let decimalStr = num.toString().split(".")[1]
 	if (!decimalStr) return 0
 	return decimalStr.length
+}
+
+export const roundToDP = (num: number, maxDecimals: number): string => {
+	let numStr = num.toString()
+	let numSplit = numStr.split(".")
+	let decimalStr = numStr.split(".")[1]
+	if (!decimalStr) {
+		return numStr;
+	}
+	let newNumStr = numSplit[0] + "." + decimalStr.substring(0, maxDecimals)
+	return newNumStr;
 }

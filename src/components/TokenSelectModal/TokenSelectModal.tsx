@@ -4,64 +4,48 @@ import Card, { CardBody } from "../Card";
 
 import "./TokenSelectModal.css"
 
-import CloseIcon from "../../svg/icons/close.svg"
-import { CurrencyItem, getTokenLabelString, tokenList } from "../../util";
-import clsx from "clsx";
-import Input from "../Input";
-import SearchIcon from "../../svg/icons/search.svg"
-import IconButton from "../IconButton";
-import Button from "../Button";
+import { CurrencyItem, getTokenLabelString, tokenList as fullTokenList } from "../../util";
 import { FormContext } from "../Form";
+import SelectModal, { SelectModalProps } from "../SelectModal";
+import { TokenBonus } from "../../types/Api";
 
-export type TokenSelectModalProps = Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> & {
-	open: boolean,
-	onClose: () => void,
-	onChange?: (item: CurrencyItem) => void;
+export type TokenSelectModalProps = Omit<SelectModalProps<CurrencyItem>, "items"> & {
+	bonuses?: TokenBonus[]
 }
 
-const TokenSelectModal: Component<TokenSelectModalProps> = ({
-	open, onClose, onChange
-}) => {
-	const [ search, setSearch ] = useState("")
-	
-	const filteredTokens = useMemo<CurrencyItem[]>(() => {
-		return tokenList.filter((tokenItem) => (tokenItem.name + tokenItem.symbol + (tokenItem.chain || "ERC20")).toLowerCase().includes(search.toLowerCase()))
-	}, [tokenList, search])
+const TokenSelectModal = ({ bonuses, ...others }: TokenSelectModalProps): JSX.Element => {
 
 	return (
-		<div className={clsx("token-modal", {open})}>
-			<Card className="p-6 pr-2 flex-gap-y-6">
-				<div className="modal-header">
-					<span>Select a currency</span>
-					<IconButton onClick={onClose}>
-						<CloseIcon />
-					</IconButton>
-				</div>
-				<Input
-					icon={SearchIcon}
-					placeholder="Search"
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-				/>
-				<div className="modal-body flex-gap-y-2">
-					{filteredTokens.map((token) => (
-						<Button
-							key={token.symbol + token.chain}
-							color="transparent"
-							className="token-item justify-start"
-							onClick={() => {
-								onChange?.(token)
-								onClose()
-							}}
-						>
-							<img className="token-img" src={token.imageUrl} />
-							<span className="token-symbol">{token.symbol}</span>
-							<span className="token-name">- {getTokenLabelString(filteredTokens, token)}</span>
-						</Button>
-					))}
-				</div>
-			</Card>
-		</div>
+		<SelectModal<CurrencyItem>
+			{...others}
+			className="token-modal"
+			items={fullTokenList}
+			searchStringFunction={(token) => token.name + token.chain + token.symbol}
+			itemComponentGenerator={(token) => (
+				<TokenSelectItem token={token} bonuses={bonuses} />
+			)}
+		/>
+	)
+}
+
+export interface TokenSelectItemProps {
+	token: CurrencyItem,
+	compact?: boolean,
+	bonuses?: TokenBonus[]
+}
+
+export const TokenSelectItem: Component<TokenSelectItemProps> = ({
+	token, compact, bonuses
+}) => {
+	let bonusItem = bonuses ? bonuses.find((bonus) => bonus.token_id.toLowerCase() === token.symbol.toLowerCase()) : undefined;
+
+	return  (
+		<>
+			<img className="token-img" src={token.imageUrl} />
+			<span className="token-symbol">{token.symbol}</span>
+			{!compact && <span className="token-name">- {getTokenLabelString(fullTokenList, token)}</span>}
+			{bonusItem && <span className="token-bonus">+{bonusItem.percentage}%</span>}
+		</>
 	)
 }
 
@@ -81,6 +65,7 @@ export const FormTokenSelectModal: Component<FormTokenSelectModalProps> = ({
 		<TokenSelectModal
 			{...others}
 			onChange={(item: CurrencyItem) => formContext.updateValue(field, item)}
+
 		/>
 	)
 }

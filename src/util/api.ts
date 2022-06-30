@@ -4,7 +4,7 @@ import { minMax } from "./number";
 import { MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { AuthContext } from "../context/AuthContext";
-import { APIError, LoginResponse, Stage, Tokens, User } from "../types/Api";
+import { APIError, LoginResponse, PricesResponse, Project, Stage, Tokens, User } from "../types/Api";
 
 export type URLString = `http://${string}.${string}` | `https://${string}.${string}` | `/${string}`
 export type CreateRequestOptions = AxiosRequestConfig & {
@@ -331,6 +331,33 @@ export const useGetActiveStages = (): CreateRequestResponse<
 	() => Promise<AxiosResponse<Stage>>
 > => {
 	const request = useRequest<Stage>("/stages/active")
+
+	const sendRequest = () => {
+		return request.sendRequest({})
+	}
+
+	return { ...request, sendRequest }
+}
+
+
+export const useGetPrices = (): CreateRequestResponse<
+	PricesResponse,
+	() => Promise<AxiosResponse<PricesResponse>>
+> => {
+	const request = useAuthRequest<PricesResponse>("/prices")
+
+	const sendRequest = () => {
+		return request.sendRequest({})
+	}
+
+	return { ...request, sendRequest }
+}
+
+export const useGetCurrentProject = (): CreateRequestResponse<
+	Project,
+	() => Promise<AxiosResponse<Project>>
+> => {
+	const request = useRequest<Project>("/projects/current")
 
 	const sendRequest = () => {
 		return request.sendRequest({})

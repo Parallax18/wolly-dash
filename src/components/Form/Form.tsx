@@ -28,14 +28,15 @@ const defaultValue: FormContextValue = {
 export const FormContext = createContext<FormContextValue>(defaultValue)
 
 export type FormProps = React.FormHTMLAttributes<HTMLFormElement> & {
+	values?: Record<string, any>,
 	initialValues: Record<string, any>,
 	onSubmit: (values: Record<string, any>) => void,
-	onUpdate?: (values: Record<string, any>) => void,
+	onUpdate?: (values: Record<string, any>, field: string) => void,
 	validationSchema?: Yup.ObjectSchema<Record<string, any>>
 }
 
 const Form: Component<FormProps> = ({
-	initialValues, onSubmit, validationSchema,
+	initialValues, onSubmit, validationSchema, values : propValues,
 	onUpdate, ...others
 }) => {
 	const [ values, setValues, valuesRef ] = useStateRef(initialValues)
@@ -46,7 +47,7 @@ const Form: Component<FormProps> = ({
 	const updateValue = (key: string, value: any) => {
 		setValues((val) => {
 			let newValues = {...val, [key]: value}
-			onUpdate?.(newValues)
+			onUpdate?.(newValues, key)
 			return newValues
 		})
 		updateErrors()
@@ -88,7 +89,7 @@ const Form: Component<FormProps> = ({
 	}
 
 	const FormValue: FormContextValue = {
-		values, errors, changed,
+		values: propValues !== undefined ? propValues : values, errors, changed,
 		updateValue, updateError, updateChanged
 	}
 

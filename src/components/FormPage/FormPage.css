@@ -26,6 +26,7 @@
 		overflow-y-auto
 		max-h-[calc(var(--screen-height)-2rem)]
 
+		<md:max-h-[calc(var(--screen-height)-6rem)]
 		<xs:max-h-none
 		<xs:w-full
 		<xs:flex-1

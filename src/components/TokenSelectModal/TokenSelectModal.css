@@ -1,69 +1,29 @@
-.token-modal {
-	@apply
-		absolute
-		z-4
-		w-full
-		h-full
-		top-0
-		left-0
-		transform
-		!translate-y-full
-		transition-transform
-		duration-400
-}
-
-.token-modal.open {
-	@apply
-		!translate-y-0
-}
-
-.token-modal .card {
-	@apply
-		flex flex-col
-		w-full
-		h-full
-}
-
-.token-modal .modal-header {
-	@apply
-		flex
-		justify-between
-		text-xl
-		pr-4
-}
-
-.token-modal .input-root {
-	@apply
-		flex-shrink-0
-		mr-4
-}
-
-.token-modal .modal-body {
-	@apply
-		flex flex-col
-		justify-start
-		overflow-y-auto
-}
-
-.token-modal .token-item {
+.token-item {
 	@apply
 		flex items-center
 		width-full
 }
 
-.token-modal .token-item img {
+.token-item img {
 	@apply
 		w-8 h-8
 		mr-4
 }
 
-.token-modal .token-item span {
+.token-item span {
 	@apply
 		text-base
 }
 
-.token-modal .token-symbol {
+.token-item .token-symbol {
 	@apply
 		font-bold
 		mr-1
+}
+
+.token-item .token-bonus {
+	@apply
+		ml-auto
+		font-bold
+		text-success-light
 }

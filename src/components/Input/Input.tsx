@@ -6,7 +6,6 @@ import clsx from "clsx"
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 	label?: string,
-	class?: string,
 	round?: boolean,
 	inputStyle?: InputBaseProps["inputStyle"],
 	hintText?: string,
@@ -60,7 +59,10 @@ const Input: Component<InputProps> = ({
 					size={1}
 					value={val}
 					onInput={others.onInput ?? ((e) => _setValue(e.currentTarget.value))}
-					onFocus={() => setSelected(true)}
+					onFocus={(e) => {
+						setSelected(true)
+						others.onFocus?.(e)
+					}}
 					onBlur={(e) => {
 						setSelected(false)
 						others.onBlur?.(e)

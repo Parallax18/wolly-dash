@@ -65,6 +65,12 @@
 	--text-color: var(--theme-text-primary);
 }
 
+.button.bg-contrast {
+	--bg-color: var(--theme-background-contrast);
+	--bg-hover-color: var(--theme-background-paperLight);
+	--text-color: var(--theme-text-primary);
+}
+
 .button.text-col-unselected {
 	--text-color: var(--theme-action-unselected);
 }
@@ -83,7 +89,7 @@
 }
 
 .button {
-	--outline-color: var(--bg-color)
+	--outline-color: var(--theme-primary-main)
 }
 
 .button.transparent {
@@ -189,4 +195,12 @@
 .button:focus-visible {
 	@apply
 		outline-4
+}
+
+.button.size-tiny {
+	@apply
+		px-1.5
+		py-0.5
+		text-sm
+		rounded
 }

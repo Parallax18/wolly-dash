@@ -1,0 +1,60 @@
+.select-modal {
+	@apply
+		absolute
+		z-4
+		w-full
+		h-full
+		top-0
+		left-0
+		transform
+		!translate-y-full
+		transition-transform
+		duration-400
+}
+
+.select-modal.open {
+	@apply
+		!translate-y-0
+}
+
+.select-modal .card {
+	@apply
+		flex flex-col
+		w-full
+		h-full
+}
+
+.select-modal .modal-header {
+	@apply
+		flex
+		justify-between
+		text-xl
+		pr-4
+}
+
+.select-modal .input-root {
+	@apply
+		flex-shrink-0
+		mr-4
+}
+
+.select-modal .modal-body {
+	@apply
+		flex flex-col
+		justify-start
+		overflow-y-auto
+}
+
+.select-modal-wrapper {
+	@apply
+		absolute
+		top-0 left-0
+		w-full h-full
+		overflow-hidden
+		pointer-events-none
+}
+
+.select-modal-wrapper.open {
+	@apply
+		pointer-events-auto
+}

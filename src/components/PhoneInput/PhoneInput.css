@@ -1,0 +1,10 @@
+.phone-input-select {
+	@apply
+		!rounded-r-none w-18 min-w-0 !px-2
+}
+
+.phone-input-select .dropdown-icon {
+	@apply
+		w-2.75 h-2.75
+		!ml-0.5
+}

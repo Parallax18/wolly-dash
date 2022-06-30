@@ -12,9 +12,9 @@ export interface ButtonClasses {
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 	icon?: ComponentType;
-	class?: string;
 	classes?: ButtonClasses;
-	color?: "base" | "primary" | "secondary" | "accent" | "transparent" | "bg-light",
+	color?: "base" | "primary" | "secondary" | "accent" | "transparent" | "bg-light" | "bg-contrast",
+	size?: "default" | "tiny",
 	textColor?: "unselected" | "secondary" | "default"
 	buttonStyle?: "contained" | "outlined",
 	component?: ComponentType,
@@ -24,6 +24,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 	fluid?: boolean,
 	flush?: "top" | "left" | "bottom" | "right";
 	textFill?: boolean
+	rounded?: boolean
 	[key: string]: any
 }
 
@@ -31,7 +32,7 @@ const Button: Component<ButtonProps> = ({
 	icon, className, classes, color = "base",
 	children, component, disabled, buttonStyle = "contained",
 	compact, loading, fluid, textFill, textColor, flush,
-	...others
+	rounded, size, ...others
 }) => {
 	const Comp = (component || "button") as Component<any>
 	const Icon = icon
@@ -54,7 +55,9 @@ const Button: Component<ButtonProps> = ({
 				disabled, compact,
 				loading, fluid,
 				"text-fill": textFill,
-				[`flush-${flush}`]: flush
+				"rounded-full": rounded,
+				[`flush-${flush}`]: flush,
+				[`size-${size}`]: size
 			})}
 		>
 			{Icon && (

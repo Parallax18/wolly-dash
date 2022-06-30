@@ -22,7 +22,7 @@ export type ValueComponent = Component<{
 }>
 
 export type SelectProps = {
-	class?: string
+	className?: string
 	style?: Record<string, any>,
 	multiple?: false,
 	onChange: (newValue: any, totalValues?: any[], prevValues?: any[]) => any,
@@ -77,7 +77,7 @@ const Select: Component<SelectProps> = (props) => {
 			</Chip>
 		)) : <p style={props.itemStyle?.(props.value)}>{props.items.find((item: ComponentItem) => item.value === props.value)?.label || props.emptyValuePlaceholder}</p>
 		if (props.multiple && (comp as []).length === 0 && props.emptyValuePlaceholder) {
-			(comp as (JSX.Element | string)[]).push(<Chip class="empty-value" style={props.itemStyle?.(null)}>
+			(comp as (JSX.Element | string)[]).push(<Chip className="empty-value" style={props.itemStyle?.(null)}>
 				{props.emptyValuePlaceholder}
 			</Chip>)
 		}
@@ -88,7 +88,7 @@ const Select: Component<SelectProps> = (props) => {
 		<InputBase
 			component={"button"}
 			type="button"
-			className={clsx("select", props.class, {
+			className={clsx("select", props.className, {
 				multiple: props.multiple,
 				open: dropdownOpen,
 				compact: props.compact

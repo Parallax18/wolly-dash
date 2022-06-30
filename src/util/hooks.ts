@@ -148,12 +148,33 @@ export const useRandoms = (numOfRandoms: number, min: number = 0, max: number = 
 	return randoms
 }
 
-export const useInterval = (callback: Function, timeMs: number, runFirst: boolean = false) => {
+export const useInterval = (
+	callback: Function,
+	timeMs: number,
+	runFirst: boolean = false
+): {
+	getTimeRemaining: () => number
+} => {
+	const ranRef = useRef(false)
+	const lastRan = useRef(Date.now())
+
 	useEffect(() => {
-		if (runFirst) callback()
-		const interval = setInterval(callback, timeMs)
+		console.log("CREATING EFFECT")
+		lastRan.current = Date.now();
+		if (runFirst && !ranRef.current) {
+			ranRef.current = true;
+			callback()
+		}
+		const interval = setInterval(() => {
+			callback()
+			lastRan.current = Date.now()
+		}, timeMs)
 		return () => clearInterval(interval)
 	}, [callback, runFirst, timeMs])
+
+	return {
+		getTimeRemaining: () => timeMs - (Date.now() - lastRan.current)
+	}
 }
 
 export const useRandom = (min: number, max: number): number => {

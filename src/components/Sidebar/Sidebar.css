@@ -58,8 +58,9 @@
 		<md:h-full
 		<md:flex <md:flex-col
 		<md:!items-center <md:!justify-center
-		<md:text-sm
+		<md:text-xs
 		<md:!py-0
+		<md:w-22
 }
 
 .sidebar .list > .button .icon-container {

@@ -12,9 +12,9 @@ import EmailIcon from "../../svg/icons/email-outline.svg"
 import PasswordIcon from "../../svg/icons/lock-outline.svg"
 import NameIcon from "../../svg/icons/account-circle-outline.svg"
 
-import { useRegisterRequest, UserArgs, registerSchema, pick, getDialCodeFromCountryCode, errorToString } from "../../util"
+import { useRegisterRequest, UserArgs, registerSchema, pick, getDialCodeFromCountryCode, errorToString, tokenList } from "../../util"
 import NationalityInput from "../../components/NationalityInput"
-import Form from "../../components/Form"
+import Form, { FormRender } from "../../components/Form"
 import FormInput from "../../components/FormInput"
 
 import * as Yup from "yup"
@@ -22,10 +22,16 @@ import { AuthContext } from "../../context/AuthContext"
 import { AlertContext } from "../../context/AlertContext"
 import { User } from "../../types/Api"
 import PhoneInput from "../../components/PhoneInput"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import FormCheckbox from "../../components/FormCheckbox"
 import TokenSelect from "../../components/TokenSelect"
 import FormNumberInput from "../../components/FormNumberInput"
+import { SelectModalWrapper } from "../../components/SelectModal"
+import TokenSelectModal, { FormTokenSelectModal, TokenSelectItem } from "../../components/TokenSelectModal"
+
+import _DropdownIcon from "../../svg/icons/down-chevron.svg"
+
+const DropdownIcon = _DropdownIcon as unknown as Component<any>
 
 const RegisterPage: Component = () => {
 	const navigate = useNavigate()
@@ -33,6 +39,8 @@ const RegisterPage: Component = () => {
 	const alertContext = useContext(AlertContext)
 
 	const registerRequest = useRegisterRequest()
+
+	const [ tokenModalOpen, setTokenModalOpen ] = useState(false)
 
 	const initialValues = {
 		first_name: "",
@@ -43,7 +51,7 @@ const RegisterPage: Component = () => {
 		phone_number: "",
 		country_code: "GB",
 		terms_accepted: false,
-		token: "",
+		token: tokenList[0],
 		usd_amount: null
 	}
 
@@ -72,12 +80,25 @@ const RegisterPage: Component = () => {
 
 	return (
 		<Page path="/register" title="Register" onlyLoggedOut>
-			<FormPage title="Register an account" background={"/image/background/hexagons.svg"}>
-				<Form
-					className="flex flex-col flex-gap-y-4"
-					initialValues={initialValues}
-					onSubmit={onSubmit}
-					validationSchema={registerSchema}
+			<Form
+				className="register-page flex-1"
+				initialValues={initialValues}
+				onSubmit={onSubmit}
+				validationSchema={registerSchema}
+			>
+				<FormPage
+					title="Register an account"
+					background={"/image/background/hexagons.svg"}
+					classes={{body: "flex-gap-y-4", wrapper: "relative"}}
+					outsideElement={(
+						<SelectModalWrapper open={tokenModalOpen}>
+							<FormTokenSelectModal
+								field="token"
+								open={tokenModalOpen}
+								onClose={() => setTokenModalOpen(false)}
+							/>
+						</SelectModalWrapper>
+					)}
 				>
 					<div className="flex flex-gap-x-2">
 						<FormInput
@@ -86,7 +107,7 @@ const RegisterPage: Component = () => {
 							placeholder="First Name"
 							autoComplete="given-name"
 							autoCapitalize="words"
-							className="flex-1"
+							className="flex-[1.3]"
 						/>
 						<FormInput
 							field="last_name"
@@ -117,9 +138,19 @@ const RegisterPage: Component = () => {
 					<NationalityInput field="nationality" />
 					<div className="flex flex-col flex-gap-y-4">
 						<h2 className="text-lg">Purchase Details</h2>
-						<TokenSelect
-							field="token"
-						/>
+						<FormRender>
+							{(formContext) => (
+								<Button
+									className="token-item py-3 !justify-start"
+									color="bg-contrast"
+									type="button"
+									onClick={() => setTokenModalOpen(true)}
+								>
+									<TokenSelectItem compact token={formContext.values.token} />
+									<DropdownIcon className="h-3 w-3 ml-auto" />
+								</Button>
+							)}
+						</FormRender>
 						<FormNumberInput
 							field="usd_amount"
 							placeholder="Purchase Amount $"
@@ -141,8 +172,8 @@ const RegisterPage: Component = () => {
 							Already have account? <Link to="/login">Sign in</Link>
 						</span>
 					</div>
-				</Form>
-			</FormPage>
+				</FormPage>
+			</Form>
 		</Page>
 	)
 }

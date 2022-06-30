@@ -13,9 +13,18 @@
 		font-primary
 }
 
+.select:hover {
+	--input-root-bg: var(--theme-background-paperLight);
+}
+
 .select.multiple {
 	@apply
 		pb-[0.25rem]
+}
+
+.select:hover .dropdown-icon {
+	@apply
+		text-text-primary
 }
 
 .select .dropdown-icon {

@@ -21,10 +21,12 @@ export interface PhoneInputProps {
 const PhoneInput: Component<PhoneInputProps> = (props) => {
 	return (
 		<FormInput
+			className="phone-input"
 			field={props.numberField}
 			placeholder="Phone Number"
 			leftContent={(
 				<FormSelect
+					className="phone-input-select"
 					searchable
 					field={props.codeField}
 					compact
@@ -32,11 +34,11 @@ const PhoneInput: Component<PhoneInputProps> = (props) => {
 					inputStyle="light"
 					valueComponent={(props) => (
 						<div className="flex-1 flex items-center h-6">
-							<img src={props.item?.data?.flagUrl} className="h-full mr-2 rounded-md" />
-							<p style={props.style}>{props.item?.data.dial_code}</p>
+							<p style={props.style}>
+								{props.item?.data.dial_code}
+							</p>
 						</div>
 					)}
-					class="!rounded-r-none !min-w-10 !pl-3"
 					items={countryList.map((countryItem) => ({
 						label: `${countryItem.flag} ${countryItem.name} ${countryItem.dial_code}`,
 						value: countryItem.code,

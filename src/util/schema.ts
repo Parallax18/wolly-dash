@@ -14,7 +14,12 @@ export const registerSchema =  Yup.object().shape({
 	terms_accepted: Yup.bool()
 		.required("Must accept terms and conditions")
 		.oneOf([true], "Must accept terms and conditions"),
-	token: Yup.string().required("Can't be empty"),
+	token: Yup.object().shape({
+		name: Yup.string().required(),
+		symbol: Yup.string().required(),
+		imageUrl: Yup.string(),
+		chain: Yup.string()
+	}),
 	usd_amount: Yup.number()
 		.required("Can't be empty")
 		.min(0.01, "Must be more than 0.01")

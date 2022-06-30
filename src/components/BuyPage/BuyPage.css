@@ -1,41 +1,158 @@
-.form-page .card {
+.buy-page {
 	@apply
-		flex flex-col
-		relative overflow-auto
-		min-h-165
+		h-full
+		flex-1
 }
 
-.form-page .card-body {
+.buy-page .card {
+	box-shadow: 0px 0px 50px rgba(0,0,0,0.6);
+	@apply
+		rounded-paper
+		flex flex-col
+		relative overflow-auto
+		min-h-160
+}
+
+.buy-page .card-body {
 	@apply
 		flex flex-col
 		flex-1
 }
 
-.form-page .form {
+.buy-page .form {
 	@apply
 		flex flex-col 
 }
 
-.form-item {
+.buy-page .form-item {
 	@apply
 		flex flex-col
 }
 
-.form-item > label, .form-item > span {
+.buy-page .form-item > label, .buy-page .form-item > span {
 	@apply
 		text-sm mb-2
 }
 
-.form-select-wrapper {
+
+.buy-page .bonus-buttons {
 	@apply
-		absolute
-		top-0 left-0
-		w-full h-full
-		overflow-hidden
-		pointer-events-none
+		mt-2
+		flex
 }
 
-.form-page.modal-open .form-select-wrapper {
+.buy-page .bonus-button.active {
 	@apply
-		pointer-events-auto
+		bg-primary-main
+		text-primary-contrastText
+		hover:bg-primary-dark
+}
+
+.buy-page .bonus-buttons .percent {
+	@apply
+		ml-1
+		font-semibold
+}
+
+.buy-page .total-tiered-bonus {
+	@apply
+		ml-auto
+		text-sm
+		px-1.5
+		py-0.5
+		bg-background-contrast
+		rounded
+}
+
+.bonus-list {
+	@apply
+		flex flex-col
+		py-2
+		px-4
+		bg-background-contrast
+		rounded-item
+}
+
+.bonus-item {
+	@apply
+		flex
+}
+
+.bonus-item .bonus-label {
+}
+
+.bonus-item .bonus-percent {
+	@apply
+		ml-auto
+}
+
+.bonus-item .bonus-usd {
+	@apply
+		text-right
+		ml-2
+		min-w-20
+}
+
+.bonus-item.total {
+	@apply
+		relative
+		font-bold
+		border-divider
+		mt-2
+}
+
+.bonus-item.total::before {
+	content: " ";
+	@apply
+		absolute
+		-top-1
+		left-0
+		w-full
+		h-[1px]
+		bg-divider
+}
+
+.currency-display-item {
+	@apply
+		py-2
+		px-4
+		flex
+		items-center
+		bg-background-paperLight
+		h-full
+		rounded-r-item
+		w-33
+}
+
+.currency-display-item img {
+	@apply
+		flex
+		items-center justify-center
+		h-8
+		w-8
+		object-center
+		object-cover
+		rounded-full
+}
+
+.currency-display-item .chain-chip {
+	@apply
+		flex
+		items-center justify-center
+		absolute
+		-bottom-0.5
+		-right-0.5
+		w-3.5 h-3.5
+		bg-background-default
+		rounded-full
+		text-2xs
+}
+
+.currency-display-item .text-container {
+	@apply
+		flex flex-col
+		ml-2
+		text-base
+		font-primary
+		relative
 }

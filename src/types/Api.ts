@@ -10,7 +10,9 @@ export interface User {
 	email: string,
 	mobile: string | null,
 	nationality: string,
-	role: "user" | "admin"
+	role: "user" | "admin",
+	purchased: boolean,
+	signup_date: string
 }
 
 export interface Token {
@@ -28,18 +30,65 @@ export interface LoginResponse {
 	tokens: Tokens
 }
 
+export interface TokenBonus {token_id: string, percentage: number}
+
 export interface Stage {
 	id: string,
-	project_id: string,
-	name: string,
+	name: string
 	type: "string",
 	token_price: number,
-	liquidity: number,
 	start_date: string,
 	end_date: string,
 	total_tokens: number,
-	sold_tokens: number,
 	disabled: boolean,
 	min_fiat_amount: number | null,
-	max_fiat_amount: number | null
+	max_fiat_amount: number | null,
+	bonuses: {
+		base_percentage: number,
+		tiered_fiat?: {amount: number, percentage: number}[],
+		payment_tokens?: TokenBonus[],
+		limited_time?: {
+			start_date: string,
+			end_date: string,
+			percentage: number
+		},
+		signup?: {
+			first_purchase_percentage?: 100,
+			limited_time: {
+				minutes_after_signup: 15,
+				percentage: 100
+			}
+		}
+	}
+}
+
+export interface PricesResponse {
+	[key: string]: {
+		[key: string]: number
+	}
+}
+
+export interface PaymentToken {
+	id: string,
+	name: string,
+	short_name: string,
+	chain: string,
+	payment_provider_ids: {
+		[key: string]: string
+	}
+}
+
+export interface Project {
+	id: string,
+	name: string,
+	symbol: string,
+	frontend_url: string,
+	main_site_url: string,
+	wallet: {
+		type: string,
+		name: string,
+		symbol: string,
+	},
+	payment_tokens: PaymentToken[],
+	
 }

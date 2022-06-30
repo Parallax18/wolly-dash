@@ -27,7 +27,12 @@ const Collapse: Component<CollapseProps> = (props) => {
 
 	return (
 		<div className={clsx("collapse", {open: !collapsed})}>
-			<Button className="collapse-header transition-all" flush={collapsed ? undefined : "bottom" } color="transparent" onClick={() => setCollapsed((collapsed) => !collapsed)}>
+			<Button
+				className="collapse-header transition-all"
+				flush={collapsed ? undefined : "bottom" }
+				color="bg-contrast"
+				onClick={() => setCollapsed((collapsed) => !collapsed)}
+			>
 				<div className="title-container">
 					{props.title}
 				</div>
