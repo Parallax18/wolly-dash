@@ -110,7 +110,7 @@ const BuyPage: Component = () => {
 											for <span className="font-semibold mx-1">${formatNumber(formContext.values.usd_amount - 0.48 || 0)}</span>
 										</p>
 										<p className="mt-1">
-											Network fee $0.40
+											Network fee $0.48
 										</p>
 									</>
 								)}
