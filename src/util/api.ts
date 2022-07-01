@@ -4,7 +4,7 @@ import { minMax } from "./number";
 import { MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { AuthContext } from "../context/AuthContext";
-import { APIError, LoginResponse, PricesResponse, Project, Stage, Tokens, User } from "../types/Api";
+import { APIError, BonusCalculations, LoginResponse, PricesResponse, Project, Stage, Tokens, User } from "../types/Api";
 
 export type URLString = `http://${string}.${string}` | `https://${string}.${string}` | `/${string}`
 export type CreateRequestOptions = AxiosRequestConfig & {
@@ -361,6 +361,29 @@ export const useGetCurrentProject = (): CreateRequestResponse<
 
 	const sendRequest = () => {
 		return request.sendRequest({})
+	}
+
+	return { ...request, sendRequest }
+}
+
+export interface BonusCalculationArgs {
+	purchase_token_id: string,
+	purchase_amount: number,
+	token_price: number,
+	bonuses: Stage["bonuses"]
+}
+
+export const useBonusCalculations = (): CreateRequestResponse<
+BonusCalculations,
+	(args: BonusCalculationArgs) => Promise<AxiosResponse<BonusCalculations>>
+> => {
+	const request = useAuthRequest<BonusCalculations>("/calculations/bonus")
+
+	const sendRequest = (args: BonusCalculationArgs) => {
+		return request.sendRequest({
+			method: "POST",
+			data: args
+		})
 	}
 
 	return { ...request, sendRequest }

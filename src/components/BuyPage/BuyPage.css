@@ -64,13 +64,18 @@
 		rounded
 }
 
-.bonus-list {
+/* .bonus-list {
 	@apply
 		flex flex-col
 		py-2
 		px-4
 		bg-background-contrast
 		rounded-item
+} */
+
+.bonus-list.loading .bonus-item {
+	@apply
+		py-1
 }
 
 .bonus-item {
@@ -96,20 +101,8 @@
 .bonus-item.total {
 	@apply
 		relative
-		font-bold
-		border-divider
-		mt-2
-}
-
-.bonus-item.total::before {
-	content: " ";
-	@apply
-		absolute
-		-top-1
-		left-0
-		w-full
-		h-[1px]
-		bg-divider
+		flex-1
+		pr-2
 }
 
 .currency-display-item {

@@ -9,8 +9,17 @@ import Button from "../Button"
 
 const DropdownIcon = _DropdownIcon as unknown as Component<any>
 
+export interface CollapseClasses {
+	header?: string
+	title?: string,
+	root?: string,
+	body?: string,
+	inner?: string
+}
+
 export interface CollapseProps {
-	title: JSX.Element | string
+	title: JSX.Element | string,
+	classes?: CollapseClasses
 }
 
 const Collapse: Component<CollapseProps> = (props) => {
@@ -26,9 +35,9 @@ const Collapse: Component<CollapseProps> = (props) => {
 	}, [props.children])
 
 	return (
-		<div className={clsx("collapse", {open: !collapsed})}>
+		<div className={clsx("collapse", props.classes?.root, {open: !collapsed})}>
 			<Button
-				className="collapse-header transition-all"
+				className={clsx("collapse-header transition-all", props.classes?.header)}
 				flush={collapsed ? undefined : "bottom" }
 				color="bg-contrast"
 				onClick={() => setCollapsed((collapsed) => !collapsed)}
@@ -38,8 +47,8 @@ const Collapse: Component<CollapseProps> = (props) => {
 				</div>
 				<DropdownIcon className="dropdown-icon" />
 			</Button>
-			<div className="collapse-body" style={{["--height" as any]: `${height / 16}rem`}}>
-				<div ref={(el) => innerRef.current = el || undefined} className="collapse-inner">
+			<div className={clsx("collapse-body", props.classes?.body)} style={{["--height" as any]: `${height / 16}rem`}}>
+				<div ref={(el) => innerRef.current = el || undefined} className={clsx("collapse-inner", props.classes?.inner)}>
 					{props.children}
 				</div>
 			</div>

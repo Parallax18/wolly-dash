@@ -107,6 +107,7 @@ export const roundToDP = (num: number, maxDecimals: number): string => {
 	let numStr = num.toString()
 	let numSplit = numStr.split(".")
 	let decimalStr = numStr.split(".")[1]
+	if (maxDecimals === 0) return numSplit[0]
 	if (!decimalStr) {
 		return numStr;
 	}

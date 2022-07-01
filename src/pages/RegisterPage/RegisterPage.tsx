@@ -92,7 +92,7 @@ const RegisterPage: Component = () => {
 				<FormPage
 					title="Register an account"
 					background={"/image/background/hexagons.svg"}
-					classes={{body: "flex-gap-y-4", wrapper: "relative"}}
+					classes={{body: "flex flex-col flex-gap-y-4", wrapper: "relative"}}
 					outsideElement={(
 						<SelectModalWrapper open={tokenModalOpen}>
 							<FormTokenSelectModal

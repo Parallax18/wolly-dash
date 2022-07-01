@@ -62,7 +62,7 @@ export const Loadable: Component<LoadableProps> = ({
 				<LoadingComponent
 					className={clsx(
 						"loadable", variant, loadClass,
-						others.class, {
+						others.className, {
 							full: full, invisible: invisible
 						}
 					)}
@@ -78,7 +78,7 @@ export const Loadable: Component<LoadableProps> = ({
 				<LoadingComponent
 					className={clsx(
 						"loadable", variant, loadClass,
-						others.class, {
+						others.className, {
 							full: full, invisible: invisible
 						}
 					)}
@@ -88,8 +88,8 @@ export const Loadable: Component<LoadableProps> = ({
 					}}
 				/>
 			)}
-			{!component && children}
-			{component && (
+			{!component && !loadValue.loading && children}
+			{component && !loadValue.loading && (
 				<Comp
 					{...others}
 					component={component}

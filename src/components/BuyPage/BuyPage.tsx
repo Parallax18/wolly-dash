@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { Component, ComponentType } from "../../types/Util"
-import { CurrencyItem, deserializeObjFromQuery, dollarItem, formatNumber, isDuplicate, roundToDP, tokenList, useInterval, useStateRef } from "../../util"
+import { CurrencyItem, deserializeObjFromQuery, dollarItem, formatNumber, getBonusName, isDuplicate, roundToDP, tokenList, useBonusCalculations, useInterval, useStateRef } from "../../util"
 import Button from "../Button"
 import Form, { FormContextValue, FormRender } from "../Form"
 import FormInput from "../FormInput"
@@ -26,10 +26,12 @@ import { PricesResponse, TokenBonus } from "../../types/Api"
 import { StageContext } from "../../context/StageContext"
 import { AuthContext } from "../../context/AuthContext"
 import { ProjectContext } from "../../context/ProjectContext"
+import { Loadable, Loader, LoaderContext } from "../Loader"
 
 const BuyPage: Component = () => {
 	const [ timeRemaining, setTimeRemaining ] = useState(0);
 	const { prices, refreshPrices } = useContext(PriceContext)
+	const bonusCalculationRequest = useBonusCalculations()
 
 	const { activeStage } = useContext(StageContext)
 	const { user } = useContext(AuthContext)
@@ -78,6 +80,26 @@ const BuyPage: Component = () => {
 		}
 	}
 
+	const updateBonuses = () => {
+		let vals = valuesRef.current
+		if (!vals.token?.id || !activeStage) return;
+		console.log("SENDING")
+		bonusCalculationRequest.sendRequest({
+			purchase_token_id: vals.token?.id,
+			bonuses: activeStage?.bonuses,
+			purchase_amount: vals.usd_amount,
+			token_price: activeStage.token_price
+		})
+	}
+
+	useEffect(() => {
+		updateBonuses();
+	}, [values])
+
+	useEffect(() => {
+		console.log("BONUS DATA", bonusCalculationRequest.data)
+	}, [bonusCalculationRequest.data])
+
 	const { getTimeRemaining } = useInterval(useCallback(async () => {
 		let prices = await refreshPrices()
 		updatePrices(prices)
@@ -91,30 +113,26 @@ const BuyPage: Component = () => {
 	}
 
 	const tiered_fiat = activeStage?.bonuses.tiered_fiat?.sort((a, b) => a.amount - b.amount) || []
-	const totalTieredFiatBonus = tiered_fiat.reduce((acc, bonus) => values.usd_amount >= bonus.amount ? acc + bonus.percentage : acc, 0)
 
-	let paymentTokenBonus = activeStage?.bonuses.payment_tokens ? activeStage?.bonuses.payment_tokens.find((bonus) => bonus.token_id.toLowerCase() === values.token?.symbol.toLowerCase()) : undefined;
+	let bonuses: {label: string, amount: number}[] = useMemo(() => {
+		let bonusArr;
+		if (bonusCalculationRequest.fetching) {
+			bonusArr = new Array(4).fill(0).map((_, i) => ({label: i.toString(), amount: 0}))
+		} else  {
+			bonusArr = Object.entries(bonusCalculationRequest.data || {}).map(([key, value]) => ({
+				label: getBonusName(key),
+				amount: (value * (activeStage?.token_price || 0)) * 100 / values.usd_amount
+			})).filter((bonus) => bonus.amount > 0)
+		}
 
-	const signupStartTime = new Date(user?.signup_date || "01/01/1970").getTime()
-	const signupEndTime = signupStartTime + 15 * 1000
+		return bonusArr
+	}, [bonusCalculationRequest, activeStage, values.usd_amount])
 
-	const limitedEndTime = new Date(activeStage?.bonuses.limited_time?.end_date || "01/01/1970").getTime()
+	const totalBonus = useMemo(() => {
+		return bonuses.reduce((acc, currBonus) => acc + (currBonus.amount || 0), 0)
+	}, [bonuses])
 
-	let bonuses: {label: string, amount: number}[] = [
-		{label: "Base Bonus", amount: activeStage?.bonuses.base_percentage || 0},
-		{label: "Buy Bonus", amount: totalTieredFiatBonus},
-		{label: "Token Bonus", amount: paymentTokenBonus?.percentage || 0},
-		{label: "First Purchase Bonus", amount: user?.purchased === false ? activeStage?.bonuses.signup?.first_purchase_percentage || 0 : 0},
-		{label: "Limited Signup Bonus", amount: Date.now() < signupEndTime ? activeStage?.bonuses.signup?.first_purchase_percentage || 0 : 0},
-		{label: "Limited Time Bonus", amount: Date.now() < limitedEndTime ? activeStage?.bonuses.limited_time?.percentage || 0 : 0},
-	].filter((bonus) => bonus.amount > 0)
-
-	const totalBonus = bonuses.reduce((acc, currBonus) => acc + (currBonus.amount || 0), 0)
-
-	bonuses = [
-		...bonuses,
-		{label: "Total", amount: totalBonus}
-	]
+	const totalBonusItem = {label: "Total Bonus", amount: totalBonus}
 
 	return (
 		<Page path="/buy" title="Buy">
@@ -195,21 +213,32 @@ const BuyPage: Component = () => {
 						/>
 					</div>
 					<div className="form-item">
-						<span>
-							Bonuses
-						</span>
-						<div className="bonus-list">
-							{bonuses.map((bonus) => (
-								<div
-									key={bonus.label}
-									className={clsx("bonus-item", {total: bonus.label === "Total"})}
-								>
-									<span className="bonus-label">{bonus.label}</span>
-									<span className="bonus-percent">+{bonus.amount}%</span>
-									<span className="bonus-usd">+{roundToDP((bonus.amount || 0) / 100 * values.usd_amount, 2)}$</span>
-								</div>
-							))}
-						</div>
+						<Loader loading={bonusCalculationRequest.fetching}>
+							<span>
+								Bonuses
+							</span>
+							<Collapse
+								classes={{inner: clsx("bonus-list", {loading: bonusCalculationRequest.fetching})}}
+								title={
+									<div className="bonus-item total">
+										<span className="bonus-label">{totalBonusItem.label}</span>
+										<Loadable component="span" length={3} className="bonus-percent">+{totalBonusItem.amount}%</Loadable>
+										<Loadable component="span" length={2} className="bonus-usd">+{roundToDP((totalBonusItem.amount || 0) / 100 * values.usd_amount, 2)}$</Loadable>
+									</div>
+								}
+							>
+								{bonuses.map((bonus) => (
+									<div
+										key={bonus.label}
+										className={clsx("bonus-item", {total: bonus.label === "Total"})}
+									>
+										<Loadable component="span" className="bonus-label">{bonus.label}</Loadable>
+										<Loadable component="span" length={3} className="bonus-percent">+{roundToDP(bonus.amount, 0)}%</Loadable>
+										<Loadable component="span" length={2} className="bonus-usd">+{roundToDP((bonus.amount || 0) / 100 * values.usd_amount, 2)}$</Loadable>
+									</div>
+								))}
+							</Collapse>
+						</Loader>
 					</div>
 					<div className="form-item">
 						<span className="flex">

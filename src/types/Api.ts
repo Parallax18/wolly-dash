@@ -31,6 +31,10 @@ export interface LoginResponse {
 }
 
 export interface TokenBonus {token_id: string, percentage: number}
+export interface LimitedSignupBonus {
+	minutes_after_signup: 15,
+	percentage: 100
+}
 
 export interface Stage {
 	id: string,
@@ -54,10 +58,7 @@ export interface Stage {
 		},
 		signup?: {
 			first_purchase_percentage?: 100,
-			limited_time?: {
-				minutes_after_signup: 15,
-				percentage: 100
-			}
+			limited_time?: LimitedSignupBonus
 		}
 	}
 }
@@ -91,4 +92,8 @@ export interface Project {
 	},
 	payment_tokens: PaymentToken[],
 
+}
+
+export interface BonusCalculations {
+	[key: string]: number
 }
