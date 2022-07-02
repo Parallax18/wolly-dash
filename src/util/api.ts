@@ -4,7 +4,7 @@ import { minMax } from "./number";
 import { MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { AuthContext } from "../context/AuthContext";
-import { APIError, BonusCalculations, LoginResponse, PricesResponse, Project, Stage, Tokens, Transaction, TransactionsResponse, User } from "../types/Api";
+import { APIError, BonusCalculations, LoginResponse, MinimumAmountResponse, PricesResponse, Project, Stage, Tokens, Transaction, TransactionsResponse, User } from "../types/Api";
 
 export type URLString = `http://${string}.${string}` | `https://${string}.${string}` | `/${string}`
 export type CreateRequestOptions = AxiosRequestConfig & {
@@ -421,7 +421,7 @@ export type CreateTransactionRequest = CreateRequestResponse<
 >
 
 export const useCreateTransaction = (): CreateTransactionRequest => {
-	const request = useAuthRequest<Transaction, CreateTransactionArgs>("/user")
+	const request = useAuthRequest<Transaction, CreateTransactionArgs>("/transactions")
 
 	const sendRequest = (args: CreateTransactionArgs) => {
 		return request.sendRequest({
@@ -444,6 +444,23 @@ export const useGetTransactions = (): GetTransactionsRequest => {
 	const sendRequest = (userId: string) => {
 		return request.sendRequest({
 			url: "/" + userId + "/transactions"
+		})
+	}
+
+	return { ...request, sendRequest }
+}
+
+export type GetMinimumAmountRequest = CreateRequestResponse<
+	MinimumAmountResponse,
+	(token_id: string) => Promise<AxiosResponse<MinimumAmountResponse>>
+>
+
+export const useGetMinimumAmount = (): GetMinimumAmountRequest => {
+	const request = useAuthRequest<MinimumAmountResponse>("/tokens")
+
+	const sendRequest = (token_id: string) => {
+		return request.sendRequest({
+			url: "/" + token_id + "/minimum-amount"
 		})
 	}
 

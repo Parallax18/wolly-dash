@@ -92,7 +92,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
 				{copyable && (					
 					<IconButton className="ml-1" type="button" onClick={() => {
 						let input = ref.current;
-						console.log(input)
 						if (!input) return;
 						input.select();
 						input.setSelectionRange(0, 99999);

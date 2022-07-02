@@ -124,3 +124,8 @@ export type Paginated<T> ={
 }
 
 export type TransactionsResponse = Paginated<Transaction>
+
+export interface MinimumAmountResponse {
+	token_id: string,
+	min_amount_fiat: number,
+}
