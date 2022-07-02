@@ -100,7 +100,7 @@ const baseTheme: Record<string, any> = {
 		dark: "#115293"
 	},
 	warning: {
-		contrastText: "#ffffff",
+		contrastText: "#000",
 		light: "#ffb333",
 		main: "#ffa000",
 		dark: "#b27000",

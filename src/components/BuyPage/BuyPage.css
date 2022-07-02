@@ -111,13 +111,21 @@
 		px-4
 		flex
 		items-center
+		justify-start
 		bg-background-paperLight
 		h-full
 		rounded-r-item
 		w-33
 }
 
-.currency-display-item img {
+.currency-display-item .currency-image {
+	@apply
+		w-8 h-8
+		!rounded-full
+		object-cover object-center
+}
+
+.currency-display-item .currency-display-item {
 	@apply
 		flex
 		items-center justify-center
@@ -148,4 +156,12 @@
 		text-base
 		font-primary
 		relative
+		mr-auto
+}
+
+.buy-page .summary-container {
+	@apply
+		p-4
+		bg-background-contrast
+		rounded-button
 }

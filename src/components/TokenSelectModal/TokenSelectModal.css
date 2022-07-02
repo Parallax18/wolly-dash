@@ -4,10 +4,11 @@
 		width-full
 }
 
-.token-item img {
+.token-item .token-img {
 	@apply
 		w-8 h-8
 		mr-4
+		rounded-full
 }
 
 .token-item span {

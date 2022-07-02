@@ -4,18 +4,19 @@ import { minMax } from "./number";
 import { MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { AuthContext } from "../context/AuthContext";
-import { APIError, BonusCalculations, LoginResponse, PricesResponse, Project, Stage, Tokens, User } from "../types/Api";
+import { APIError, BonusCalculations, LoginResponse, PricesResponse, Project, Stage, Tokens, Transaction, TransactionsResponse, User } from "../types/Api";
 
 export type URLString = `http://${string}.${string}` | `https://${string}.${string}` | `/${string}`
 export type CreateRequestOptions = AxiosRequestConfig & {
 	method?: Method
 }
 
-export type CreateRequestResponse<T, K> = {
+export type CreateRequestResponse<T, K, Q = Record<string, unknown>> = {
 	progress: number;
 	uploadProgress: number;
 	downloadProgress: number;
 	data: T | null | undefined;
+	requestData: Q | null | undefined;
 	dataHistory: DataHistoryItem<T | null | undefined>[];
 	requestStatus: RequestStatus;
 	responseStatusCode: number | undefined;
@@ -35,7 +36,7 @@ export type DataHistoryItem<T> = {
 
 const baseUrl = import.meta.env.REACT_APP_API_BASE_URL;
 
-export const useRequest = <T = Record<string, unknown>>(url: URLString, options?: CreateRequestOptions): CreateRequestResponse<T, (options: AxiosRequestConfig) => Promise<AxiosResponse<T>>> => {
+export const useRequest = <T = Record<string, unknown>, K = Record<string, unknown>>(url: URLString, options?: CreateRequestOptions): CreateRequestResponse<T, (options: AxiosRequestConfig) => Promise<AxiosResponse<T>>, K> => {
 	const unmountedRef = useRef(false)
 	const [uploadProgress, setUploadProgress] = useState(0)
 	const [downloadProgress, setDownloadProgress] = useState(0)
@@ -51,6 +52,7 @@ export const useRequest = <T = Record<string, unknown>>(url: URLString, options?
 	const [error, setError] = useState<string>();
 
 	const [data, setData] = useState<T | null>();
+	const [requestData, setRequestData] = useState<K>()
 	const [dataHistory, setDataHistory] = useState<DataHistoryItem<T>[]>([]);
 
 	const addDataToHistory = useCallback((dataToAdd: T | null | undefined) => {
@@ -119,17 +121,16 @@ export const useRequest = <T = Record<string, unknown>>(url: URLString, options?
 
 	let lastReceived = 0;
 	const sendRequest = async (newOptions?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
+		setUploadProgress(0)
+		setDownloadProgress(0)
+		setRequestData(newOptions?.data)
+		setFetching(true)
+		setSuccess(false)
+		setFinished(false)
+		setError(undefined)
+		setRequestStatus("UPLOADING")
+		setResponseStatusCode(undefined)
 		return new Promise((resolve, reject) => {
-			if (unmountedRef.current) return;
-			setUploadProgress(0)
-			setDownloadProgress(0)
-			setFetching(true)
-			setSuccess(false)
-			setFinished(false)
-			setError(undefined)
-			setData(null)
-			setRequestStatus("UPLOADING")
-			setResponseStatusCode(undefined)
 
 			axiosInstance({...(newOptions || {}), url: url + (newOptions?.url || "")})
 				.then((res: AxiosResponse<T>) => {
@@ -138,13 +139,13 @@ export const useRequest = <T = Record<string, unknown>>(url: URLString, options?
 					if (lastReceived > now) return reject("Completed too late");
 					lastReceived = now;
 
+					setFetchedAt(now)
 					setFetching(false)
 					setSuccess(true)
 					setProgress(1)
 					setResponseStatusCode(res.status)
 					setFinished(true)
 					setData(res.data || null)
-					setFetchedAt(now)
 
 					resolve(res)
 			}).catch((error: AxiosError) => {
@@ -156,6 +157,7 @@ export const useRequest = <T = Record<string, unknown>>(url: URLString, options?
 				console.error("ERROR IN API:")
 				console.error(responseError.message)
 
+				setFetchedAt(Date.now())
 				setFetching(false)
 				setProgress(1)
 				setUploadProgress(1)
@@ -164,16 +166,15 @@ export const useRequest = <T = Record<string, unknown>>(url: URLString, options?
 				setFinished(true);
 				setError((error.response?.data as APIError).message || error.message)
 				setResponseStatusCode(error.response?.status)
-				setFetchedAt(Date.now())
 
 				reject(responseError)
 			})
 		})
 	}
 
-	let returnVal: CreateRequestResponse<T, (options: AxiosRequestConfig) => Promise<AxiosResponse<T>>> = {
+	let returnVal: CreateRequestResponse<T, (options: AxiosRequestConfig) => Promise<AxiosResponse<T>>, K> = {
 		progress, uploadProgress, downloadProgress,
-		data, dataHistory,
+		data, requestData, dataHistory,
 		requestStatus, responseStatusCode,
 		sendRequest,
 		finished, fetching, success, error,
@@ -183,8 +184,8 @@ export const useRequest = <T = Record<string, unknown>>(url: URLString, options?
 	return returnVal;
 }
 
-export const useAuthRequest = <T = Record<string, unknown>>(url: URLString, options: CreateRequestOptions = {}, suppliedTokenRef?: MutableRefObject<Tokens>): CreateRequestResponse<T, (newOptions?: AxiosRequestConfig) => Promise<AxiosResponse>> => {
-	const request: CreateRequestResponse<T, (options: AxiosRequestConfig) => Promise<AxiosResponse<T>>> = useRequest<T>(url, options)
+export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, unknown>>(url: URLString, options: CreateRequestOptions = {}, suppliedTokenRef?: MutableRefObject<Tokens>): CreateRequestResponse<T, (newOptions?: AxiosRequestConfig) => Promise<AxiosResponse>, K> => {
+	const request: CreateRequestResponse<T, (options: AxiosRequestConfig) => Promise<AxiosResponse<T>>, K> = useRequest<T, K>(url, options)
 	const { tokensRef, tokens, refreshTokens } = useContext(AuthContext)
 	
 	const newSendRequest = async (newOptions: AxiosRequestConfig = {}): Promise<AxiosResponse<T>> => {
@@ -207,7 +208,7 @@ export const useAuthRequest = <T = Record<string, unknown>>(url: URLString, opti
 				return Promise.reject(error)
 			}
 			tokenRes = tokenRes as AxiosResponse<Tokens>
-			token = tokenRes.data.access.token
+			token = tokenRes.data?.access?.token
 		}
 
 		if (!totalOptions.headers) totalOptions.headers = {}
@@ -217,10 +218,24 @@ export const useAuthRequest = <T = Record<string, unknown>>(url: URLString, opti
 		totalOptions.headers["Authorization"] = "BEARER " + token
 
 		return new Promise((resolve, reject) => {
-			request.sendRequest(totalOptions).then((res) => resolve(res))
+			// if (url.includes("price")) console.log("SENDING PRICE REQUEST")
+			request.sendRequest(totalOptions)
+				.then((res) => resolve(res))
 				.catch((err: AxiosError) => {
 					if (err.code?.toString() === "401") {
 						refreshTokens()
+							.then((res) => {
+								return request.sendRequest({
+									...totalOptions,
+									headers: {
+										...totalOptions.headers,
+										"Authorization": "BEARER " + res.data.access?.token
+									}
+								})
+							.catch((err: AxiosError) => reject(err))
+									.then((res) => resolve(res as AxiosResponse<T>))
+									.catch((err: AxiosError) => reject(err))
+							})
 					}
 					reject(err)
 				})
@@ -244,9 +259,10 @@ export interface UserArgs {
 
 export const useRegisterRequest = (): CreateRequestResponse<
 	LoginResponse,
-	(args: UserArgs) => Promise<AxiosResponse<LoginResponse>>
+	(args: UserArgs) => Promise<AxiosResponse<LoginResponse>>,
+	UserArgs
 > => {
-	const request = useRequest<LoginResponse>("/auth/register")
+	const request = useRequest<LoginResponse, UserArgs>("/auth/register")
 
 	const sendRequest = (args: UserArgs) => {
 		return request.sendRequest({
@@ -260,9 +276,10 @@ export const useRegisterRequest = (): CreateRequestResponse<
 
 export const useLoginRequest = (): CreateRequestResponse<
 	LoginResponse,
-	(email: string, password: string) => Promise<AxiosResponse<LoginResponse>>
+	(email: string, password: string) => Promise<AxiosResponse<LoginResponse>>,
+	{email: string, password: string}
 > => {
-	const request = useRequest<LoginResponse>("/auth/login")
+	const request = useRequest<LoginResponse, {email: string, password: string}>("/auth/login")
 
 	const sendRequest = (email: string, password: string) => {
 		return request.sendRequest({
@@ -278,9 +295,10 @@ export const useLoginRequest = (): CreateRequestResponse<
 
 export const useEditUserRequest = (): CreateRequestResponse<
 	User,
-	(userId: string, args: Partial<UserArgs>) => Promise<AxiosResponse<User>>
+	(userId: string, args: Partial<UserArgs>) => Promise<AxiosResponse<User>>,
+	Partial<UserArgs>
 > => {
-	const request = useAuthRequest<User>("/users")
+	const request = useAuthRequest<User, Partial<UserArgs>>("/users")
 
 	const sendRequest = (userId: string, args: Partial<UserArgs>) => {
 		return request.sendRequest({
@@ -310,9 +328,10 @@ export const useGetUserRequest = (suppliedTokenRef?: MutableRefObject<Tokens>): 
 
 export const useRefreshTokensRequest = (suppliedTokenRef?: MutableRefObject<Tokens>): CreateRequestResponse<
 	Tokens,
-	(refreshToken: string) => Promise<AxiosResponse<Tokens>>
+	(refreshToken: string) => Promise<AxiosResponse<Tokens>>,
+	{refreshToken: string}
 > => {
-	const request = useAuthRequest<Tokens>("/auth/refresh-tokens", {}, suppliedTokenRef)
+	const request = useAuthRequest<Tokens, {refreshToken: string}>("/auth/refresh-tokens", {}, suppliedTokenRef)
 
 	const sendRequest = (refreshToken: string) => {
 		return request.sendRequest({
@@ -374,15 +393,57 @@ export interface BonusCalculationArgs {
 }
 
 export const useBonusCalculations = (): CreateRequestResponse<
-BonusCalculations,
-	(args: BonusCalculationArgs) => Promise<AxiosResponse<BonusCalculations>>
+	BonusCalculations,
+	(args: BonusCalculationArgs) => Promise<AxiosResponse<BonusCalculations>>,
+	BonusCalculationArgs
 > => {
-	const request = useAuthRequest<BonusCalculations>("/calculations/bonus")
+	const request = useAuthRequest<BonusCalculations, BonusCalculationArgs>("/calculations/bonus")
 
 	const sendRequest = (args: BonusCalculationArgs) => {
 		return request.sendRequest({
 			method: "POST",
 			data: args
+		})
+	}
+
+	return { ...request, sendRequest }
+}
+
+export interface CreateTransactionArgs {
+	purchase_token_id: string,
+	purchase_amount: number
+}
+
+export type CreateTransactionRequest = CreateRequestResponse<
+	Transaction,
+	(args: CreateTransactionArgs) => Promise<AxiosResponse<Transaction>>,
+	CreateTransactionArgs
+>
+
+export const useCreateTransaction = (): CreateTransactionRequest => {
+	const request = useAuthRequest<Transaction, CreateTransactionArgs>("/user")
+
+	const sendRequest = (args: CreateTransactionArgs) => {
+		return request.sendRequest({
+			method: "POST",
+			data: args
+		})
+	}
+
+	return { ...request, sendRequest }
+}
+
+export type GetTransactionsRequest = CreateRequestResponse<
+	TransactionsResponse,
+	(userId: string) => Promise<AxiosResponse<TransactionsResponse>>
+>
+
+export const useGetTransactions = (): GetTransactionsRequest => {
+	const request = useAuthRequest<TransactionsResponse>("/users")
+
+	const sendRequest = (userId: string) => {
+		return request.sendRequest({
+			url: "/" + userId + "/transactions"
 		})
 	}
 

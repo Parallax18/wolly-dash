@@ -12,7 +12,8 @@
 
 .chip.compact {
 	@apply
-		py-1.75
-		px-3.5
+		py-1
+		px-2.5
+		text-sm
 
 }

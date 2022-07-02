@@ -7,6 +7,7 @@ import AccountPage from "./pages/AccountPage"
 import HomePage from "./pages/HomePage"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
+import TransactionsPage from "./pages/TransactionsPage"
 
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
 						<Route path="/register" element={<RegisterPage />} />
 						<Route path="/account" element={<AccountPage />} />
 						<Route path="/buy" element={<BuyPage />} />
+						<Route path="/transactions" element={<TransactionsPage />} />
 					</Routes>
 				</Layout>
 			</GlobalContextWrapper>

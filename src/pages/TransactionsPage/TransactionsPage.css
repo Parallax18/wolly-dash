@@ -1,0 +1,46 @@
+.transactions-page {
+	@apply
+		p-4
+}
+
+.transaction-item {
+	@apply
+		flex
+		bg-background-paper
+		px-4
+		py-3
+		rounded-item
+
+		<md:overflow-x-auto
+}
+
+.transaction-item-title {
+	@apply
+		sticky
+		top-0
+		font-semibold
+		z-[2]
+}
+
+.transaction-item .item-value {
+	@apply
+		flex
+		items-center
+		flex-1
+}
+
+.transaction-item .token-value {
+}
+
+.transaction-item .token-image {
+	@apply
+		w-9
+		h-9
+		rounded-full
+		mr-3
+}
+
+.transaction-item .token-value span {
+	@apply
+		font-semibold
+}

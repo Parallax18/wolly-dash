@@ -5,20 +5,23 @@ import { PriceContextWrapper } from "./PriceContext";
 import { ProjectContextWrapper } from "./ProjectContext";
 import { StageContextWrapper } from "./StageContext";
 import { ThemeContextWrapper } from "./ThemeContext";
+import { TransactionsContextWrapper } from "./TransactionsContext";
 
 export const GlobalContextWrapper: Component = ({ children }) => {
 	return (
 		<ThemeContextWrapper>
 			<AlertContextWrapper>
-				<AuthContextWrapper>
-					<PriceContextWrapper>
-						<StageContextWrapper>
-							<ProjectContextWrapper>
-								{children}
-							</ProjectContextWrapper>
-						</StageContextWrapper>
-					</PriceContextWrapper>
-				</AuthContextWrapper>
+				<StageContextWrapper>
+					<ProjectContextWrapper>
+						<AuthContextWrapper>
+							<TransactionsContextWrapper>
+								<PriceContextWrapper>
+									{children}
+								</PriceContextWrapper>
+							</TransactionsContextWrapper>
+						</AuthContextWrapper>
+					</ProjectContextWrapper>
+				</StageContextWrapper>
 			</AlertContextWrapper>
 		</ThemeContextWrapper>
 	)

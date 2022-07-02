@@ -1,12 +1,15 @@
-import React, { createContext, useEffect, useState } from "react"
+import { AxiosResponse } from "axios"
+import React, { createContext, useEffect, useMemo, useState } from "react"
 import { Project } from "../types/Api"
 import { Component } from "../types/Util"
-import { useGetCurrentProject } from "../util"
+import { apiListToCurrencyList, CreateRequestResponse, CurrencyItem, useGetCurrentProject } from "../util"
 
-export const ProjectContext = createContext<ProjectContextData>({})
+export const ProjectContext = createContext<ProjectContextData>({} as ProjectContextData)
 
 export interface ProjectContextData {
-	currentProject: Project | undefined
+	currentProject: Project | undefined,
+	currencyTokenList: CurrencyItem[] | undefined,
+	currProjectRequest: CreateRequestResponse<Project, () => Promise<AxiosResponse<Project>>> 
 }
 
 export const ProjectContextWrapper: Component = ({ children }) => {
@@ -17,8 +20,14 @@ export const ProjectContextWrapper: Component = ({ children }) => {
 		currProjectRequest.sendRequest().then((res) => setCurrentProject(res.data))
 	}, [])
 
+	const currencyTokenList = useMemo(() => {
+		return apiListToCurrencyList(currentProject?.payment_tokens || [])
+	}, [currentProject?.payment_tokens])
+
 	const ProjectData: ProjectContextData = {
-		currentProject
+		currentProject,
+		currencyTokenList,
+		currProjectRequest
 	}
 
 	return (

@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useRef, useState } from "react";
+import React, { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { deserializeValue } from "../util";
 import { serializeValue } from "./data";
 
@@ -159,7 +159,6 @@ export const useInterval = (
 	const lastRan = useRef(Date.now())
 
 	useEffect(() => {
-		console.log("CREATING EFFECT")
 		lastRan.current = Date.now();
 		if (runFirst && !ranRef.current) {
 			ranRef.current = true;
@@ -180,4 +179,18 @@ export const useInterval = (
 export const useRandom = (min: number, max: number): number => {
 	let rands = useRandoms(1, min, max)
 	return rands[0]
+}
+
+export const useDebounce = (func: () => void, ms: number): () => void => {
+	const timeoutRef = useRef<number>()
+
+	const run = useCallback(() => {
+		if (timeoutRef.current) clearTimeout(timeoutRef.current);
+		timeoutRef.current = setTimeout(() => {
+			timeoutRef.current = undefined;
+			func()
+		}, ms)
+	}, [func, ms])
+
+	return run
 }

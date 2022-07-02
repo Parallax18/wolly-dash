@@ -4,7 +4,7 @@ import Card, { CardBody } from "../Card";
 
 import "./TokenSelectModal.css"
 
-import { CurrencyItem, getTokenLabelString, tokenList as fullTokenList } from "../../util";
+import { CurrencyItem, getChainDisplayName, getTokenLabelString, tokenList as fullTokenList } from "../../util";
 import { FormContext } from "../Form";
 import SelectModal, { SelectModalProps } from "../SelectModal";
 import { TokenBonus } from "../../types/Api";
@@ -15,22 +15,16 @@ export type TokenSelectModalProps = Omit<SelectModalProps<CurrencyItem>, "items"
 }
 
 const TokenSelectModal = ({ bonuses, ...others }: TokenSelectModalProps): JSX.Element => {
-	const { currentProject } = useContext(ProjectContext)
-
-	const listTokens = useMemo(() => {
-		return (currentProject?.payment_tokens || [])
-			.map((apiToken) => fullTokenList.find((listToken) => apiToken.id === listToken.id) as CurrencyItem)
-			.filter((token) => token !== undefined)
-	}, [currentProject?.payment_tokens])
+	const { currentProject, currencyTokenList } = useContext(ProjectContext)
 
 	return (
 		<SelectModal<CurrencyItem>
 			{...others}
 			className="token-modal"
-			items={listTokens}
+			items={currencyTokenList || []}
 			searchStringFunction={(token) => token.name + token.chain + token.symbol}
 			itemComponentGenerator={(token) => (
-				<TokenSelectItem token={token} bonuses={bonuses} />
+				<TokenSelectItem token={token} bonuses={bonuses} tokenList={currencyTokenList || []} />
 			)}
 		/>
 	)
@@ -38,20 +32,21 @@ const TokenSelectModal = ({ bonuses, ...others }: TokenSelectModalProps): JSX.El
 
 export interface TokenSelectItemProps {
 	token: CurrencyItem,
+	tokenList: CurrencyItem[]
 	compact?: boolean,
 	bonuses?: TokenBonus[]
 }
 
 export const TokenSelectItem: Component<TokenSelectItemProps> = ({
-	token, compact, bonuses
+	token, compact, bonuses, tokenList
 }) => {
-	let bonusItem = bonuses ? bonuses.find((bonus) => bonus.token_id.toLowerCase() === token.symbol.toLowerCase()) : undefined;
+	let bonusItem = bonuses ? bonuses.find((bonus) => bonus.token_id === token.id) : undefined;
 
 	return  (
 		<>
 			<img className="token-img" src={token.imageUrl} />
 			<span className="token-symbol">{token.symbol}</span>
-			{!compact && <span className="token-name">- {getTokenLabelString(fullTokenList, token)}</span>}
+			{!compact && <span className="token-name">- {getTokenLabelString(tokenList, token)}</span>}
 			{bonusItem && <span className="token-bonus">+{bonusItem.percentage}%</span>}
 		</>
 	)
@@ -72,7 +67,9 @@ export const FormTokenSelectModal: Component<FormTokenSelectModalProps> = ({
 	return (
 		<TokenSelectModal
 			{...others}
-			onChange={(item: CurrencyItem) => formContext.updateValue(field, item)}
+			onChange={(item: CurrencyItem) => {
+				formContext.updateValue(field, item)
+			}}
 
 		/>
 	)

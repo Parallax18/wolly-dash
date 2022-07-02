@@ -13,7 +13,7 @@ export const getTimeLeftLimitedSignupBonus = (signupDate: string | undefined, bo
 }
 
 const nameMap: Record<string, string> = {
-	"base_bonus": "Base Bonus",
+	"base_bonus": "Stage Bonus",
 	"spending_bonus": "Spending Bonus",
 	"limited_time_bonus": "Limited Time Bonus",
 	"first_purchase_bonus": "First Purchase Bonus"

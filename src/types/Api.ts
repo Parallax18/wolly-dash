@@ -97,3 +97,30 @@ export interface Project {
 export interface BonusCalculations {
 	[key: string]: number
 }
+
+export interface Transaction {
+	id: string,
+	payment_id: string,
+	payment_address: string,
+	status: "pending" | "processing" | "completed" | "expired" | "failed"
+	tokens: {
+		base: number,
+		bonuses: Record<string, number>,
+		total: number
+	},
+	payment_token: PaymentToken,
+	initial_purchase_amount_fiat: 1000,
+	initial_purchase_amount_crypto: number,
+	token_price: number,
+	completed_date: string | null,
+	actual_purchase_amount_crypto: number | null,
+	actual_purchase_amount_fiat: number | null,
+	user_id: string
+}
+
+export type Paginated<T> ={ 
+	after: [],
+	data: T[]
+}
+
+export type TransactionsResponse = Paginated<Transaction>

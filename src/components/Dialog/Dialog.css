@@ -1,0 +1,31 @@
+.dialog {
+	@apply
+		fixed
+		top-1/2 left-1/2
+		-translate-x-1/2 -translate-y-1/2
+		z-[21]
+		transition-all
+}
+
+.dialog:not(.open) {
+	@apply
+		translate-y-0
+		top-full
+}
+
+.overlay {
+	@apply
+		z-[20]
+		fixed
+		top-0 left-0
+		w-full
+		h-full
+		bg-background-overlay
+		transition-opacity
+}
+
+.overlay:not(.open) {
+	@apply
+		opacity-0
+		pointer-events-none
+}

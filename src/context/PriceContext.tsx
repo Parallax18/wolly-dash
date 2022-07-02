@@ -1,16 +1,22 @@
+import { AxiosResponse } from "axios"
 import React, { createContext, useEffect, useState } from "react"
 import { PricesResponse } from "../types/Api"
 import { Component } from "../types/Util"
-import { useGetPrices } from "../util"
+import { CreateRequestResponse, useGetPrices } from "../util"
 
 export const PriceContext = createContext<PriceContextData>({
 	prices: {},
-	refreshPrices: () => Promise.reject()
+	refreshPrices: () => Promise.reject(),
+	priceRequest: {} as CreateRequestResponse<PricesResponse, () => Promise<AxiosResponse<PricesResponse>>>
 })
 
 export interface PriceContextData {
 	prices: PricesResponse
 	refreshPrices: () => Promise<PricesResponse>
+	priceRequest: CreateRequestResponse<
+		PricesResponse,
+		() => Promise<AxiosResponse<PricesResponse>>
+	>
 }
 
 export const PriceContextWrapper: Component = ({ children }) => {
@@ -27,12 +33,9 @@ export const PriceContextWrapper: Component = ({ children }) => {
 
 	const PriceData: PriceContextData = {
 		prices: prices,
-		refreshPrices
+		refreshPrices,
+		priceRequest
 	}
-
-	useEffect(() => {
-		refreshPrices()
-	}, [])
 
 	return (
 		<PriceContext.Provider value={PriceData}>

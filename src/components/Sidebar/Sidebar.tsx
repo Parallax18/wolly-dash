@@ -13,11 +13,13 @@ import { AuthContext } from "../../context/AuthContext"
 import { useContext } from "react"
 
 import BuyIcon from "../../svg/icons/shopping-cart.svg"
+import TransactionsIcon from "../../svg/icons/payments.svg"
 
 const navList = [
 	{label: "Dashboard", path: "/", icon: DashboardIcon},
 	{label: "Account", path: "/account", icon: AccountIcon},
-	{label: "Buy", path: "/buy", icon: BuyIcon}
+	{label: "Buy", path: "/buy", icon: BuyIcon},
+	{label: "Transactions", path: "/transactions", icon: TransactionsIcon},
 ]
 
 const bottomList = [

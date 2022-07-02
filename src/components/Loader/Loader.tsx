@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import React, { createContext, useContext, useEffect, useState } from "react"
+import React, { createContext, useContext, useEffect, useRef, useState } from "react"
 import { Component, ComponentType } from "../../types/Util"
 import { useRandom, useRandoms } from "../../util"
 import "./Loader.css"
@@ -38,19 +38,38 @@ export type LoadableProps = {
 
 export const Loadable: Component<LoadableProps> = ({
 	component, children, loadStyles,
-	loadElement, variant = "text", loadClass = {},
+	loadElement, variant, loadClass = {},
 	full, length, invisible, ...others
 }) => {
 	const loadValue = useContext(LoaderContext)
+	const compRef = useRef<HTMLElement>()
+
+	useEffect(() => {
+		let comp = compRef.current
+		if (!comp) return;
+		const { height } = comp.getBoundingClientRect()
+		const style = getComputedStyle(comp)
+		setHeights({
+			height: `${height}px`,
+			line: style.lineHeight
+		})
+	}, [compRef.current])
+
+	const [ heights, setHeights ] = useState({
+		line: "1.5em",
+		height: "1em"
+	})
 
 	const allowedLoaderElements: (keyof JSX.IntrinsicElements)[] = [
 		"a", "p", "h1", "h2", "h3", "h4", "h5", "h6", "label",
 		"span"
 	]
 
-	const LoadingComponent =
-		((allowedLoaderElements.includes(component as keyof JSX.IntrinsicElements) ?
-			component : "div")) as Component<any>
+	let allowedComponent = allowedLoaderElements.includes(component as keyof JSX.IntrinsicElements)
+
+	let newVariant = variant === undefined ? (allowedComponent ? "text" : "block") : variant
+
+	const LoadingComponent = (allowedComponent ? component : "div") as Component<any>
 
 	const Comp = component as Component<any>
 
@@ -60,15 +79,18 @@ export const Loadable: Component<LoadableProps> = ({
 		<>
 			{loadElement !== undefined && loadValue.loading && (
 				<LoadingComponent
+					ref={(el: HTMLElement) => compRef.current = el}
 					className={clsx(
-						"loadable", variant, loadClass,
+						"loadable", "transform", newVariant, loadClass,
 						others.className, {
 							full: full, invisible: invisible
 						}
 					)}
 					style={{
 						...loadStyles,
-						"--length": `${length || random}em`
+						"--length": `${length || random}em`,
+						marginTop: newVariant === "text" && `calc((${heights.line} - ${heights.height}) / 2)`,
+						marginBottom: newVariant === "text" && `calc((${heights.line} - ${heights.height}) / 2)`
 					}}
 				>
 					{loadElement}
@@ -76,15 +98,18 @@ export const Loadable: Component<LoadableProps> = ({
 			)}
 			{loadValue.loading && (
 				<LoadingComponent
+					ref={(el: HTMLElement) => compRef.current = el}
 					className={clsx(
-						"loadable", variant, loadClass,
+						"loadable", "transform", newVariant, loadClass,
 						others.className, {
 							full: full, invisible: invisible
 						}
 					)}
 					style={{
 						...loadStyles,
-						"--length": `${length || random}em`
+						"--length": `${length || random}em`,
+						marginTop: newVariant === "text" && `calc((${heights.line} - ${heights.height}) / 2)`,
+						marginBottom: newVariant === "text" &&`calc((${heights.line} - ${heights.height}) / 2)`
 					}}
 				/>
 			)}

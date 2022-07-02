@@ -6,7 +6,7 @@ import Page from "../../components/Page"
 import { AlertContext } from "../../context/AlertContext"
 import { AuthContext } from "../../context/AuthContext"
 import { Component } from "../../types/Util"
-import { getCountryCodeFromDialCode, getDialCodeFromCountryCode, pick, splitPhoneNumber, useEditUserRequest, userUpdateSchema } from "../../util"
+import { errorToString, getCountryCodeFromDialCode, getDialCodeFromCountryCode, pick, splitPhoneNumber, useEditUserRequest, userUpdateSchema } from "../../util"
 
 import "./AccountPage.css"
 
@@ -56,7 +56,7 @@ const AccountPage: Component = () => {
 			})
 			.catch((err) => {
 				alertContext.addAlert({
-					type: "error", label: "Error updating user" + (err.message ? `: ${err.message}` : "")
+					type: "error", label: errorToString(err, "Error updating user")
 				})
 			})
 	}

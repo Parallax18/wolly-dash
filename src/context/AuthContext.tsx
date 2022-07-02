@@ -26,7 +26,7 @@ export interface AuthContextData {
 	setTokens: (newTokens: Tokens) => void,
 	login: (user: User, tokens: Tokens) => void,
 	logout: () => void,
-	refreshTokens: () => Promise<AxiosResponse | AxiosError>,
+	refreshTokens: () => Promise<AxiosResponse<Tokens>>,
 	tokensFetchedAt: number,
 	updateUser: (newUserProps: Partial<User>) => void,
 }

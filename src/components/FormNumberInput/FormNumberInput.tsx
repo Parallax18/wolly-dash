@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import { Component } from "../../types/Util"
-import { formatPrecision, getDecimalPlaces, roundToDP } from "../../util"
+import { formatPrecision, getDecimalPlaces, floorToDP } from "../../util"
 import { FormContext } from "../Form/Form"
 import Input, { InputProps } from "../Input"
 
@@ -31,7 +31,7 @@ const FormNumberInput: Component<FormNumberInputProps> = ({ field, maxDecimals =
 		let fullNumber = getFullNumberFromPartialNumber(newValue, formContext.values[field])
 
 		const newNumValue = Number.parseFloat(newValue)
-		newValue = roundToDP(newNumValue, maxDecimals)
+		newValue = floorToDP(newNumValue, maxDecimals)
 		const newFullNumber = Number.parseFloat(newValue)
 
 		if (!Number.isNaN(fullNumber)) formContext.updateValue(field, newFullNumber)
@@ -44,9 +44,8 @@ const FormNumberInput: Component<FormNumberInputProps> = ({ field, maxDecimals =
 	}
 
 	const updateStrValue = () => {
-		console.log(formContext.values, field)
 		setStrValue(
-			roundToDP(formContext.values[field].toString(), maxDecimals)
+			floorToDP(formContext.values[field].toString(), maxDecimals)
 		)
 	}
 

@@ -55,7 +55,7 @@ const Button: Component<ButtonProps> = ({
 				disabled, compact,
 				loading, fluid,
 				"text-fill": textFill,
-				"rounded-full": rounded,
+				"!rounded-full": rounded,
 				[`flush-${flush}`]: flush,
 				[`size-${size}`]: size
 			})}

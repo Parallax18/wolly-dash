@@ -12,7 +12,7 @@ import PasswordIcon from "../../svg/icons/lock-outline.svg"
 import Form from "../../components/Form"
 
 import FormInput from "../../components/FormInput"
-import { useLoginRequest } from "../../util"
+import { errorToString, useLoginRequest } from "../../util"
 import { AuthContext } from "../../context/AuthContext"
 import { AlertContext } from "../../context/AlertContext"
 import { useContext } from "react"
@@ -42,7 +42,7 @@ const LoginPage: Component = () => {
 		}).catch((err) => {
 			alertContext.addAlert({
 				type: "error",
-				label: "Error while logging in" + (err.message ? `: ${err.message}` : "")
+				label: errorToString(err, "Error while logging in")
 			})
 		})
 	}

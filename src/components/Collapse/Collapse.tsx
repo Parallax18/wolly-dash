@@ -37,6 +37,7 @@ const Collapse: Component<CollapseProps> = (props) => {
 	return (
 		<div className={clsx("collapse", props.classes?.root, {open: !collapsed})}>
 			<Button
+				type="button"
 				className={clsx("collapse-header transition-all", props.classes?.header)}
 				flush={collapsed ? undefined : "bottom" }
 				color="bg-contrast"

@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
-import { useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { Component, ComponentType } from "../../types/Util"
-import { CurrencyItem, deserializeObjFromQuery, dollarItem, formatNumber, getBonusName, isDuplicate, roundToDP, tokenList, useBonusCalculations, useInterval, useStateRef } from "../../util"
+import { CurrencyItem, deserializeObjFromQuery, dollarItem, formatLargeNumber, formatNumber, getBonusName, isDuplicate, floorToDP, roundToNearest, tokenList, useBonusCalculations, useDebounce, useInterval, useStateRef, useCreateTransaction, errorToString } from "../../util"
 import Button from "../Button"
 import Form, { FormContextValue, FormRender } from "../Form"
 import FormInput from "../FormInput"
@@ -27,19 +27,24 @@ import { StageContext } from "../../context/StageContext"
 import { AuthContext } from "../../context/AuthContext"
 import { ProjectContext } from "../../context/ProjectContext"
 import { Loadable, Loader, LoaderContext } from "../Loader"
+import { AlertContext } from "../../context/AlertContext"
+import { TransactionsContext } from "../../context/TransactionsContext"
 
 const BuyPage: Component = () => {
 	const [ timeRemaining, setTimeRemaining ] = useState(0);
-	const { prices, refreshPrices } = useContext(PriceContext)
+	const { prices, refreshPrices, priceRequest } = useContext(PriceContext)
 	const bonusCalculationRequest = useBonusCalculations()
+	const [ bonusUSDFixed, setBonusUSDFixed ] = useState(0)
 
 	const { activeStage } = useContext(StageContext)
 	const { user } = useContext(AuthContext)
-	const { currentProject } = useContext(ProjectContext)
+	const { currentProject, currencyTokenList, currProjectRequest } = useContext(ProjectContext)
 
 	const [ searchParams, setSearchParams ] = useSearchParams()
 	const [ tokenModalOpen, setTokenModalOpen ] = useState(false)
 	const lastChanged = useRef("usd_amount")
+
+	const { createTransactionRequest, createTransaction } = useContext(TransactionsContext)
 
 	const params = deserializeObjFromQuery(
 		new URLSearchParams(searchParams),
@@ -49,10 +54,16 @@ const BuyPage: Component = () => {
 	const initialValues = {
 		usd_amount: params.usd_amount as number || 1000,
 		buy_token_amount: 1,
-		token: tokenList.find((token) => token.id === params.token_id || "ETH")
+		token: currencyTokenList?.[0]
 	}
-
+	
 	const [ values, setValues, valuesRef ] = useStateRef(initialValues)
+	
+	useEffect(() => {
+		if (values.token === undefined)
+		updateValue("token", currencyTokenList?.[0])
+	}, [values?.token, currencyTokenList])
+
 
 	const updateValue = (key: string, value: any) => {
 		if (["usd_amount", "buy_token_amount"].includes(key)) lastChanged.current = key;
@@ -80,27 +91,35 @@ const BuyPage: Component = () => {
 		}
 	}
 
-	const updateBonuses = () => {
+	const [ bonusLoading, setBonusLoading ] = useState(false)
+
+	const fetchBonuses = useDebounce(() => {
 		let vals = valuesRef.current
 		if (!vals.token?.id || !activeStage) return;
-		console.log("SENDING")
+		let usd = vals.usd_amount
 		bonusCalculationRequest.sendRequest({
 			purchase_token_id: vals.token?.id,
 			bonuses: activeStage?.bonuses,
 			purchase_amount: vals.usd_amount,
 			token_price: activeStage.token_price
+		}).then(() => {
+			setBonusUSDFixed(usd)
+		}).finally(() => {
+			setBonusLoading(false)
 		})
+	}, 700)
+
+	const updateBonuses = () => {
+		setBonusLoading(true)
+		fetchBonuses()
 	}
 
 	useEffect(() => {
 		updateBonuses();
-	}, [values])
-
-	useEffect(() => {
-		console.log("BONUS DATA", bonusCalculationRequest.data)
-	}, [bonusCalculationRequest.data])
+	}, [values, activeStage])
 
 	const { getTimeRemaining } = useInterval(useCallback(async () => {
+		if (Date.now() - priceRequest.fetchedAt < 60 * 100 || priceRequest.fetching) return;
 		let prices = await refreshPrices()
 		updatePrices(prices)
 	}, []), 60*1000, true)
@@ -109,30 +128,48 @@ const BuyPage: Component = () => {
 	useInterval(useCallback(() => setTimeRemaining(Math.floor(getTimeRemaining() / 1000)), []), 1000, true)
 
 	const toDisplay = (num: number) => {
-		return roundToDP(num, 5)
+		return floorToDP(num, 5)
 	}
 
 	const tiered_fiat = activeStage?.bonuses.tiered_fiat?.sort((a, b) => a.amount - b.amount) || []
-
-	let bonuses: {label: string, amount: number}[] = useMemo(() => {
-		let bonusArr;
-		if (bonusCalculationRequest.fetching) {
-			bonusArr = new Array(4).fill(0).map((_, i) => ({label: i.toString(), amount: 0}))
-		} else  {
-			bonusArr = Object.entries(bonusCalculationRequest.data || {}).map(([key, value]) => ({
-				label: getBonusName(key),
-				amount: (value * (activeStage?.token_price || 0)) * 100 / values.usd_amount
-			})).filter((bonus) => bonus.amount > 0)
+	let selectedTier = 0
+	tiered_fiat.forEach((tier) => {
+		if (tier.amount > selectedTier && values.usd_amount >= tier.amount) {
+			selectedTier = tier.amount
 		}
+	})
+
+	let bonuses: {label: string, amount: number, dollar: number}[] = useMemo(() => {
+		let bonusArr = Object.entries(bonusCalculationRequest.data || {}).map(([key, value]) => ({
+			label: getBonusName(key),
+			amount: (value * (activeStage?.token_price || 0)) * 100 / (bonusUSDFixed || 1),
+			dollar: (value * (activeStage?.token_price || 0))
+		})).filter((bonus) => bonus.amount > 0)
 
 		return bonusArr
-	}, [bonusCalculationRequest, activeStage, values.usd_amount])
+	}, [bonusCalculationRequest, activeStage])
 
 	const totalBonus = useMemo(() => {
-		return bonuses.reduce((acc, currBonus) => acc + (currBonus.amount || 0), 0)
+		return bonuses.reduce((acc, currBonus) => ({amount: acc.amount + (currBonus.amount || 0), dollar: acc.dollar + (currBonus.dollar || 0)}), {amount: 0, dollar: 0})
 	}, [bonuses])
 
-	const totalBonusItem = {label: "Total Bonus", amount: totalBonus}
+	const totalBonusItem = {label: "Total Bonus", amount: totalBonus.amount, dollar: totalBonus.dollar}
+
+	const alertContext = useContext(AlertContext)
+	const navigate = useNavigate()
+
+	const createPurchaseTransaction = () => {
+		if (!values.token?.id) return;
+		createTransaction({
+			purchase_amount: values.usd_amount,
+			purchase_token_id: values.token?.id
+		}).then((res) => {
+			alertContext.addAlert({type: "success", label: "Successfully created transaction", duration: 4000})
+			navigate("/transactions?id=" + res.data.id)
+		}).catch((err) => {
+			alertContext.addAlert({type: "error", label: errorToString(err, "Error creating transaction")})
+		})
+	}
 
 	return (
 		<Page path="/buy" title="Buy">
@@ -144,141 +181,128 @@ const BuyPage: Component = () => {
 					setValues(newVals as typeof values)
 					updatePrices()
 				}}
-				onSubmit={() => {}}
+				onSubmit={() => createPurchaseTransaction()}
 			>
-				<FormPage
-					title={`Buy ${currentProject?.symbol.toUpperCase() || "Tokens"}`}
-					classes={{body: "flex-gap-y-6", wrapper: "relative"}}
-					outsideElement={
-						<SelectModalWrapper open={tokenModalOpen}>
-							<FormTokenSelectModal
-								bonuses={activeStage?.bonuses.payment_tokens}
-								className="fixed pointer-events-auto"
-								open={tokenModalOpen}
-								onClose={() => setTokenModalOpen(false)}
-								field="token"
+				<Loader loading={currProjectRequest.fetching}>
+					<FormPage
+						title={`Buy ${currentProject?.symbol.toUpperCase() || "Tokens"}`}
+						classes={{body: "flex-gap-y-6", wrapper: "relative"}}
+						outsideElement={
+							<SelectModalWrapper open={tokenModalOpen}>
+								<FormTokenSelectModal
+									bonuses={activeStage?.bonuses.payment_tokens}
+									className="fixed pointer-events-auto"
+									open={tokenModalOpen}
+									onClose={() => setTokenModalOpen(false)}
+									field="token"
+								/>
+							</SelectModalWrapper>
+						}
+					>
+						<div className="form-item">
+							<label htmlFor="usd-amount">I want to spend</label>
+							<FormNumberInput
+								id="usd-amount"
+								field="usd_amount"
+								rightContent={<CurrencyItemDisplay currencyItem={dollarItem} />}
+								onFocus={() => lastChanged.current = "usd_amount"}
 							/>
-						</SelectModalWrapper>
-					}
-				>
-					<div className="form-item">
-						<label htmlFor="usd-amount">I want to spend</label>
-						<FormNumberInput
-							id="usd-amount"
-							field="usd_amount"
-							rightContent={<CurrencyItemDisplay currencyItem={dollarItem} />}
-							onFocus={() => lastChanged.current = "usd_amount"}
-						/>
-						<div className="bonus-buttons flex-gap-x-2">
-							{tiered_fiat.map((bonus) => (
-								<Button
-									key={bonus.amount}
-									size="tiny"
-									color="bg-light"
-									className={clsx("bonus-button", {
-										active: values.usd_amount >= bonus.amount
-									})}
-									onClick={() => updateValue("usd_amount", bonus.amount)}
-								>
-									<span className="amount">${bonus.amount}</span>
-									<span className="percent">+{bonus.percentage}%</span>
-								</Button>
-							))}
+							<div className="bonus-buttons flex-gap-x-2">
+								{tiered_fiat.map((bonus) => (
+									<Button
+										type="button"
+										key={bonus.amount}
+										size="tiny"
+										color="bg-light"
+										className={clsx("bonus-button", {
+											active: selectedTier === bonus.amount
+										})}
+										onClick={() => updateValue("usd_amount", bonus.amount)}
+									>
+										<span className="amount">${bonus.amount}</span>
+										<span className="percent">+{bonus.percentage}%</span>
+									</Button>
+								))}
+							</div>
 						</div>
-					</div>
-					<div className="form-item">
-						<label htmlFor="buy-token-amount">I want to buy with</label>
-						<FormNumberInput
-							id="buy-token-amount"
-							field="buy_token_amount"
-							onFocus={() => lastChanged.current = "buy_token_amount"}
-							maxDecimals={5}
-							rightContent={(
-								<FormRender>
-									{(formContext) => (
-										<CurrencyItemDisplay
-											currencyItem={tokenList.find((item) => item === formContext.values.token)}
-											currencyList={tokenList}
-											component={Button}
-											color="bg-light"
-											flush="left"
-											onClick={() => setTokenModalOpen(true)}
-											bonuses={activeStage?.bonuses.payment_tokens}
-										>
-											<DropdownIcon className="w-3 h-3 ml-2 fill-current !text-text-primary" />
-										</CurrencyItemDisplay>
-									)}
-								</FormRender>
-							)}
-						/>
-					</div>
-					<div className="form-item">
-						<Loader loading={bonusCalculationRequest.fetching}>
+						<div className="form-item">
+							<label htmlFor="buy-token-amount">I want to buy with</label>
+							<FormNumberInput
+								id="buy-token-amount"
+								field="buy_token_amount"
+								onFocus={() => lastChanged.current = "buy_token_amount"}
+								maxDecimals={5}
+								rightContent={(
+									<FormRender>
+										{(formContext) => (
+											<CurrencyItemDisplay
+												currencyItem={formContext.values.token}
+												currencyList={currencyTokenList}
+												component={Button}
+												type="button"
+												color="bg-light"
+												flush="left"
+												onClick={() => setTokenModalOpen(true)}
+												bonuses={activeStage?.bonuses.payment_tokens}
+											>
+												<DropdownIcon className="w-3 h-3 ml-2 fill-current !text-text-primary" />
+											</CurrencyItemDisplay>
+										)}
+									</FormRender>
+								)}
+							/>
+						</div>
+						<div className="form-item">
 							<span>
 								Bonuses
 							</span>
-							<Collapse
-								classes={{inner: clsx("bonus-list", {loading: bonusCalculationRequest.fetching})}}
-								title={
-									<div className="bonus-item total">
-										<span className="bonus-label">{totalBonusItem.label}</span>
-										<Loadable component="span" length={3} className="bonus-percent">+{totalBonusItem.amount}%</Loadable>
-										<Loadable component="span" length={2} className="bonus-usd">+{roundToDP((totalBonusItem.amount || 0) / 100 * values.usd_amount, 2)}$</Loadable>
-									</div>
-								}
-							>
-								{bonuses.map((bonus) => (
-									<div
-										key={bonus.label}
-										className={clsx("bonus-item", {total: bonus.label === "Total"})}
-									>
-										<Loadable component="span" className="bonus-label">{bonus.label}</Loadable>
-										<Loadable component="span" length={3} className="bonus-percent">+{roundToDP(bonus.amount, 0)}%</Loadable>
-										<Loadable component="span" length={2} className="bonus-usd">+{roundToDP((bonus.amount || 0) / 100 * values.usd_amount, 2)}$</Loadable>
-									</div>
-								))}
-							</Collapse>
-						</Loader>
-					</div>
-					<div className="form-item">
-						<span className="flex">
-							Summary
-							<span className="ml-auto">
-								Quote updates in {timeRemaining}s
+							<Loader loading={bonusLoading}>
+								<Collapse
+									classes={{inner: "bonus-list"}}
+									title={
+										<div className="bonus-item total">
+											<span className="bonus-label">{totalBonusItem.label}</span>
+											<Loadable component="span" length={2} className="bonus-percent">+{floorToDP(totalBonusItem.amount || 0, 0)}%</Loadable>
+											<Loadable component="span" length={2.5} className="bonus-usd">+{floorToDP((totalBonusItem.dollar || 0), 2)}$</Loadable>
+										</div>
+									}
+								>
+									{bonuses.map((bonus) => (
+										<div
+											key={bonus.label}
+											className={clsx("bonus-item", {total: bonus.label === "Total"})}
+										>
+											<Loadable component="span" className="bonus-label">{bonus.label}</Loadable>
+											<Loadable component="span" length={2} className="bonus-percent">+{floorToDP(bonus.amount || 0, 0)}%</Loadable>
+											<Loadable component="span" length={2.5} className="bonus-usd">+{floorToDP(bonus.dollar || 0, 2)}$</Loadable>
+										</div>
+									))}
+								</Collapse>
+							</Loader>
+						</div>
+						<div className="form-item">
+							<span className="flex">
+								Summary
+								<span className="ml-auto">
+									Quote updates in {timeRemaining}s
+								</span>
 							</span>
-						</span>
-						<Collapse title={
-							<>
+							<div className="summary-container">
 								You spend
 								<span className="font-semibold mx-1">
 									{toDisplay(values.buy_token_amount)} {values.token?.symbol}
 								</span>
 								for <span className="font-semibold mx-1">
-									${formatNumber(values.usd_amount + values.usd_amount * totalBonus / 100 || 0)}
-								</span>
-							</>
-						}>
-							<>
-								<p>
-									{toDisplay(values.buy_token_amount)} {values.token?.symbol}
-									{" "}@<span className="ml-1">
-										${prices[values.token?.symbol || ""]?.USD || 1}
-									</span>{" "}for
-									<span className="font-semibold mx-1">
-										${formatNumber(values.usd_amount || 0)}
-									</span>
-								</p>
-								<p>
-									A total bonus of <span className="font-semibold">{totalBonus}%</span> for <span className="font-semibold">${formatNumber(totalBonus / 100*values.usd_amount)}</span>
-								</p>
-							</>
-						</Collapse>
-					</div>
-					<div className="flex-1 !mb-0" />
-					<Button color="primary" rounded>
-						Continue
-					</Button>
-				</FormPage>
+									{formatLargeNumber((values.usd_amount + (totalBonus.dollar || 0)) / (activeStage?.token_price || 1))}
+								</span> {currentProject?.symbol}
+							</div>
+						</div>
+						<div className="flex-1 !mb-0" />
+						<Button color="primary" rounded loading={createTransactionRequest.fetching}>
+							Pay
+						</Button>
+					</FormPage>
+				</Loader>
 			</Form>
 		</Page>
 	)
@@ -301,7 +325,7 @@ export const CurrencyItemDisplay: Component<CurrencyItemDisplayProps> = ({
 	currencyItem, component = "div", children, currencyList,
 	bonuses, classes, ...others
 }) => {
-	const bonusItem = bonuses ? bonuses.find((bonus) => bonus.token_id.toLowerCase() === currencyItem?.symbol.toLowerCase()) : undefined;
+	const bonusItem = bonuses ? bonuses.find((bonus) => bonus.token_id.toLowerCase() === currencyItem?.id?.toLowerCase()) : undefined;
 
 	const Comp = (component || "div") as Component<any>
 	
@@ -320,7 +344,8 @@ export const CurrencyItemDisplay: Component<CurrencyItemDisplayProps> = ({
 				)
 			}>
 			<div className="relative">
-				<img
+				<Loadable component="img"
+					className="currency-image"
 					src={currencyItem?.imageUrl}
 				/>
 				{duplicate && (
@@ -329,12 +354,12 @@ export const CurrencyItemDisplay: Component<CurrencyItemDisplayProps> = ({
 					</div>
 				)}
 			</div>
-			<span className="text-container">
+			<Loadable length={2} component="span" className="text-container">
 				{currencyItem?.symbol}
 				{bonusItem && <span className={clsx("text-2xs text-success-light font-bold bg-background-contrast py-0.5 px-1.5 rounded-full", classes?.bonusChip)}>
 					+{bonusItem.percentage}%
 				</span>}
-			</span>
+			</Loadable>
 			{children}
 		</Comp>
 	)

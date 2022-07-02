@@ -1,4 +1,5 @@
 import { countries } from "country-flags-svg"
+import { PaymentToken, Transaction } from "../types/Api"
 import { isDuplicate } from "./data"
 
 export interface CurrencyItem {
@@ -6,7 +7,7 @@ export interface CurrencyItem {
 	name: string,
 	symbol: string,
 	imageUrl: string,
-	chain?: "ERC20" | "BEP20" | "TRC20"
+	chain?: string
 }
 
 export const tokenList: CurrencyItem[] = [
@@ -63,7 +64,46 @@ export const tokenList: CurrencyItem[] = [
 	}
 ]
 
+const tokenChainMap: Record<string, string[]> = {
+	"ERC20": ["ERC-20", "ERC20", "ETH", "ETHEREUM"],
+	"BSC": ["BSC", "BINANCE SMART CHAIN", "BEP20", "BEP-20"],
+	"BTC": ["BTC", "BITCOIN"]
+}
 
+export const getWalletQRValue = (payment_token: PaymentToken, address: string): string => {
+	let chain = payment_token.chain.toLowerCase() === "bitcoin" ? "bitcoin" : "ethereum";
+	return `${chain}:${address}`
+}
+
+const tokenChainMapEntries = Object.entries(tokenChainMap)
+
+export const getChainDisplayName = (chain: string | undefined): string | undefined => {
+	if (!chain) return "ERC20"
+	for (let i = 0; i < tokenChainMapEntries.length; i++) {
+		const [name, aliases] = tokenChainMapEntries[i]
+		if (aliases.includes(chain.toUpperCase())) {
+			return name;
+		}
+	}
+	return chain;
+}
+
+export const apiToCurrency = (apiToken: PaymentToken) => {
+	let tokenListItem = tokenList.find((listToken) => apiToken.short_name === listToken.symbol)
+	return {
+		id: apiToken.id,
+		name: apiToken.name,
+		symbol: apiToken.short_name,
+		imageUrl: tokenListItem?.imageUrl || "",
+		chain: getChainDisplayName(apiToken.chain)
+	} as CurrencyItem
+}
+
+export const apiListToCurrencyList = (tokens: PaymentToken[]) => {
+	return (tokens || [])
+		.map((apiToken) => apiToCurrency(apiToken))
+		.filter((token) => token !== undefined)
+}
 
 export const fiatList: CurrencyItem[] = [
 	{
@@ -77,6 +117,6 @@ export const dollarItem = fiatList[0]
 
 export const getTokenLabelString = (list: CurrencyItem[], item: CurrencyItem) => {
 	let duplicate = isDuplicate(item, list, (currItem: CurrencyItem) => currItem.symbol === item.symbol)
-	if (duplicate) return `${item.name} (${item.chain})`
+	if (duplicate || item.chain !== "ERC20") return `${item.name} (${item.chain})`
 	return `${item.name}`
 }
