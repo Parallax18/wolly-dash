@@ -3,14 +3,10 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { Component, ComponentType } from "../../types/Util"
 import { CurrencyItem, deserializeObjFromQuery, dollarItem, formatLargeNumber, formatNumber, getBonusName, isDuplicate, floorToDP, roundToNearest, tokenList, useBonusCalculations, useDebounce, useInterval, useStateRef, useCreateTransaction, errorToString } from "../../util"
 import Button from "../Button"
-import Form, { FormContextValue, FormRender } from "../Form"
-import FormInput from "../FormInput"
+import Form, { FormRender } from "../Form"
 import FormPage from "../FormPage"
-import FormSelect from "../FormSelect"
 import Page from "../Page"
-import TokenSelect from "../TokenSelect"
 
-import DollarIcon from "../../svg/icons/dollar.svg"
 import _DropdownIcon from "../../svg/icons/down-chevron.svg"
 
 const DropdownIcon = _DropdownIcon as unknown as Component<any>
@@ -18,7 +14,7 @@ const DropdownIcon = _DropdownIcon as unknown as Component<any>
 import "./BuyPage.css"
 import FormNumberInput from "../FormNumberInput"
 import clsx from "clsx"
-import TokenSelectModal, { FormTokenSelectModal } from "../TokenSelectModal"
+import { FormTokenSelectModal } from "../TokenSelectModal"
 import Collapse from "../Collapse"
 import { SelectModalWrapper } from "../SelectModal"
 import { PriceContext } from "../../context/PriceContext"
@@ -29,6 +25,7 @@ import { ProjectContext } from "../../context/ProjectContext"
 import { Loadable, Loader, LoaderContext } from "../Loader"
 import { AlertContext } from "../../context/AlertContext"
 import { TransactionsContext } from "../../context/TransactionsContext"
+import TieredBonusButtons from "../TieredBonusButtons"
 
 const BuyPage: Component = () => {
 	const [ timeRemaining, setTimeRemaining ] = useState(0);
@@ -111,7 +108,7 @@ const BuyPage: Component = () => {
 		}).finally(() => {
 			setBonusLoading(false)
 		})
-	}, 350)
+	}, 200)
 
 	const updateBonuses = () => {
 		setBonusLoading(true)
@@ -134,14 +131,6 @@ const BuyPage: Component = () => {
 	const toDisplay = (num: number) => {
 		return floorToDP(num, 5)
 	}
-
-	const tiered_fiat = activeStage?.bonuses.tiered_fiat?.sort((a, b) => a.amount - b.amount) || []
-	let selectedTier = 0
-	tiered_fiat.forEach((tier) => {
-		if (tier.amount > selectedTier && values.usd_amount >= tier.amount) {
-			selectedTier = tier.amount
-		}
-	})
 
 	let bonuses: {label: string, amount: number, dollar: number}[] = useMemo(() => {
 		let bonusArr = Object.entries(bonusCalculationRequest.data || {}).map(([key, value]) => ({
@@ -211,23 +200,11 @@ const BuyPage: Component = () => {
 								rightContent={<CurrencyItemDisplay currencyItem={dollarItem} />}
 								onFocus={() => lastChanged.current = "usd_amount"}
 							/>
-							<div className="bonus-buttons flex-gap-x-2">
-								{tiered_fiat.map((bonus) => (
-									<Button
-										type="button"
-										key={bonus.amount}
-										size="tiny"
-										color="bg-light"
-										className={clsx("bonus-button", {
-											active: selectedTier === bonus.amount
-										})}
-										onClick={() => updateValue("usd_amount", bonus.amount)}
-									>
-										<span className="amount">${bonus.amount}</span>
-										<span className="percent">+{bonus.percentage}%</span>
-									</Button>
-								))}
-							</div>
+							<TieredBonusButtons
+								bonuses={activeStage?.bonuses.tiered_fiat || []}
+								onSelect={(item) => updateValue("usd_amount", item.amount)}
+								usdAmount={values.usd_amount}
+							/>
 						</div>
 						<div className="form-item">
 							<label htmlFor="buy-token-amount">I want to buy with</label>

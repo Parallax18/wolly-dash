@@ -1,13 +1,15 @@
 import * as Yup from "yup"
 
+export const passwordSchema = Yup.string()
+	.matches(/([a-zA-Z]\d)|(\d[a-zA-Z])/, "Must have at least 1 number and 1 letter")
+	.max(32, "Maximum 32 character")
+	.min(8, "Minimum 8 character")
+
 export const registerSchema =  Yup.object().shape({
 	first_name: Yup.string().required("Can't be empty"),
 	last_name: Yup.string().required("Can't be empty"),
 	email: Yup.string().email("Email is invalid").required("Can't be empty"),
-	password: Yup.string()
-		.matches(/([a-zA-Z]\d)|(\d[a-zA-Z])/, "Must have at least 1 number and 1 letter")
-		.max(32, "Maximum 32 character")
-		.min(8, "Minimum 8 character"),
+	password: passwordSchema,
 	nationality: Yup.string().required("Can't be empty"),
 	phone_number: Yup.string(),
 	country_code: Yup.string(),

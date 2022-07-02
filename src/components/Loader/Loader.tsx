@@ -75,6 +75,8 @@ export const Loadable: Component<LoadableProps> = ({
 
 	const random = useRandom(3, 7)
 	
+	const margin = newVariant === "text" && `calc((${heights.line} - ${heights.height}) / 2)`
+
 	return (
 		<>
 			{loadElement !== undefined && loadValue.loading && (
@@ -89,8 +91,8 @@ export const Loadable: Component<LoadableProps> = ({
 					style={{
 						...loadStyles,
 						"--length": `${length || random}em`,
-						marginTop: newVariant === "text" && `calc((${heights.line} - ${heights.height}) / 2)`,
-						marginBottom: newVariant === "text" && `calc((${heights.line} - ${heights.height}) / 2)`
+						marginTop: margin,
+						marginBottom: margin
 					}}
 				>
 					{loadElement}
@@ -108,8 +110,8 @@ export const Loadable: Component<LoadableProps> = ({
 					style={{
 						...loadStyles,
 						"--length": `${length || random}em`,
-						marginTop: newVariant === "text" && `calc((${heights.line} - ${heights.height}) / 2)`,
-						marginBottom: newVariant === "text" &&`calc((${heights.line} - ${heights.height}) / 2)`
+						marginTop: margin,
+						marginBottom: margin
 					}}
 				/>
 			)}

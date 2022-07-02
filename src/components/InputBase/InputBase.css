@@ -114,7 +114,7 @@
 		text-text-primary
 }
 
-.input-root.active svg {
+.input-root.active .icon-container svg {
 	@apply
 		text-text-primary
 }

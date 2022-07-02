@@ -150,6 +150,6 @@ export const toDisplayString = (str: string): string => {
 }
 
 export const errorToString = (err: any, defaultString: string): string => {
-	if (!err.code || !err.message) return defaultString;
+	if (!err || !err.code || !err.message) return defaultString;
 	return err.message;
 }

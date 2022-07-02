@@ -20,15 +20,27 @@ import CopyIcon from "../../svg/icons/copy.svg"
 import { AlertContext } from "../../context/AlertContext"
 import { CurrencyItemDisplay } from "../../components/BuyPage"
 import WarningIcon from "../../svg/icons/warning.svg"
-import { useParams } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import { Loadable, Loader } from "../../components/Loader"
 import { defaultTransaction } from "../../defaults/Api"
 
 const TransactionsPage: Component = () => {
 	const { transactions, getTransactionsRequest } = useContext(TransactionsContext)
-	const { id } = useParams()
-	const [ selectedTransaction, setSelectedTransaction ] = useState<Transaction | undefined>(transactions.find((txn) => txn.id === id))
+	const params = new URLSearchParams(location.search)
+	const [ selectedTransaction, setSelectedTransaction ] = useState<Transaction | undefined>()
 	const [ detailsOpen, setDetailsOpen ] = useState(false)
+
+	const paramsRef = useRef(false)
+
+	useEffect(() => {
+		let id = params.get("id")
+		if (!id || paramsRef.current || transactions.length === 0) return;
+		paramsRef.current = true;
+		let transaction = transactions.find((txn) => txn.id === params.get("id"))
+		if (!transaction) return;
+		setSelectedTransaction(transaction)
+		setDetailsOpen(true)
+	}, [params, transactions])
 
 	return (
 		<Page path="/transactions" title="Transactions">

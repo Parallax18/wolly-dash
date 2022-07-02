@@ -30,28 +30,33 @@ const FormNumberInput: Component<FormNumberInputProps> = ({ field, maxDecimals =
 	const updateFormValue = (newValue: string) => {
 		let fullNumber = getFullNumberFromPartialNumber(newValue, formContext.values[field])
 
-		const newNumValue = Number.parseFloat(newValue)
-		newValue = floorToDP(newNumValue, maxDecimals)
-		const newFullNumber = Number.parseFloat(newValue)
+		const newValueNum = floorToDP(fullNumber, maxDecimals)
+		const newFullNumber = Number.parseFloat(newValueNum)
 
-		if (!Number.isNaN(fullNumber)) formContext.updateValue(field, newFullNumber)
+		const newValueStr = newValueNum ? newValueNum.toString() + (newValue.endsWith(".") ? "." : "") : ""
+
+		if (!Number.isNaN(newFullNumber)) formContext.updateValue(field, newFullNumber)
 		else {
 			setStrValue("")
 			formContext.updateValue(field, 0)
 		}
 
-		if (partialNumberRegex.test(newValue)) setStrValue(newValue)
+		if (partialNumberRegex.test(newValue)) {
+			setStrValue(newValueStr)
+		}
 	}
 
 	const updateStrValue = () => {
+		let newValue = floorToDP(formContext.values[field].toString(), maxDecimals)
 		setStrValue(
-			floorToDP(formContext.values[field].toString(), maxDecimals)
+			newValue
 		)
 	}
 
 	useEffect(() => {
 		let newValue = 0;
 		if (strValue && partialNumberRegex.test(strValue)) newValue = Number.parseFloat(strValue)
+		
 		formContext.updateValue(field, newValue)
 	}, [])
 

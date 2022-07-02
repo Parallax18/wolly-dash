@@ -1,0 +1,18 @@
+.tiered-bonus-buttons {
+	@apply
+		mt-2
+		flex
+}
+
+.tiered-bonus-buttons .bonus-button.active {
+	@apply
+		bg-primary-main
+		text-primary-contrastText
+		hover:bg-primary-dark
+}
+
+.tiered-bonus-buttons .percent {
+	@apply
+		ml-1
+		font-semibold
+}

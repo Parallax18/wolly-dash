@@ -12,7 +12,7 @@ import EmailIcon from "../../svg/icons/email-outline.svg"
 import PasswordIcon from "../../svg/icons/lock-outline.svg"
 import NameIcon from "../../svg/icons/account-circle-outline.svg"
 
-import { useRegisterRequest, UserArgs, registerSchema, pick, getDialCodeFromCountryCode, errorToString, tokenList } from "../../util"
+import { useRegisterRequest, UserArgs, registerSchema, pick, getDialCodeFromCountryCode, errorToString, tokenList, dollarItem } from "../../util"
 import NationalityInput from "../../components/NationalityInput"
 import Form, { FormRender } from "../../components/Form"
 import FormInput from "../../components/FormInput"
@@ -22,7 +22,7 @@ import { AuthContext } from "../../context/AuthContext"
 import { AlertContext } from "../../context/AlertContext"
 import { User } from "../../types/Api"
 import PhoneInput from "../../components/PhoneInput"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import FormCheckbox from "../../components/FormCheckbox"
 import TokenSelect from "../../components/TokenSelect"
 import FormNumberInput from "../../components/FormNumberInput"
@@ -32,6 +32,10 @@ import TokenSelectModal, { FormTokenSelectModal, TokenSelectItem } from "../../c
 import _DropdownIcon from "../../svg/icons/down-chevron.svg"
 import { CurrencyItemDisplay } from "../../components/BuyPage"
 import { StageContext } from "../../context/StageContext"
+import clsx from "clsx"
+import TieredBonusButtons from "../../components/TieredBonusButtons"
+import { Loader } from "../../components/Loader"
+import { ProjectContext } from "../../context/ProjectContext"
 
 const DropdownIcon = _DropdownIcon as unknown as Component<any>
 
@@ -39,7 +43,8 @@ const RegisterPage: Component = () => {
 	const navigate = useNavigate()
 	const authContext = useContext(AuthContext)
 	const alertContext = useContext(AlertContext)
-	const { activeStage } = useContext(StageContext)
+	const { activeStage, activeStageRequest } = useContext(StageContext)
+	const { currencyTokenList, currProjectRequest } = useContext(ProjectContext)
 
 	const registerRequest = useRegisterRequest()
 
@@ -54,9 +59,16 @@ const RegisterPage: Component = () => {
 		phone_number: "",
 		country_code: "GB",
 		terms_accepted: false,
-		token: tokenList[0],
+		token: currencyTokenList?.[0],
 		usd_amount: 0
 	}
+
+	const [ values, setValues ] = useState(initialValues)
+	
+	useEffect(() => {
+		if (values.token === undefined)
+		updateValue("token", currencyTokenList?.[0])
+	}, [values?.token, currencyTokenList])
 
 	const onSubmit = (vals: Record<string, any>) => {
 		const dialCode = getDialCodeFromCountryCode(vals.country_code)
@@ -81,6 +93,13 @@ const RegisterPage: Component = () => {
 		})
 	}
 
+	const updateValue = (key: string, value: any) => {
+		setValues((val) => {
+			let newValues = {...val, [key]: value}
+			return newValues
+		})
+	}
+
 	return (
 		<Page path="/register" title="Register" onlyLoggedOut>
 			<Form
@@ -88,6 +107,8 @@ const RegisterPage: Component = () => {
 				initialValues={initialValues}
 				onSubmit={onSubmit}
 				validationSchema={registerSchema}
+				values={values}
+				onUpdate={(newVals) => setValues(newVals as unknown as typeof values)}
 			>
 				<FormPage
 					title="Register an account"
@@ -140,45 +161,51 @@ const RegisterPage: Component = () => {
 						codeField="country_code"
 					/>
 					<NationalityInput field="nationality" />
-					<div className="flex flex-col flex-gap-y-4">
-						<h2 className="text-lg">Purchase Details</h2>
-						<FormRender>
-							{(formContext) => (
-								<CurrencyItemDisplay
-									component={Button}
-									className="py-3 !justify-start w-full group"
-									color="bg-contrast"
-									type="button"
-									onClick={() => setTokenModalOpen(true)}
-									currencyItem={formContext.values.token}
-									bonuses={activeStage?.bonuses.payment_tokens}
-									classes={{bonusChip: "bg-background-paperLight group-hover:bg-background-paperHighlight transition-background-color"}}
-								>
-									<DropdownIcon className="h-3 w-3 ml-auto text-action-unselected group-hover:text-text-primary transition-color" />
-								</CurrencyItemDisplay>
-							)}
-						</FormRender>
-						<FormNumberInput
-							field="usd_amount"
-							placeholder="Purchase Amount $"
-							autoCapitalize="off"
-						/>
-					</div>
-					<div className="flex items-center">
-						<FormCheckbox
-							field="terms_accepted"
-							className="inline-block"
-						/>
-						<span className="ml-3">I agree to the Terms and Conditions and Privacy Policy</span>
-					</div>
-					<div className="login-footer flex-gap-y-4 flex flex-col mt-2 <xs:mt-2">
-						<Button color="primary" loading={registerRequest.fetching}>
-							Create Account
-						</Button>
-						<span className="text-center">
-							Already have account? <Link to="/login">Sign in</Link>
-						</span>
-					</div>
+					<Loader loading={activeStageRequest.fetching || currProjectRequest.fetching}>
+						<div className="flex flex-col flex-gap-y-4">
+							<h2 className="text-lg">Purchase Details</h2>
+							<CurrencyItemDisplay
+								component={Button}
+								className="py-3 !justify-start w-full group"
+								color="bg-contrast"
+								type="button"
+								onClick={() => setTokenModalOpen(true)}
+								currencyItem={values.token}
+								bonuses={activeStage?.bonuses.payment_tokens}
+								classes={{bonusChip: "bg-background-paperLight group-hover:bg-background-paperHighlight transition-background-color"}}
+							>
+								<DropdownIcon className="h-3 w-3 ml-auto text-action-unselected group-hover:text-text-primary transition-color" />
+							</CurrencyItemDisplay>
+							<div className="flex flex-col">
+								<FormNumberInput
+									field="usd_amount"
+									placeholder="Purchase Amount $"
+									autoCapitalize="off"
+									rightContent={<CurrencyItemDisplay className="w-auto" currencyItem={dollarItem} />}
+								/>
+								<TieredBonusButtons
+									bonuses={activeStage?.bonuses.tiered_fiat || []}
+									onSelect={(item) => updateValue("usd_amount", item.amount)}
+									usdAmount={values.usd_amount}
+								/>
+							</div>
+						</div>
+						<div className="flex items-center">
+							<FormCheckbox
+								field="terms_accepted"
+								className="inline-block"
+							/>
+							<span className="ml-3">I agree to the Terms and Conditions and Privacy Policy</span>
+						</div>
+						<div className="login-footer flex-gap-y-4 flex flex-col mt-2 <xs:mt-2">
+							<Button color="primary" loading={registerRequest.fetching}>
+								Create Account
+							</Button>
+							<span className="text-center">
+								Already have account? <Link to="/login">Sign in</Link>
+							</span>
+						</div>
+					</Loader>
 				</FormPage>
 			</Form>
 		</Page>

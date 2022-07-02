@@ -21,3 +21,6 @@ type PropsWithChildren<P = unknown> = P & { children?: ReactNode | undefined };
 export type Component<P = {}> = React.FC<PropsWithChildren<P>>;
 
 export type ComponentType = React.FC<any> | string
+
+export type ArrayElement<ArrayType extends readonly unknown[]> = 
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;

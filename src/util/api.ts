@@ -456,11 +456,53 @@ export type GetMinimumAmountRequest = CreateRequestResponse<
 >
 
 export const useGetMinimumAmount = (): GetMinimumAmountRequest => {
-	const request = useAuthRequest<MinimumAmountResponse>("/tokens")
+	const request = useRequest<MinimumAmountResponse>("/tokens")
 
 	const sendRequest = (token_id: string) => {
 		return request.sendRequest({
 			url: "/" + token_id + "/minimum-amount"
+		})
+	}
+
+	return { ...request, sendRequest }
+}
+
+
+export type ForgotPasswordRequest = CreateRequestResponse<
+	null,
+	(email: string) => Promise<AxiosResponse<null>>
+>
+
+export const useForgotPasswordRequest = (): ForgotPasswordRequest => {
+	const request = useRequest<null>("/auth/forgot-password")
+
+	const sendRequest = (email: string) => {
+		return request.sendRequest({
+			method: "POST",
+			data: {
+				email
+			}
+		})
+	}
+
+	return { ...request, sendRequest }
+}
+
+export type ResetPasswordRequest = CreateRequestResponse<
+	null,
+	(token: string, newPassword: string) => Promise<AxiosResponse<null>>
+>
+
+export const useResetPasswordRequest = (): ResetPasswordRequest => {
+	const request = useRequest<null>("/auth/reset-password")
+
+	const sendRequest = (token: string, newPassword: string) => {
+		return request.sendRequest({
+			method: "POST",
+			data: {
+				token,
+				password: newPassword
+			}
 		})
 	}
 

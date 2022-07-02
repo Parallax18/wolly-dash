@@ -34,26 +34,6 @@
 		text-sm mb-2
 }
 
-
-.buy-page .bonus-buttons {
-	@apply
-		mt-2
-		flex
-}
-
-.buy-page .bonus-button.active {
-	@apply
-		bg-primary-main
-		text-primary-contrastText
-		hover:bg-primary-dark
-}
-
-.buy-page .bonus-buttons .percent {
-	@apply
-		ml-1
-		font-semibold
-}
-
 .buy-page .total-tiered-bonus {
 	@apply
 		ml-auto
