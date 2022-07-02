@@ -66,27 +66,6 @@ export const formatNumber = (num: number, minDP?: number, maxDP?: number): strin
 	return numberWithCommas(formatPrecision(num, minDP, maxDP))
 }
 
-const letterMap = {
-	"K": 1_000,
-	"M": 1_000_000,
-	"B": 1_000_000_000,
-	"T": 1_000_000_000_000
-}
-
-export const formatLargeNumber = (num: number, precisionCutoff: number = 1000, minDP?: number, maxDP?: number) => {
-	if (num < precisionCutoff) return formatNumber(num, minDP, maxDP)
-	num = Math.floor(num);
-	let newNum = num;
-	let suffix = ""
-	Object.entries(letterMap).forEach(([letter, divisor]) => {
-		if (num / divisor < 1000 && num / divisor > 1) {
-			suffix = letter
-			newNum = num / divisor;
-		}
-	})
-	return `${roundToDP(newNum, 2)}${suffix}`
-}
-
 export const formatNumberWithSign = (num: number): string => {
 	let numStr = formatNumber(num)
 	if (numStr.substring(0, 1) == "-") return numStr;
@@ -138,4 +117,25 @@ export const floorToDP = (num: number, maxDecimals: number): string => {
 
 export const roundToDP = (num: number, decimalPlaces: number): string => {
 	return (Math.floor(num * 10**decimalPlaces) / 10**decimalPlaces).toString()
+}
+
+const letterMap = {
+	"K": 1_000,
+	"M": 1_000_000,
+	"B": 1_000_000_000,
+	"T": 1_000_000_000_000
+}
+
+export const formatLargeNumber = (num: number, precisionCutoff: number = 1000, minDP?: number, maxDP?: number) => {
+	if (num < precisionCutoff) return formatNumber(num, minDP, maxDP)
+	num = Math.floor(num);
+	let newNum = num;
+	let suffix = ""
+	Object.entries(letterMap).forEach(([letter, divisor]) => {
+		if (num / divisor < 1000 && num / divisor >= 1) {
+			suffix = letter
+			newNum = num / divisor;
+		}
+	})
+	return `${roundToDP(newNum, 2)}${suffix}`
 }

@@ -48,11 +48,10 @@ const TransactionsPage: Component = () => {
 				<div className="transactions-list flex-gap-y-4">
 					<Loader loading={getTransactionsRequest.fetching }>
 						<Card className="transaction-item transaction-item-title flex-gap-x-2" >
-							<span className="item-value token-value">Payment Token</span>
-							<span className="item-value">Crypto Amount</span>
-							<span className="item-value">Fiat Amount</span>
+							<span className="item-value token-value">Token</span>
+							<span className="item-value">Amount</span>
+							<span className="item-value">USD</span>
 							<span className="item-value">Status</span>
-							<span className="item-value">Wallet Address</span>
 							<span className="item-value"></span>
 						</Card>
 						{(getTransactionsRequest.fetching ? new Array(4).fill(defaultTransaction) : transactions).map((txn, i) => (
@@ -118,11 +117,6 @@ export const TransactionItem: Component<TransactionItemProps> = ({ transaction, 
 					<Chip compact className={clsx(statusColorMap[transaction.status])}>
 						{capitalize(transaction.status)}
 					</Chip>
-				</Loadable>
-			</span>
-			<span className="item-value">
-				<Loadable component="span">
-					{transaction.payment_address.substring(0, 8)}...
 				</Loadable>
 			</span>
 			<span className="item-value">

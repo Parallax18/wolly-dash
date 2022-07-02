@@ -1,4 +1,5 @@
-import { LimitedSignupBonus } from "../types/Api";
+import { LimitedSignupBonus, Stage } from "../types/Api";
+import { getTimeString } from "./data";
 import { capitalize } from "./string";
 
 export const limitedSignupBonusValid = (signupDate: string | undefined, bonus: LimitedSignupBonus): boolean => {
@@ -22,4 +23,33 @@ const nameMap: Record<string, string> = {
 export const getBonusName = (bonusKey: string) => {
 	if (nameMap[bonusKey]) return nameMap[bonusKey];
 	return bonusKey.split("_").map((str) => capitalize(str)).join(" ");
+}
+
+export interface BannerItem {
+	label: string,
+	key: string
+}
+
+export const getBonusBanners = (bonuses: Stage["bonuses"] | undefined, signupDate: string | undefined): BannerItem[] => {
+	let banners: BannerItem[] = []
+
+	let signupLimitedBonus = bonuses?.signup?.limited_time
+	if (signupLimitedBonus && limitedSignupBonusValid(signupDate, signupLimitedBonus)) {
+		banners.push({
+			label: `Limited signup bonus available. +${signupLimitedBonus.percentage}% bonus if you purchase within ${getTimeString(getTimeLeftLimitedSignupBonus(signupDate, signupLimitedBonus))}`,
+			key: "signup-limited"
+		})
+	}
+
+	let limitedBonus = bonuses?.limited_time
+	let limitedDiff = new Date(limitedBonus?.end_date || "").getTime() - Date.now()
+
+	if (limitedDiff && limitedDiff > 0) {
+		banners.push({
+			label: `Limited time bonus available. +${limitedBonus?.percentage}% bonus if you purchase within ${getTimeString(limitedDiff)}`,
+			key: "limited"
+		})
+	}
+
+	return banners
 }

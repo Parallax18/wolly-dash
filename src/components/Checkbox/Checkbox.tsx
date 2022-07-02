@@ -23,7 +23,6 @@ const Checkbox: Component<CheckboxProps> = ({
 	return (
 		<IconButton {...others} className={clsx({"text-primary-main": value}, others.className)} onClick={() => {
 			_setValue((val) => !val)
-			console.log("CHANGING", onChange)
 			onChange?.(!value)
 		}} >
 			{value ? <CheckboxCheckedIcon /> : <CheckboxOutlineIcon /> }

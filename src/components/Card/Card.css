@@ -55,10 +55,16 @@
 
 .card-body, .card-title {
 	@apply
-		px-8
-		py-10
+		px-[var(--padding,2rem)]
+		py-[calc(var(--padding,2.5rem)*1.25)]
 		<md:flex
 		<md:flex-col
+}
+
+.card-title.compact {
+	font-size: 1.25rem;
+	@apply
+		py-[calc(var(--padding,2.5rem)*0.5)]
 }
 
 .card .card-buttons {
@@ -73,4 +79,14 @@
 .card-title + .card-body {
 	@apply
 		!pt-0
+}
+
+.card-group {
+	@apply
+		flex
+}
+
+.card-group > * {
+	@apply
+		flex-1
 }

@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Component, ComponentType } from "../../types/Util"
-import { CurrencyItem, deserializeObjFromQuery, dollarItem, formatLargeNumber, formatNumber, getBonusName, isDuplicate, floorToDP, roundToNearest, tokenList, useBonusCalculations, useDebounce, useInterval, useStateRef, useCreateTransaction, errorToString } from "../../util"
+import { CurrencyItem, deserializeObjFromQuery, dollarItem, formatLargeNumber, formatNumber, getBonusName, isDuplicate, floorToDP, roundToNearest, tokenList, useBonusCalculations, useDebounce, useInterval, useStateRef, useCreateTransaction, errorToString, useGetMinimumAmount } from "../../util"
 import Button from "../Button"
 import Form, { FormRender } from "../Form"
 import FormPage from "../FormPage"
@@ -27,13 +27,15 @@ import { AlertContext } from "../../context/AlertContext"
 import { TransactionsContext } from "../../context/TransactionsContext"
 import TieredBonusButtons from "../TieredBonusButtons"
 
+import * as Yup from "yup"
+
 const BuyPage: Component = () => {
 	const [ timeRemaining, setTimeRemaining ] = useState(0);
 	const { prices, refreshPrices, priceRequest } = useContext(PriceContext)
 	const bonusCalculationRequest = useBonusCalculations()
 	const [ bonusUSDFixed, setBonusUSDFixed ] = useState(0)
 
-	const { activeStage } = useContext(StageContext)
+	const { activeStage, activeStageRequest } = useContext(StageContext)
 	const { user } = useContext(AuthContext)
 	const { currentProject, currencyTokenList, currProjectRequest } = useContext(ProjectContext)
 
@@ -42,10 +44,6 @@ const BuyPage: Component = () => {
 	const lastChanged = useRef("usd_amount")
 
 	const { createTransactionRequest, createTransaction } = useContext(TransactionsContext)
-
-	const minimumAmountPage = () => {
-
-	}
 
 	const params = deserializeObjFromQuery(
 		new URLSearchParams(searchParams),
@@ -64,6 +62,13 @@ const BuyPage: Component = () => {
 		if (values.token === undefined)
 		updateValue("token", currencyTokenList?.[0])
 	}, [values?.token, currencyTokenList])
+	
+	const minimumAmountRequest = useGetMinimumAmount()
+
+	useEffect(() => {
+		if (!values.token?.id) return;
+		minimumAmountRequest.sendRequest(values.token.id)
+	}, [values.token, prices])
 
 
 	const updateValue = (key: string, value: any) => {
@@ -164,8 +169,10 @@ const BuyPage: Component = () => {
 		})
 	}
 
+	const minimum = minimumAmountRequest.data?.min_amount_fiat || 0
+
 	return (
-		<Page path="/buy" title="Buy">
+		<Page path="/buy" title="Buy" userRestricted>
 			<Form
 				className={clsx("buy-page", {"modal-open": tokenModalOpen})}
 				initialValues={values}
@@ -175,6 +182,7 @@ const BuyPage: Component = () => {
 					updatePrices()
 				}}
 				onSubmit={() => createPurchaseTransaction()}
+				validationSchema={Yup.object().shape({usd_amount: Yup.number().min(minimum, `Must spend more than ${formatNumber(minimum)}`)})}
 			>
 				<Loader loading={currProjectRequest.fetching}>
 					<FormPage
@@ -273,13 +281,20 @@ const BuyPage: Component = () => {
 								<span className="font-semibold mx-1">
 									{toDisplay(values.buy_token_amount)} {values.token?.symbol}
 								</span>
-								for <span className="font-semibold mx-1">
+								for
+								<span className="font-semibold mx-1">
 									{formatLargeNumber((values.usd_amount + (totalBonus.dollar || 0)) / (activeStage?.token_price || 1))}
-								</span> {currentProject?.symbol}
+								</span>
+								{currentProject?.symbol}
 							</div>
 						</div>
 						<div className="flex-1 !mb-0" />
-						<Button color="primary" rounded loading={createTransactionRequest.fetching}>
+						<Button
+							color="primary"
+							rounded
+							loading={createTransactionRequest.fetching}
+							disabled={currProjectRequest.fetching || activeStageRequest.fetching || minimumAmountRequest.fetching}
+						>
 							Pay
 						</Button>
 					</FormPage>

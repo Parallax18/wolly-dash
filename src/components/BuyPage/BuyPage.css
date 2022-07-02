@@ -85,6 +85,12 @@
 		pr-2
 }
 
+.bonus-item.total .bonus-percent, .bonus-item.total .bonus-usd {
+	@apply
+		text-success-light
+		font-semibold
+}
+
 .currency-display-item {
 	@apply
 		py-2

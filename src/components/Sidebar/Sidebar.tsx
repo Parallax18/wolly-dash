@@ -23,7 +23,6 @@ const navList = [
 ]
 
 const bottomList = [
-	{label: "Settings", path: "/settings", icon: SettingsIcon},
 	{label: "Logout", onClick: ({ logout }: {logout: () => void;}) => {
 		logout()
 	}, icon: LogoutIcon},
@@ -65,9 +64,7 @@ const Sidebar: Component = () => {
 					{bottomList.map((navItem) => (
 						<Button
 							key={navItem.label}
-							component={navItem.path ? NavLink : "button"}
-							to={navItem.path}
-							color={routeMatchesExact(navItem.path, location.pathname) ? "primary" : "transparent"}
+							color="transparent"
 							className="!justify-start"
 							icon={navItem.icon}
 							onClick={() => navItem.onClick?.({ logout: authContext.logout })}

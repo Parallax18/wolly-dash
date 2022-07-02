@@ -41,7 +41,7 @@ const FormNumberInput: Component<FormNumberInputProps> = ({ field, maxDecimals =
 			formContext.updateValue(field, 0)
 		}
 
-		if (partialNumberRegex.test(newValue)) {
+		if (partialNumberRegex.test(newValue) && newValue !== "") {
 			setStrValue(newValueStr)
 		}
 	}
@@ -56,7 +56,7 @@ const FormNumberInput: Component<FormNumberInputProps> = ({ field, maxDecimals =
 	useEffect(() => {
 		let newValue = 0;
 		if (strValue && partialNumberRegex.test(strValue)) newValue = Number.parseFloat(strValue)
-		
+
 		formContext.updateValue(field, newValue)
 	}, [])
 

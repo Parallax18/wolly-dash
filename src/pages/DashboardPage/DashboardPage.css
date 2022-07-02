@@ -1,0 +1,42 @@
+.dashboard-page.dashboard-page {
+	@apply
+		py-2
+		px-4
+		!m-0
+}
+
+.dashboard-page .card-group {
+	@apply
+		max-w-250
+		!mx-auto
+}
+
+.dashboard-card .card-body {
+	@apply
+		flex flex-col
+		py-4
+}
+
+.dashboard-card .card-body > *:not(:last-child) {
+	@apply
+		mb-2
+}
+
+.dashboard-card .card-header {
+	@apply
+		flex
+		items-center
+		px-4
+		py-2
+		bg-background-paperLight
+		rounded-t-card
+		justify-between
+		h-12
+}
+
+.dashboard-card .card-header .chip {
+	@apply
+		ml-4
+		bg-primary-main
+		text-primary-contrastText
+}

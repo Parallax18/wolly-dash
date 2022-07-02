@@ -3,20 +3,9 @@ import React, { createContext, MutableRefObject, useEffect, useRef } from "react
 import { useNavigate } from "react-router"
 import { Component } from "../types/Util"
 import { Tokens, User } from "../types/Api"
-import { useGetUserRequest, useLocalState, useLocalStateRef, useRefreshTokensRequest } from "../util"
+import { GetUserRequest, useGetUserRequest, useLocalState, useLocalStateRef, useRefreshTokensRequest } from "../util"
 
-export const AuthContext = createContext<AuthContextData>({
-	tokens: {},
-	tokensRef: {current: {}},
-	user: null,
-	loggedIn: false,
-	setTokens: () => {},
-	login: () => {},
-	logout: () => {},
-	refreshTokens: () => Promise.reject(),
-	tokensFetchedAt: 0,
-	updateUser: () => {}
-})
+export const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 export interface AuthContextData {
 	tokens: Tokens,
@@ -29,6 +18,7 @@ export interface AuthContextData {
 	refreshTokens: () => Promise<AxiosResponse<Tokens>>,
 	tokensFetchedAt: number,
 	updateUser: (newUserProps: Partial<User>) => void,
+	userRequest: GetUserRequest
 }
 
 export const AuthContextWrapper: Component = ({ children }) => {
@@ -45,6 +35,7 @@ export const AuthContextWrapper: Component = ({ children }) => {
 	const refreshingPromiseRef = useRef<Promise<any> | null>(null)
 
 	const logout = () => {
+		console.log("LOGGING OUT")
 		setLoggedIn(false)
 		setUser(null)
 		navigate("/login", {replace: true})
@@ -77,6 +68,7 @@ export const AuthContextWrapper: Component = ({ children }) => {
 			setUser(newUser)
 			setTokens(tokens)
 		},
+		userRequest: getUserRequest,
 		logout,
 		refreshTokens: (): Promise<any> => {
 			if (refreshingRef.current && refreshingPromiseRef.current !== null){

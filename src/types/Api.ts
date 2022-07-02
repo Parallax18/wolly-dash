@@ -12,7 +12,12 @@ export interface User {
 	nationality: string,
 	role: "user" | "admin",
 	purchased: boolean,
-	signup_date: string
+	signup_date: string,
+	tokens: {
+		base: number,
+		bonuses: number,
+		total: number
+	} | null
 }
 
 export interface Token {
@@ -36,6 +41,11 @@ export interface LimitedSignupBonus {
 	percentage: 100
 }
 
+export interface TieredBonus {
+	amount: number,
+	percentage: number
+}
+
 export interface Stage {
 	id: string,
 	name: string
@@ -49,7 +59,7 @@ export interface Stage {
 	max_fiat_amount: number | null,
 	bonuses: {
 		base_percentage: number,
-		tiered_fiat?: {amount: number, percentage: number}[],
+		tiered_fiat?: TieredBonus[],
 		payment_tokens?: TokenBonus[],
 		limited_time?: {
 			start_date: string,

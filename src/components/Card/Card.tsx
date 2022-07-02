@@ -4,15 +4,20 @@ import "./Card.css"
 
 export type CardProps = {
 	component?: ComponentType,
+	padding?: number
 } & React.HTMLAttributes<HTMLDivElement>
 
 const Card: Component<CardProps> = ({
-	component, children, ...others
+	component, children, padding = 2, ...others
 }) => {
 	const Comp = (component as Component<any>) || "div"
 
 	return (
-		<Comp {...others} className={clsx("card", others.className)}>
+		<Comp
+			{...others}
+			className={clsx("card", others.className)}
+			style={{["--padding" as any]: `${padding}rem`}}>
+			
 			{children}
 		</Comp>
 	)
@@ -28,18 +33,24 @@ export interface CardTitleClasses {
 export type CardTitleProps = {
 	title?: string;
 	classes?: CardTitleClasses;
-	center?: boolean
+	center?: boolean;
+	compact?: boolean
 } & React.HTMLAttributes<HTMLDivElement>
 
 export const CardTitle: Component<CardTitleProps> = ({
-	center, title, classes, children, ...others
+	center, title, classes, compact, children, ...others
 }) => {
 	return (
-		<div {...others} className={
-			clsx("card-title", classes?.title, others.className, {
-				"text-center": center,
-				"!items-center": center
-			})}>
+		<div
+			{...others}
+			className={
+				clsx("card-title", classes?.title, others.className, {
+					"text-center": center,
+					compact,
+					"!items-center": center
+				})
+			}
+			>
 			<div className="card-title-text-container">
 				{title !== undefined && (
 					<h1 className={clsx(classes?.title)}>{title}</h1>
@@ -56,7 +67,7 @@ export type CardBodyProps = {
 } & React.HTMLAttributes<HTMLDivElement>
 
 export const CardBody: Component<CardBodyProps> = ({
-	component, padding, children, ...others
+	component, children, ...others
 }) => {
 	const Comp = (component || "div") as Component<any>
 
@@ -64,9 +75,18 @@ export const CardBody: Component<CardBodyProps> = ({
 		<Comp
 			component={component}
 			className={clsx("card-body", others.className)}
-			style={padding !== undefined ? {padding: `${padding}rem`} : {}}
 		>
 			{children}
 		</Comp>
+	)
+}
+
+export type CardGroupProps = React.HTMLAttributes<HTMLDivElement>
+
+export const CardGroup: Component<CardGroupProps> = (props) => {
+	return (
+		<div {...props} className={clsx("card-group", props.className)}>
+			{props.children}
+		</div>
 	)
 }

@@ -84,14 +84,17 @@ export const useStateRef = <T>(defaultValue: T): [T, React.Dispatch<React.SetSta
 	return [value, newSetValue, valueRef]
 }
 
-export const useLocalState = <T>(defaultValue: T | undefined, stateKey: string): [T, (newValue: T) => void] => {
+export const useLocalState = <T extends string | Record<string | number | symbol, any> | boolean | unknown[] | null | undefined>(defaultValue: T | undefined, stateKey: string): [T, (newValue: T) => void] => {
 	const localValue = localStorage.getItem(stateKey)
 	const parsedValue = localValue ? deserializeValue(localValue) : defaultValue
 	const [ value, setValue ] = useState<T>(parsedValue)
 
-	const newSetValue = (newValue: T) => {
-		setValue(newValue)
-		localStorage.setItem(stateKey, serializeValue(newValue))
+	const newSetValue = (newValue: T | ((prevItem: T) => T)) => {
+		setValue((prev) => {
+			let val = typeof(newValue) === "function" ? ((newValue as Function)(prev)) : newValue;
+			localStorage.setItem(stateKey, serializeValue(val))
+			return val;
+		})
 	}
 
 	return [value, newSetValue]

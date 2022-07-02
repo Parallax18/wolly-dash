@@ -1,11 +1,23 @@
-.banner {
+.banners-container {
 	@apply
+		flex flex-col
 		fixed
 		top-0
 		left-80
 		pr-80
 		w-full
 		z-[5]
+		
+		<md:left-0
+		<md:bottom-16
+		<md:top-[initial]
+		<md:pr-0
+}
+
+.banner {
+	box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+	@apply
+		relative
 		px-2
 		bg-primary-dark
 		text-primary-contrastText
@@ -13,11 +25,6 @@
 		py-1
 		text-center
 		transition-opacity
-		
-		<md:left-0
-		<md:bottom-16
-		<md:top-[initial]
-		<md:pr-0
 }
 
 .banner:not(.open) {
@@ -29,7 +36,7 @@
 	@apply
 		absolute
 		top-1/2
-		right-80
+		right-0
 		!-translate-y-1/2
 		text-primary-contrastText
 		<md:right-0

@@ -6,7 +6,7 @@ import ResetPasswordPage from "./components/ResetPasswordPage"
 import { GlobalContextWrapper } from "./context/GlobalContext"
 import AccountPage from "./pages/AccountPage"
 
-import HomePage from "./pages/HomePage"
+import DashboardPage from "./pages/DashboardPage"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 import TransactionsPage from "./pages/TransactionsPage"
@@ -18,7 +18,7 @@ const App = () => {
 			<GlobalContextWrapper>
 				<Layout>
 					<Routes>
-						<Route path="/" element={<HomePage />} />
+						<Route path="/" element={<DashboardPage />} />
 						<Route path="/login" element={<LoginPage />} />
 						<Route path="/register" element={<RegisterPage />} />
 						<Route path="/forgot-password" element={<ForgotPasswordPage />} />

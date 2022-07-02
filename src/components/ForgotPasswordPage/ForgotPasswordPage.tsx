@@ -23,7 +23,6 @@ const ForgotPasswordPage: Component = () => {
 	}
 
 	const sendPasswordReset = (values: Record<string, any>) => {
-		console.log("SUBMITTING")
 		forgotPasswordRequest.sendRequest(values.email)
 			.then(() => {
 				alertContext.addAlert({

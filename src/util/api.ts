@@ -194,8 +194,8 @@ export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, u
 			...newOptions
 		}
 
-		let token = (suppliedTokenRef || tokensRef).current.access?.token;
-		let expires = (suppliedTokenRef || tokensRef).current.access?.expires
+		let token = (suppliedTokenRef || tokensRef).current?.access?.token;
+		let expires = (suppliedTokenRef || tokensRef).current?.access?.expires
 
 		if (!expires || Date.now() > new Date(expires || 0).getTime()) {
 			let success = true
@@ -218,7 +218,6 @@ export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, u
 		totalOptions.headers["Authorization"] = "BEARER " + token
 
 		return new Promise((resolve, reject) => {
-			// if (url.includes("price")) console.log("SENDING PRICE REQUEST")
 			request.sendRequest(totalOptions)
 				.then((res) => resolve(res))
 				.catch((err: AxiosError) => {
@@ -311,10 +310,12 @@ export const useEditUserRequest = (): CreateRequestResponse<
 	return { ...request, sendRequest }
 }
 
-export const useGetUserRequest = (suppliedTokenRef?: MutableRefObject<Tokens>): CreateRequestResponse<
+export type GetUserRequest = CreateRequestResponse<
 	User,
 	(userId: string) => Promise<AxiosResponse<User>>
-> => {
+>
+
+export const useGetUserRequest = (suppliedTokenRef?: MutableRefObject<Tokens>): GetUserRequest => {
 	const request = useAuthRequest<User>("/users", {}, suppliedTokenRef)
 
 	const sendRequest = (userId: string) => {
@@ -345,10 +346,12 @@ export const useRefreshTokensRequest = (suppliedTokenRef?: MutableRefObject<Toke
 	return { ...request, sendRequest }
 }
 
-export const useGetActiveStages = (): CreateRequestResponse<
+export type GetActiveStageRequest = CreateRequestResponse<
 	Stage,
 	() => Promise<AxiosResponse<Stage>>
-> => {
+>
+
+export const useGetActiveStages = (): GetActiveStageRequest => {
 	const request = useRequest<Stage>("/stages/active")
 
 	const sendRequest = () => {
@@ -456,7 +459,7 @@ export type GetMinimumAmountRequest = CreateRequestResponse<
 >
 
 export const useGetMinimumAmount = (): GetMinimumAmountRequest => {
-	const request = useRequest<MinimumAmountResponse>("/tokens")
+	const request = useAuthRequest<MinimumAmountResponse>("/tokens")
 
 	const sendRequest = (token_id: string) => {
 		return request.sendRequest({
