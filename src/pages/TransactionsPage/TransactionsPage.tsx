@@ -111,7 +111,7 @@ export const TransactionItem: Component<TransactionItemProps> = ({ transaction, 
 					className="!px-3 !py-1 text-sm w-20"
 					color="primary"
 					buttonStyle={transaction.status === "pending" ? "contained" : "outlined"}
-					onClick={() => onActionClick()}
+					onClick={() => onActionClick(transaction)}
 				>
 					{transaction.status === "pending" ? "Pay" : "Details"}
 				</Button>
