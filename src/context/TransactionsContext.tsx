@@ -21,7 +21,7 @@ export const TransactionsContextWrapper: Component = ({ children }) => {
 	const createTransactionRequest = useCreateTransaction();
 
 	useEffect(() => {
-		if (!loggedIn || !user) return;
+		if (!loggedIn || !user || getTransactionsRequest.fetchedAt) return;
 		getTransactionsRequest.sendRequest(user.id).then((res) => {
 			setTransactions(res.data.data)
 		})

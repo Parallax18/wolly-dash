@@ -36,24 +36,12 @@ const TransactionsPage: Component = () => {
 				<div className="transactions-list flex-gap-y-4">
 					<Loader loading={getTransactionsRequest.fetching }>
 						<Card className="transaction-item transaction-item-title flex-gap-x-2" >
-							<span className="item-value token-value">
-								Payment Token
-							</span>
-							<span className="item-value">
-								Crypto Amount
-							</span>
-							<span className="item-value">
-								Fiat Amount
-							</span>
-							<span className="item-value">
-								Status
-							</span>
-							<span className="item-value">
-								Wallet Address
-							</span>
-							<span className="item-value">
-								
-							</span>
+							<span className="item-value token-value">Payment Token</span>
+							<span className="item-value">Crypto Amount</span>
+							<span className="item-value">Fiat Amount</span>
+							<span className="item-value">Status</span>
+							<span className="item-value">Wallet Address</span>
+							<span className="item-value"></span>
 						</Card>
 						{(getTransactionsRequest.fetching ? new Array(4).fill(defaultTransaction) : transactions).map((txn, i) => (
 							<TransactionItem
