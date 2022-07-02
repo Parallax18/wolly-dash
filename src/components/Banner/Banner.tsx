@@ -31,7 +31,7 @@ export const Banners: Component = () => {
 			{banners.map((banner) => (
 				<Banner
 					key={banner.key}
-					open={true || ((bannerOpens?.[banner.key]?.open !== null && bannerOpens?.[banner.key]?.open !== undefined) ? bannerOpens?.[banner.key]?.open : true)}
+					open={(bannerOpens?.[banner.key]?.open !== null && bannerOpens?.[banner.key]?.open !== undefined) ? bannerOpens?.[banner.key]?.open : true}
 					onClose={() => setBannerOpens({
 						...bannerOpens,
 						[banner.key]: {open: false, closedAt: new Date().toISOString()}
