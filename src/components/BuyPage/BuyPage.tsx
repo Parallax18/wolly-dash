@@ -46,6 +46,10 @@ const BuyPage: Component = () => {
 
 	const { createTransactionRequest, createTransaction } = useContext(TransactionsContext)
 
+	const minimumAmountPage = () => {
+
+	}
+
 	const params = deserializeObjFromQuery(
 		new URLSearchParams(searchParams),
 		["usd_amount", "token"]
@@ -107,7 +111,7 @@ const BuyPage: Component = () => {
 		}).finally(() => {
 			setBonusLoading(false)
 		})
-	}, 700)
+	}, 350)
 
 	const updateBonuses = () => {
 		setBonusLoading(true)
