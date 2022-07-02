@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import React, { useContext, useState } from "react"
+import React, { useContext, useRef, useState } from "react"
 import Button from "../../components/Button"
 import Card, { CardBody, CardTitle } from "../../components/Card"
 import Chip from "../../components/Chip"
@@ -13,6 +13,13 @@ import { apiToCurrency, capitalize, formatLargeNumber, getWalletQRValue } from "
 import QRCode from "react-qr-code"
 
 import "./TransactionsPage.css"
+import Input from "../../components/Input"
+import IconButton from "../../components/IconButton"
+
+import CopyIcon from "../../svg/icons/copy.svg"
+import { AlertContext } from "../../context/AlertContext"
+import { CurrencyItemDisplay } from "../../components/BuyPage"
+import WarningIcon from "../../svg/icons/warning.svg"
 
 const TransactionsPage: Component = () => {
 	const { transactions } = useContext(TransactionsContext)
@@ -105,16 +112,18 @@ export const TransactionItem: Component<TransactionItemProps> = ({ transaction, 
 				{transaction.payment_address.substring(0, 8)}...
 			</span>
 			<span className="item-value">
-				<Button
-					rounded
-					type="button"
-					className="!px-3 !py-1 text-sm w-20"
-					color="primary"
-					buttonStyle={transaction.status === "pending" ? "contained" : "outlined"}
-					onClick={() => onActionClick(transaction)}
-				>
-					{transaction.status === "pending" ? "Pay" : "Details"}
-				</Button>
+				{transaction.status === "pending" && (
+					<Button
+						rounded
+						type="button"
+						className="!px-3 !py-1 text-sm w-20"
+						color="primary"
+						buttonStyle={transaction.status === "pending" ? "contained" : "outlined"}
+						onClick={() => onActionClick(transaction)}
+					>
+						{transaction.status === "pending" ? "Pay" : "Details"}
+					</Button>
+				)}
 			</span>
 		</Card>
 	)
@@ -125,17 +134,63 @@ export type TransactionDetailsProps = DialogProps & {
 }
 
 export const TransactionDetails: Component<TransactionDetailsProps> = ({ transaction, ...others }) => {
+	const inputRef = useRef<HTMLInputElement>()
+	const alertContext = useContext(AlertContext)
+
 	if (!transaction) return <></>;
+
+	const apiToken = apiToCurrency(transaction.payment_token)
+
 	return (
 		<Dialog {...others} className={clsx("transaction-details", others.className)}>
 			<Card className="transaction-details">
-				<CardTitle>
+				<CardTitle center>
 					Transaction
 				</CardTitle>
-				<CardBody>
+				<CardBody className="transaction-details-body flex-gap-y-2">
 					{transaction.status === "pending" && (
-						<QRCode className="qr-code" value={getWalletQRValue(transaction.payment_token, transaction.payment_address)} />
+						<div className="pending-container">
+							<QRCode size={160} className="qr-code" value={getWalletQRValue(transaction.payment_token, transaction.payment_address)} />
+							
+							<div className="warning">
+								<span className="warning-wrapper">
+								<WarningIcon />
+									Make sure you pay <span className="font-semibold">
+										{transaction.initial_purchase_amount_crypto} {transaction.payment_token.short_name}
+									</span> to the address below on the <span className="font-semibold">
+										{apiToken.chain}
+									</span> blockchain.
+								</span>
+							</div>
+						</div>
 					)}
+					<div className="form-item">
+						<label htmlFor="wallet-address">Wallet Address</label>
+						<Input
+							ref={(el) => inputRef.current = (el || undefined)}
+							value={transaction.payment_address}
+							id="wallet-address"
+							copyable
+						/>
+					</div>
+					<div className="form-item">
+						<label htmlFor="crypto-amount">Amount to Pay</label>
+						<Input
+							ref={(el) => inputRef.current = (el || undefined)}
+							value={transaction.initial_purchase_amount_crypto}
+							id="crypto-amount"
+							copyable
+						/>
+					</div>
+					
+					<div className="form-item">
+						<label htmlFor="crypto-amount">Token to Pay With</label>
+						<CurrencyItemDisplay
+							currencyItem={apiToCurrency(transaction.payment_token)}
+							className="rounded-item w-full bg-background-contrast py-3"
+							fullDetails
+						/>
+					</div>
 				</CardBody>
 			</Card>
 		</Dialog>

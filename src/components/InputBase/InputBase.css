@@ -102,7 +102,7 @@
 		transition-background-color
 }
 
-.input-root.input-root svg {
+.input-root.input-root .icon-container svg {
 	@apply
 		fill-current
 		text-action-unselected

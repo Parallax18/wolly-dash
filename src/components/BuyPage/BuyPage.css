@@ -118,8 +118,15 @@
 		w-33
 }
 
+.currency-display-item .currency-image-container {
+	@apply
+		relative
+		flex
+}
+
 .currency-display-item .currency-image {
 	@apply
+		!m-auto
 		w-8 h-8
 		!rounded-full
 		object-cover object-center

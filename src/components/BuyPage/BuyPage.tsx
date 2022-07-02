@@ -317,13 +317,14 @@ export type CurrencyItemDisplayProps = React.HTMLAttributes<HTMLDivElement> & {
 	currencyItem?: CurrencyItem,
 	component?: ComponentType,
 	currencyList?: CurrencyItem[],
-	bonuses?: TokenBonus[]
+	bonuses?: TokenBonus[],
+	fullDetails?: boolean,
 	[key: string]: any
 }
 
 export const CurrencyItemDisplay: Component<CurrencyItemDisplayProps> = ({
 	currencyItem, component = "div", children, currencyList,
-	bonuses, classes, ...others
+	bonuses, classes, fullDetails, ...others
 }) => {
 	const bonusItem = bonuses ? bonuses.find((bonus) => bonus.token_id.toLowerCase() === currencyItem?.id?.toLowerCase()) : undefined;
 
@@ -343,7 +344,7 @@ export const CurrencyItemDisplay: Component<CurrencyItemDisplayProps> = ({
 					others.className,
 				)
 			}>
-			<div className="relative">
+			<div className="currency-image-container">
 				<Loadable component="img"
 					className="currency-image"
 					src={currencyItem?.imageUrl}
@@ -356,6 +357,7 @@ export const CurrencyItemDisplay: Component<CurrencyItemDisplayProps> = ({
 			</div>
 			<Loadable length={2} component="span" className="text-container">
 				{currencyItem?.symbol}
+				{fullDetails && ` - ${currencyItem?.chain} `}
 				{bonusItem && <span className={clsx("text-2xs text-success-light font-bold bg-background-contrast py-0.5 px-1.5 rounded-full", classes?.bonusChip)}>
 					+{bonusItem.percentage}%
 				</span>}
