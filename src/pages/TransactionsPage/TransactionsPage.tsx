@@ -10,7 +10,7 @@ import { Transaction } from "../../types/Api"
 import { Component } from "../../types/Util"
 import { apiToCurrency, capitalize, CurrencyItem, formatLargeNumber, getWalletQRValue } from "../../util"
 
-import QRCode from "react-qr-code"
+import { QRCodeCanvas } from "qrcode.react"
 
 import "./TransactionsPage.css"
 import Input from "../../components/Input"
@@ -149,7 +149,7 @@ export const TransactionDetails: Component<TransactionDetailsProps> = ({ transac
 				<CardBody className="transaction-details-body flex-gap-y-2">
 					{transaction?.status === "pending" && (
 						<div className="pending-container">
-							<QRCode size={160} className="qr-code" value={getWalletQRValue(transaction.payment_token, transaction.payment_address)} />
+							<QRCodeCanvas size={160} className="qr-code" value={getWalletQRValue(transaction.payment_token, transaction.payment_address)} />
 							
 							<div className="warning">
 								<span className="warning-wrapper">
