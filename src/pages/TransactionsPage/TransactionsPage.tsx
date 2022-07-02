@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import React, { useContext, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import Button from "../../components/Button"
 import Card, { CardBody, CardTitle } from "../../components/Card"
 import Chip from "../../components/Chip"
@@ -8,7 +8,7 @@ import Page from "../../components/Page"
 import { TransactionsContext } from "../../context/TransactionsContext"
 import { Transaction } from "../../types/Api"
 import { Component } from "../../types/Util"
-import { apiToCurrency, capitalize, formatLargeNumber, getWalletQRValue } from "../../util"
+import { apiToCurrency, capitalize, CurrencyItem, formatLargeNumber, getWalletQRValue } from "../../util"
 
 import QRCode from "react-qr-code"
 
@@ -20,50 +20,56 @@ import CopyIcon from "../../svg/icons/copy.svg"
 import { AlertContext } from "../../context/AlertContext"
 import { CurrencyItemDisplay } from "../../components/BuyPage"
 import WarningIcon from "../../svg/icons/warning.svg"
+import { useParams } from "react-router"
+import { Loadable, Loader } from "../../components/Loader"
+import { defaultTransaction } from "../../defaults/Api"
 
 const TransactionsPage: Component = () => {
-	const { transactions } = useContext(TransactionsContext)
-	const [ selectedTransaction, setSelectedTransaction ] = useState<Transaction>()
-	const [ detailsOpen, setDetailsOpen ] = useState(true)
+	const { transactions, getTransactionsRequest } = useContext(TransactionsContext)
+	const { id } = useParams()
+	const [ selectedTransaction, setSelectedTransaction ] = useState<Transaction | undefined>(transactions.find((txn) => txn.id === id))
+	const [ detailsOpen, setDetailsOpen ] = useState(false)
 
 	return (
 		<Page path="/transactions" title="Transactions">
 			<div className="transactions-page">
 				<div className="transactions-list flex-gap-y-4">
-					<Card className="transaction-item transaction-item-title flex-gap-x-2" >
-						<span className="item-value token-value">
-							Payment Token
-						</span>
-						<span className="item-value">
-							Crypto Amount
-						</span>
-						<span className="item-value">
-							Fiat Amount
-						</span>
-						<span className="item-value">
-							Status
-						</span>
-						<span className="item-value">
-							Wallet Address
-						</span>
-						<span className="item-value">
-							
-						</span>
-					</Card>
-					{[...transactions,...transactions].map((txn, i) => (
-						<TransactionItem
-							key={i}
-							transaction={txn}
-							onActionClick={() => {
-								setSelectedTransaction(txn)
-								setDetailsOpen(true)
-							}}
-						/>
-					))}
+					<Loader loading={getTransactionsRequest.fetching }>
+						<Card className="transaction-item transaction-item-title flex-gap-x-2" >
+							<span className="item-value token-value">
+								Payment Token
+							</span>
+							<span className="item-value">
+								Crypto Amount
+							</span>
+							<span className="item-value">
+								Fiat Amount
+							</span>
+							<span className="item-value">
+								Status
+							</span>
+							<span className="item-value">
+								Wallet Address
+							</span>
+							<span className="item-value">
+								
+							</span>
+						</Card>
+						{(getTransactionsRequest.fetching ? new Array(4).fill(defaultTransaction) : transactions).map((txn, i) => (
+							<TransactionItem
+								key={i}
+								transaction={txn}
+								onActionClick={() => {
+									setSelectedTransaction(txn)
+									setDetailsOpen(true)
+								}}
+							/>
+						))}
+					</Loader>
 				</div>
 			</div>
 			<TransactionDetails
-				transaction={transactions[0]}
+				transaction={selectedTransaction}
 				open={detailsOpen}
 				onClose={() => setDetailsOpen(false)}
 			/>
@@ -92,24 +98,32 @@ export const TransactionItem: Component<TransactionItemProps> = ({ transaction, 
 	return (
 		<Card className="transaction-item flex-gap-x-2" >
 			<span className="item-value token-value">
-				<img className="token-image" src={paymentToken.imageUrl} />
-				<span>
+				<Loadable component="img" className="token-image" src={paymentToken.imageUrl} />
+				<Loadable component="span">
 					{paymentToken.symbol}
-				</span>
+				</Loadable>
 			</span>
 			<span className="item-value">
-				{formatLargeNumber(transaction.initial_purchase_amount_crypto)}
+				<Loadable component="span">
+					{formatLargeNumber(transaction.initial_purchase_amount_crypto)}
+				</Loadable>
 			</span>
 			<span className="item-value">
-				${formatLargeNumber(transaction.initial_purchase_amount_fiat)}
+				<Loadable component="span">
+					${formatLargeNumber(transaction.initial_purchase_amount_fiat)}
+				</Loadable>
 			</span>
 			<span className="item-value">
-				<Chip compact className={clsx(statusColorMap[transaction.status])}>
-					{capitalize(transaction.status)}
-				</Chip>
+				<Loadable component="span">
+					<Chip compact className={clsx(statusColorMap[transaction.status])}>
+						{capitalize(transaction.status)}
+					</Chip>
+				</Loadable>
 			</span>
 			<span className="item-value">
-				{transaction.payment_address.substring(0, 8)}...
+				<Loadable component="span">
+					{transaction.payment_address.substring(0, 8)}...
+				</Loadable>
 			</span>
 			<span className="item-value">
 				{transaction.status === "pending" && (
@@ -135,11 +149,8 @@ export type TransactionDetailsProps = DialogProps & {
 
 export const TransactionDetails: Component<TransactionDetailsProps> = ({ transaction, ...others }) => {
 	const inputRef = useRef<HTMLInputElement>()
-	const alertContext = useContext(AlertContext)
 
-	if (!transaction) return <></>;
-
-	const apiToken = apiToCurrency(transaction.payment_token)
+	const apiToken: CurrencyItem | Record<string, any> = transaction?.payment_token ? apiToCurrency(transaction?.payment_token) : {}
 
 	return (
 		<Dialog {...others} className={clsx("transaction-details", others.className)}>
@@ -148,7 +159,7 @@ export const TransactionDetails: Component<TransactionDetailsProps> = ({ transac
 					Transaction
 				</CardTitle>
 				<CardBody className="transaction-details-body flex-gap-y-2">
-					{transaction.status === "pending" && (
+					{transaction?.status === "pending" && (
 						<div className="pending-container">
 							<QRCode size={160} className="qr-code" value={getWalletQRValue(transaction.payment_token, transaction.payment_address)} />
 							
@@ -158,7 +169,7 @@ export const TransactionDetails: Component<TransactionDetailsProps> = ({ transac
 									Make sure you pay <span className="font-semibold">
 										{transaction.initial_purchase_amount_crypto} {transaction.payment_token.short_name}
 									</span> to the address below on the <span className="font-semibold">
-										{apiToken.chain}
+										{apiToken?.chain || ""}
 									</span> blockchain.
 								</span>
 							</div>
@@ -168,7 +179,7 @@ export const TransactionDetails: Component<TransactionDetailsProps> = ({ transac
 						<label htmlFor="wallet-address">Wallet Address</label>
 						<Input
 							ref={(el) => inputRef.current = (el || undefined)}
-							value={transaction.payment_address}
+							value={transaction?.payment_address}
 							id="wallet-address"
 							copyable
 						/>
@@ -177,7 +188,7 @@ export const TransactionDetails: Component<TransactionDetailsProps> = ({ transac
 						<label htmlFor="crypto-amount">Amount to Pay</label>
 						<Input
 							ref={(el) => inputRef.current = (el || undefined)}
-							value={transaction.initial_purchase_amount_crypto}
+							value={transaction?.initial_purchase_amount_crypto}
 							id="crypto-amount"
 							copyable
 						/>
@@ -185,11 +196,13 @@ export const TransactionDetails: Component<TransactionDetailsProps> = ({ transac
 					
 					<div className="form-item">
 						<label htmlFor="crypto-amount">Token to Pay With</label>
-						<CurrencyItemDisplay
-							currencyItem={apiToCurrency(transaction.payment_token)}
-							className="rounded-item w-full bg-background-contrast py-3"
-							fullDetails
-						/>
+						{apiToken && (
+							<CurrencyItemDisplay
+								currencyItem={apiToken as CurrencyItem}
+								className="rounded-item w-full bg-background-contrast py-3"
+								fullDetails
+							/>
+						)}
 					</div>
 				</CardBody>
 			</Card>

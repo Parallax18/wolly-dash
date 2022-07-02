@@ -109,7 +109,7 @@ export interface Transaction {
 		total: number
 	},
 	payment_token: PaymentToken,
-	initial_purchase_amount_fiat: 1000,
+	initial_purchase_amount_fiat: number,
 	initial_purchase_amount_crypto: number,
 	token_price: number,
 	completed_date: string | null,
