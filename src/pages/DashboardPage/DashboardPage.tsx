@@ -21,7 +21,7 @@ const DashboardPage: Component = () => {
 
 	return (
 		<Page title="Dashboard" path="/" userRestricted>
-			<div className="dashboard-page gap-6">
+			<div className="dashboard-page gap-6 <md:gap-2 <sm:!p-2">
 				<Loader loading={currProjectRequest.fetching || activeStageRequest.fetching || userRequest.fetching}>
 					<div className="flex flex-[2] flex-col flex-gap-y-6">
 						<div className="dashboard-card">

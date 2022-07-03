@@ -12,8 +12,9 @@
 		relative
 		w-full
 		h-90
-		<md:h-90
-		<sm:!h-80
+		<md:h-80
+		<sm:h-60
+		<xs:h-40
 }
 
 .chart-container .responsive-container {

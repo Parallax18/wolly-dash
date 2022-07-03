@@ -20,6 +20,7 @@ import WarningIcon from "../../svg/icons/warning.svg"
 import "./TransactionList.css"
 import Input from "../Input"
 import { CurrencyItemDisplay } from "../BuyPage"
+import placeholder from "../../constants/placeholder"
 
 const TransactionList: Component = () => {
 	const { transactions, getTransactionsRequest } = useContext(TransactionsContext)
@@ -87,17 +88,11 @@ export const TransactionItem: Component<TransactionItemProps> = ({ transaction, 
 	const { currentProject } = useContext(ProjectContext)
 
 	return (
-		<Collapse
-			color="paper"
-			classes={{
-				root: "transaction-item flex-col !rounded-none",
-				titleContainer: "flex-gap-x-2",
-				inner: "transaction-item-body"
-			}}
-			headerComponent={"div"}
-			title={<>
+		<div
+			className="transaction-item flex-gap-x-1"
+		>
 			<span className="item-value token-value">
-				<Loadable component="img" className="token-image" src={paymentToken.imageUrl} />
+				<Loadable component="img" className="token-image" src={paymentToken.imageUrl || placeholder.tokenImage } />
 			</span>
 			<span className="item-value">
 				<div className="value-group">
@@ -120,6 +115,13 @@ export const TransactionItem: Component<TransactionItemProps> = ({ transaction, 
 					</Loadable>
 				</div>
 			</span>
+			<span className="item-value">
+				<div className="value-group">
+					<Loadable component={Chip} compact className={clsx(statusColorMap[transaction.status], "font-normal w-22 justify-center mr-1")}>
+						{capitalize(transaction.status)}
+					</Loadable>
+				</div>
+			</span>
 			<span className="item-value action-value">
 				{transaction.status === "pending" && (
 					<Button
@@ -137,28 +139,7 @@ export const TransactionItem: Component<TransactionItemProps> = ({ transaction, 
 					</Button>
 				)}
 			</span>
-		</>}>
-			<div className="transaction-body-item">
-				<span className="transaction-body-label">ID</span>
-				<span className="transaction-body-value">{transaction.payment_id}</span>
-			</div>
-			<div className="transaction-body-item">
-				<span className="transaction-body-label">Token Price</span>
-				<span className="transaction-body-value">${formatNumber(transaction.token_price)}</span>
-			</div>
-			<div className="transaction-body-item">
-				<span className="transaction-body-label">Wallet Address</span>
-				<span className="transaction-body-value">{transaction.payment_address.substring(0, 12)}...</span>
-			</div>
-			<div className="transaction-body-item">
-				<span className="transaction-body-label">Status</span>
-				<span className="transaction-body-value">
-					<Chip compact className={clsx(statusColorMap[transaction.status])}>
-						{capitalize(transaction.status)}
-					</Chip>
-				</span>
-			</div>
-		</Collapse>
+		</div>
 	)
 }
 

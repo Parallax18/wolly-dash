@@ -25,10 +25,14 @@ const PriceChart: Component = () => {
 			.sort((a, b) => a.date.getTime() - b.date.getTime())
 	}, [priceChartRequest.data])
 
-	console.log(dataset)
 
 	const dateFormatter = (value: any): string => {
 		if (period === "day") return new Date(value).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+		return new Date(value).toLocaleDateString()
+	}
+
+	const tooltipDateFormatter = (value: any): string => {
+		if (period === "day") return new Date(value).toLocaleString([], {hour: '2-digit', minute:'2-digit'});
 		return new Date(value).toLocaleDateString()
 	}
 
@@ -85,7 +89,7 @@ const PriceChart: Component = () => {
 								/>
 								<Tooltip
 									wrapperClassName="!bg-background-contrast"
-									labelFormatter={dateFormatter}
+									labelFormatter={(date) => new Date(date).toLocaleString()}
 									formatter={(value: number) => `$${formatNumber(value)}`}
 								/>
 							</LineChart>

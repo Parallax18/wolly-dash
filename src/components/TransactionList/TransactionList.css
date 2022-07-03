@@ -18,22 +18,11 @@
 
 .transaction-item {
 	@apply
+		p-4
 		flex
 		bg-background-paper
-		rounded-item
 
 		<md:overflow-x-auto
-}
-
-.transaction-item-title {
-	@apply
-		sticky
-		top-0
-		font-semibold
-		z-[2]
-		pr-8
-		px-4
-		py-3
 }
 
 .transaction-item .item-value {
@@ -43,6 +32,7 @@
 		flex-1
 		font-semibold
 		leading-[1.1em]
+		<sm:text-sm
 }
 
 .transaction-item .value-group {
@@ -54,6 +44,7 @@
 	@apply
 		text-text-secondary
 		text-sm
+		<sm:text-xs
 }
 
 .transaction-item .token-value {
@@ -68,7 +59,6 @@
 	@apply
 		!min-w-16
 		!w-16
-		mr-3
 }
 
 .transaction-item .token-image {

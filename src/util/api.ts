@@ -448,7 +448,7 @@ export const useGetTransactions = (): GetTransactionsRequest => {
 		return request.sendRequest({
 			url: "/" + userId + "/transactions",
 			params: {
-				limit: 2
+				limit: 5
 			}
 		})
 	}
