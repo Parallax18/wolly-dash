@@ -2,6 +2,7 @@
 	@apply
 		mt-2
 		flex
+		flex-wrap
 }
 
 .tiered-bonus-buttons .bonus-button.active {

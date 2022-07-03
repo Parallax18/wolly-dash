@@ -10,7 +10,6 @@
 		rounded-card
 		flex flex-col
 		relative overflow-auto
-		min-h-160
 }
 
 .buy-page .card-body {

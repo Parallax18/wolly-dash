@@ -32,7 +32,7 @@ const TieredBonusButtons: Component<TieredBonusButtonsProps> = ({
 
 	if (bonuses.length === 0) return <></>;
 	return (
-		<div className={clsx("tiered-bonus-buttons flex-gap-x-2", others.className)}>
+		<div className={clsx("tiered-bonus-buttons gap-2 !my-0 !mt-1", others.className)}>
 			{bonuses.map((bonus) => (
 				<Button
 					type="button"

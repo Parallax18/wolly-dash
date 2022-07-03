@@ -5,7 +5,7 @@ import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "rec
 import "./PriceChart.css"
 import { capitalize, formatDollar, formatNumber, PriceChartPeriod, usePriceChartRequest, zeroPad } from "../../util"
 import { ThemeContext } from "../../context/ThemeContext"
-import Card from "../Card"
+import Card, { CardTitle } from "../Card"
 import Button from "../Button"
 import { Loadable, Loader } from "../Loader"
 import LoaderBar from "../LoaderBar"
@@ -25,12 +25,6 @@ const PriceChart: Component = () => {
 			.sort((a, b) => a.date.getTime() - b.date.getTime())
 	}, [priceChartRequest.data])
 
-
-	const dateFormatter = (value: any): string => {
-		if (period === "day") return new Date(value).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-		return new Date(value).toLocaleDateString()
-	}
-
 	const tooltipDateFormatter = (value: any): string => {
 		if (period === "day") return new Date(value).toLocaleString([], {hour: '2-digit', minute:'2-digit'});
 		return new Date(value).toLocaleDateString()
@@ -42,6 +36,7 @@ const PriceChart: Component = () => {
 	return (
 		<Loader loading={priceChartRequest.fetching}>
 			<Card className="price-chart-container">
+				<CardTitle className="px-0 py-0 pb-4">Price Chart</CardTitle>
 				<LoaderBar />
 				<div className="price-chart-buttons flex-gap-x-2">
 					{(["day", "week", "month", "all"] as PriceChartPeriod[]).map((value) => (
@@ -89,7 +84,7 @@ const PriceChart: Component = () => {
 								/>
 								<Tooltip
 									wrapperClassName="!bg-background-contrast"
-									labelFormatter={(date) => new Date(date).toLocaleString()}
+									labelFormatter={tooltipDateFormatter}
 									formatter={(value: number) => `$${formatNumber(value)}`}
 								/>
 							</LineChart>

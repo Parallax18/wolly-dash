@@ -39,7 +39,7 @@ export const WalletCard: Component = () => {
 	}
 
 	return (
-		<Card>
+		<Card className="wallet-card">
 			<CardTitle>
 				Wallet Address
 			</CardTitle>
@@ -99,7 +99,7 @@ export const ProfileCard: Component = () => {
 	}
 
 	return (
-		<Card className="max-w-150 flex-[2]">
+		<Card className="profile-card">
 			<CardTitle>
 				Your Profile
 			</CardTitle>

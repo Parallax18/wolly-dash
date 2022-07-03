@@ -71,7 +71,5 @@ export const fiatList: CurrencyItem[] = [
 export const dollarItem = fiatList[0]
 
 export const getTokenLabelString = (list: CurrencyItem[], item: CurrencyItem) => {
-	let duplicate = isDuplicate(item, list, (currItem: CurrencyItem) => currItem.symbol === item.symbol)
-	if (duplicate || item.chain !== "ERC20") return `${item.name} (${item.chain})`
-	return `${item.name}`
+	return `${item.name} (${item.chain})`
 }
