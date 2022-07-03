@@ -26,7 +26,8 @@
 
 .button.compact {
 	@apply
-		px-2 py-2
+		px-2 py-1.5
+		text-base
 }
 
 .button.base {
@@ -64,6 +65,13 @@
 	--bg-hover-color: var(--theme-background-paperHighlight);
 	--text-color: var(--theme-text-primary);
 }
+
+.button.bg-paper {
+	--bg-color: var(--theme-background-paper);
+	--bg-hover-color: var(--theme-background-paperLight);
+	--text-color: var(--theme-text-primary);
+}
+
 
 .button.bg-contrast {
 	--bg-color: var(--theme-background-contrast);

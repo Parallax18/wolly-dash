@@ -3,14 +3,13 @@ import "./NationalityInput.css"
 
 import { countryList } from "../../util"
 import FormSelect from "../FormSelect"
+import placeholder from "../../constants/placeholder"
 
 export interface NationalityInputProps {
 	field: string,
 }
 
 const NationalityInput: Component<NationalityInputProps> = (props) => {
-	const unknownFlagUrl = "/image/placeholder/flag.svg"
-
 	return (
 		<FormSelect
 			searchable
@@ -20,13 +19,13 @@ const NationalityInput: Component<NationalityInputProps> = (props) => {
 				<>
 					{props.item && (
 						<div className="flex-1 flex items-center h-6">
-							<img src={props.item?.data?.flagUrl || unknownFlagUrl} className="h-full mr-4 rounded" />
+							<img src={props.item?.data?.flagUrl || placeholder.flag} className="h-full mr-4 rounded" />
 							<p style={props.style} className="whitespace-nowrap">{props.item?.data?.name}</p>
 						</div>
 					)}
 					{!props.item && (
 						<div className="flex-1 flex items-center h-6">
-							<img src={unknownFlagUrl} className="h-full mr-4 rounded" />
+							<img src={placeholder.flag} className="h-full mr-4 rounded" />
 							<p style={props.style} className="whitespace-nowrap">Nationality</p>
 						</div>
 					)}

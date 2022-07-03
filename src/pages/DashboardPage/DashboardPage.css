@@ -11,27 +11,26 @@
 		!mx-auto
 }
 
-.dashboard-card .card-body {
+.dashboard-card {
 	@apply
 		flex flex-col
-		py-4
-}
-
-.dashboard-card .card-body > *:not(:last-child) {
-	@apply
-		mb-2
 }
 
 .dashboard-card .card-header {
 	@apply
 		flex
 		items-center
-		px-4
-		py-2
-		bg-background-paperLight
-		rounded-t-card
 		justify-between
-		h-12
+		mb-2
+		text-lg
+		text-text-primary
+		font-semibold
+}
+
+.dashboard-card .card-header.small {
+	@apply
+		text-text-secondary
+		text-base
 }
 
 .dashboard-card .card-header .chip {
@@ -39,4 +38,14 @@
 		ml-4
 		bg-primary-main
 		text-primary-contrastText
+}
+
+.dashboard-card .value {
+	@apply
+		font-bold
+}
+
+.dashboard-card .value.large {
+	@apply
+		text-3xl
 }

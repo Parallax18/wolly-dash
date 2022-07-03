@@ -49,7 +49,7 @@ const baseTheme: Record<string, any> = {
 	},
 	text: {
 		primary: "#fff",
-		secondary: "#6e7073",
+		secondary: "#c0c0c0",
 		muted: "#aaa",
 		hint: "#bbb"
 	},

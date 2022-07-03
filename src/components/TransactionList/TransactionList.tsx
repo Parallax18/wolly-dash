@@ -1,34 +1,33 @@
 import clsx from "clsx"
+import { QRCodeCanvas } from "qrcode.react"
 import React, { useContext, useEffect, useRef, useState } from "react"
-import Button from "../../components/Button"
-import Card, { CardBody, CardTitle } from "../../components/Card"
-import Chip from "../../components/Chip"
-import Dialog, { DialogProps } from "../../components/Dialog"
-import Page from "../../components/Page"
+import { ProjectContext } from "../../context/ProjectContext"
 import { TransactionsContext } from "../../context/TransactionsContext"
+import { defaultTransaction } from "../../defaults/Api"
 import { Transaction } from "../../types/Api"
 import { Component } from "../../types/Util"
-import { apiToCurrency, capitalize, CurrencyItem, formatLargeNumber, getWalletQRValue } from "../../util"
+import { apiToCurrency, capitalize, CurrencyItem, formatLargeNumber, formatNumber, getWalletQRValue } from "../../util"
+import Button from "../Button"
+import Card, { CardBody, CardTitle } from "../Card"
+import Chip from "../Chip"
+import Collapse from "../Collapse"
+import Dialog, { DialogProps } from "../Dialog"
+import { Loadable, Loader } from "../Loader"
+import Pagination from "../Pagination"
 
-import { QRCodeCanvas } from "qrcode.react"
-
-import "./TransactionsPage.css"
-import Input from "../../components/Input"
-import IconButton from "../../components/IconButton"
-
-import CopyIcon from "../../svg/icons/copy.svg"
-import { AlertContext } from "../../context/AlertContext"
-import { CurrencyItemDisplay } from "../../components/BuyPage"
 import WarningIcon from "../../svg/icons/warning.svg"
-import { useNavigate, useParams } from "react-router"
-import { Loadable, Loader } from "../../components/Loader"
-import { defaultTransaction } from "../../defaults/Api"
 
-const TransactionsPage: Component = () => {
+import "./TransactionList.css"
+import Input from "../Input"
+import { CurrencyItemDisplay } from "../BuyPage"
+
+const TransactionList: Component = () => {
 	const { transactions, getTransactionsRequest } = useContext(TransactionsContext)
 	const params = new URLSearchParams(location.search)
 	const [ selectedTransaction, setSelectedTransaction ] = useState<Transaction | undefined>()
 	const [ detailsOpen, setDetailsOpen ] = useState(false)
+
+	const [ page, setPage ] = useState(1)
 
 	const paramsRef = useRef(false)
 
@@ -43,28 +42,20 @@ const TransactionsPage: Component = () => {
 	}, [params, transactions])
 
 	return (
-		<Page path="/transactions" title="Transactions">
-			<div className="transactions-page">
-				<div className="transactions-list flex-gap-y-4">
-					<Loader loading={getTransactionsRequest.fetching }>
-						<Card className="transaction-item transaction-item-title flex-gap-x-2" >
-							<span className="item-value token-value">Token</span>
-							<span className="item-value">Amount</span>
-							<span className="item-value">USD</span>
-							<span className="item-value">Status</span>
-							<span className="item-value"></span>
-						</Card>
-						{(getTransactionsRequest.fetching ? new Array(4).fill(defaultTransaction) : transactions).map((txn, i) => (
-							<TransactionItem
-								key={i}
-								transaction={txn}
-								onActionClick={() => {
-									setSelectedTransaction(txn)
-									setDetailsOpen(true)
-								}}
-							/>
-						))}
-					</Loader>
+		<Loader loading={getTransactionsRequest.fetching}>
+		
+			<div className="transactions-list">
+				<div className="transactions-wrapper">
+					{(getTransactionsRequest.fetching ? new Array(2).fill(defaultTransaction) : transactions).map((txn, i) => (
+						<TransactionItem
+							key={i}
+							transaction={txn}
+							onActionClick={() => {
+								setSelectedTransaction(txn)
+								setDetailsOpen(true)
+							}}
+						/>
+					))}
 				</div>
 			</div>
 			<TransactionDetails
@@ -72,11 +63,11 @@ const TransactionsPage: Component = () => {
 				open={detailsOpen}
 				onClose={() => setDetailsOpen(false)}
 			/>
-		</Page>
+		</Loader>
 	)
 }
 
-export default TransactionsPage
+export default TransactionList
 
 export type TransactionItemProps = {
 	transaction: Transaction,
@@ -93,47 +84,81 @@ const statusColorMap: Record<Transaction["status"], [string, string]> = {
 
 export const TransactionItem: Component<TransactionItemProps> = ({ transaction, onActionClick }) => {
 	const paymentToken = apiToCurrency(transaction.payment_token)
+	const { currentProject } = useContext(ProjectContext)
 
 	return (
-		<Card className="transaction-item flex-gap-x-2" >
+		<Collapse
+			color="paper"
+			classes={{
+				root: "transaction-item flex-col !rounded-none",
+				titleContainer: "flex-gap-x-2",
+				inner: "transaction-item-body"
+			}}
+			headerComponent={"div"}
+			title={<>
 			<span className="item-value token-value">
 				<Loadable component="img" className="token-image" src={paymentToken.imageUrl} />
-				<Loadable component="span">
-					{paymentToken.symbol}
-				</Loadable>
 			</span>
 			<span className="item-value">
-				<Loadable component="span">
-					{formatLargeNumber(transaction.initial_purchase_amount_crypto)}
-				</Loadable>
+				<div className="value-group">
+					<Loadable component="span">
+						{formatLargeNumber(transaction.initial_purchase_amount_crypto)} 
+						{" "}{paymentToken.symbol}
+					</Loadable>
+					<Loadable component="span" className="value-sub">
+						${formatLargeNumber(transaction.initial_purchase_amount_fiat)}
+					</Loadable>
+				</div>
 			</span>
 			<span className="item-value">
-				<Loadable component="span">
-					${formatLargeNumber(transaction.initial_purchase_amount_fiat)}
-				</Loadable>
+				<div className="value-group">
+					<Loadable component="span">
+						{formatLargeNumber(transaction.tokens.total)} {currentProject?.symbol}
+					</Loadable>
+					<Loadable component="span" className="value-sub">
+						${formatLargeNumber(transaction.tokens.total * transaction.token_price, 1000, 0, 2)}
+					</Loadable>
+				</div>
 			</span>
-			<span className="item-value">
-				<Loadable component="span">
-					<Chip compact className={clsx(statusColorMap[transaction.status])}>
-						{capitalize(transaction.status)}
-					</Chip>
-				</Loadable>
-			</span>
-			<span className="item-value">
+			<span className="item-value action-value">
 				{transaction.status === "pending" && (
 					<Button
 						rounded
 						type="button"
-						className="!px-3 !py-1 text-sm w-20"
+						className="!px-3 !py-1 text-sm w-full"
 						color="primary"
 						buttonStyle={transaction.status === "pending" ? "contained" : "outlined"}
-						onClick={() => onActionClick(transaction)}
+						onClick={(e) => {
+							e.stopPropagation()
+							onActionClick(transaction)
+						}}
 					>
 						{transaction.status === "pending" ? "Pay" : "Details"}
 					</Button>
 				)}
 			</span>
-		</Card>
+		</>}>
+			<div className="transaction-body-item">
+				<span className="transaction-body-label">ID</span>
+				<span className="transaction-body-value">{transaction.payment_id}</span>
+			</div>
+			<div className="transaction-body-item">
+				<span className="transaction-body-label">Token Price</span>
+				<span className="transaction-body-value">${formatNumber(transaction.token_price)}</span>
+			</div>
+			<div className="transaction-body-item">
+				<span className="transaction-body-label">Wallet Address</span>
+				<span className="transaction-body-value">{transaction.payment_address.substring(0, 12)}...</span>
+			</div>
+			<div className="transaction-body-item">
+				<span className="transaction-body-label">Status</span>
+				<span className="transaction-body-value">
+					<Chip compact className={clsx(statusColorMap[transaction.status])}>
+						{capitalize(transaction.status)}
+					</Chip>
+				</span>
+			</div>
+		</Collapse>
 	)
 }
 

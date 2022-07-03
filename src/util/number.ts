@@ -139,3 +139,15 @@ export const formatLargeNumber = (num: number, precisionCutoff: number = 1000, m
 	})
 	return `${roundToDP(newNum, 2)}${suffix}`
 }
+
+export const formatDollar = (num: number) => {
+	let str = formatNumber(num)
+	if (str === "0") return "0.00"
+	if (str.includes(".")) {
+		let split = str.split(".")
+		let decimalStr = split[1]
+		decimalStr = decimalStr.substring(0, 2)
+		if (decimalStr.length === 1) decimalStr = decimalStr + "0"
+		return `${split[0]}.${decimalStr}`
+	} else return str
+}

@@ -19,7 +19,6 @@ const navList = [
 	{label: "Dashboard", path: "/", icon: DashboardIcon},
 	{label: "Account", path: "/account", icon: AccountIcon},
 	{label: "Buy", path: "/buy", icon: BuyIcon},
-	{label: "Transactions", path: "/transactions", icon: TransactionsIcon},
 ]
 
 const bottomList = [

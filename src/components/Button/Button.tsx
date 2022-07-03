@@ -13,7 +13,7 @@ export interface ButtonClasses {
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 	icon?: ComponentType;
 	classes?: ButtonClasses;
-	color?: "base" | "primary" | "secondary" | "accent" | "transparent" | "bg-light" | "bg-contrast",
+	color?: "base" | "primary" | "secondary" | "accent" | "transparent" | "bg-light" | "bg-contrast" | "bg-paper",
 	size?: "default" | "tiny",
 	textColor?: "unselected" | "secondary" | "default"
 	buttonStyle?: "contained" | "outlined",

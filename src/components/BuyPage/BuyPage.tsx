@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Component, ComponentType } from "../../types/Util"
-import { CurrencyItem, deserializeObjFromQuery, dollarItem, formatLargeNumber, formatNumber, getBonusName, isDuplicate, floorToDP, roundToNearest, tokenList, useBonusCalculations, useDebounce, useInterval, useStateRef, useCreateTransaction, errorToString, useGetMinimumAmount } from "../../util"
+import { CurrencyItem, deserializeObjFromQuery, dollarItem, formatLargeNumber, formatNumber, getBonusName, isDuplicate, floorToDP, roundToNearest, tokenImageMap, useBonusCalculations, useDebounce, useInterval, useStateRef, useCreateTransaction, errorToString, useGetMinimumAmount } from "../../util"
 import Button from "../Button"
 import Form, { FormRender } from "../Form"
 import FormPage from "../FormPage"
@@ -18,7 +18,7 @@ import { FormTokenSelectModal } from "../TokenSelectModal"
 import Collapse from "../Collapse"
 import { SelectModalWrapper } from "../SelectModal"
 import { PriceContext } from "../../context/PriceContext"
-import { PricesResponse, TokenBonus } from "../../types/Api"
+import { PricesResponse, TokenBonus, Transaction } from "../../types/Api"
 import { StageContext } from "../../context/StageContext"
 import { AuthContext } from "../../context/AuthContext"
 import { ProjectContext } from "../../context/ProjectContext"
@@ -28,6 +28,9 @@ import { TransactionsContext } from "../../context/TransactionsContext"
 import TieredBonusButtons from "../TieredBonusButtons"
 
 import * as Yup from "yup"
+import { defaultTransaction } from "../../defaults/Api"
+import placeholder from "../../constants/placeholder"
+import { TransactionDetails } from "../TransactionList"
 
 const BuyPage: Component = () => {
 	const [ timeRemaining, setTimeRemaining ] = useState(0);
@@ -154,7 +157,10 @@ const BuyPage: Component = () => {
 	const totalBonusItem = {label: "Total Bonus", amount: totalBonus.amount, dollar: totalBonus.dollar}
 
 	const alertContext = useContext(AlertContext)
-	const navigate = useNavigate()
+
+	const [ transactionDetailsOpen, setTransactionDetailsOpen ] = useState(false)
+	const [ createdTransaction, setCreatedTransaction ] = useState<Transaction>();
+
 
 	const createPurchaseTransaction = () => {
 		if (!values.token?.id) return;
@@ -163,13 +169,15 @@ const BuyPage: Component = () => {
 			purchase_token_id: values.token?.id
 		}).then((res) => {
 			alertContext.addAlert({type: "success", label: "Successfully created transaction", duration: 4000})
-			navigate("/transactions?id=" + res.data.id)
+			setCreatedTransaction(res.data)
+			setTransactionDetailsOpen(true)
 		}).catch((err) => {
 			alertContext.addAlert({type: "error", label: errorToString(err, "Error creating transaction")})
 		})
 	}
 
-	const minimum = minimumAmountRequest.data?.min_amount_fiat || 0
+	const minimum = Math.max(minimumAmountRequest.data?.min_amount_fiat || 0, activeStage?.min_fiat_amount || 0)
+	const maximum = activeStage?.max_fiat_amount || Infinity
 
 	return (
 		<Page path="/buy" title="Buy" userRestricted>
@@ -182,7 +190,14 @@ const BuyPage: Component = () => {
 					updatePrices()
 				}}
 				onSubmit={() => createPurchaseTransaction()}
-				validationSchema={Yup.object().shape({usd_amount: Yup.number().min(minimum, `Must spend more than ${formatNumber(minimum)}`)})}
+				validationSchema={
+					Yup.object()
+						.shape({
+							usd_amount: Yup.number()
+								.min(minimum, `Can't spend less than ${formatNumber(minimum)}`)
+								.max(maximum, `Can't spend more than ${formatNumber(maximum)}`)
+						})
+					}
 			>
 				<Loader loading={currProjectRequest.fetching}>
 					<FormPage
@@ -252,7 +267,7 @@ const BuyPage: Component = () => {
 										<div className="bonus-item total">
 											<span className="bonus-label">{totalBonusItem.label}</span>
 											<Loadable component="span" length={2} className="bonus-percent">+{floorToDP(totalBonusItem.amount || 0, 0)}%</Loadable>
-											<Loadable component="span" length={2.5} className="bonus-usd">+{floorToDP((totalBonusItem.dollar || 0), 2)}$</Loadable>
+											<Loadable component="span" length={2.5} className="bonus-usd">+${floorToDP((totalBonusItem.dollar || 0), 2)}</Loadable>
 										</div>
 									}
 								>
@@ -263,7 +278,7 @@ const BuyPage: Component = () => {
 										>
 											<Loadable component="span" className="bonus-label">{bonus.label}</Loadable>
 											<Loadable component="span" length={2} className="bonus-percent">+{floorToDP(bonus.amount || 0, 0)}%</Loadable>
-											<Loadable component="span" length={2.5} className="bonus-usd">+{floorToDP(bonus.dollar || 0, 2)}$</Loadable>
+											<Loadable component="span" length={2.5} className="bonus-usd">+${floorToDP(bonus.dollar || 0, 2)}</Loadable>
 										</div>
 									))}
 								</Collapse>
@@ -293,13 +308,18 @@ const BuyPage: Component = () => {
 							color="primary"
 							rounded
 							loading={createTransactionRequest.fetching}
-							disabled={currProjectRequest.fetching || activeStageRequest.fetching || minimumAmountRequest.fetching}
+							disabled={currProjectRequest.fetching || activeStageRequest.fetching || minimumAmountRequest.fetching || bonusLoading}
 						>
 							Pay
 						</Button>
 					</FormPage>
 				</Loader>
 			</Form>
+			<TransactionDetails
+				transaction={createdTransaction || defaultTransaction}
+				open={transactionDetailsOpen}
+				onClose={() => setTransactionDetailsOpen(false)}
+			/>
 		</Page>
 	)
 }
@@ -343,7 +363,7 @@ export const CurrencyItemDisplay: Component<CurrencyItemDisplayProps> = ({
 			<div className="currency-image-container">
 				<Loadable component="img"
 					className="currency-image"
-					src={currencyItem?.imageUrl}
+					src={currencyItem?.imageUrl || placeholder.tokenImage}
 				/>
 				{duplicate && (
 					<div className="chain-chip">

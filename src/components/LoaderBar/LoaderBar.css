@@ -1,0 +1,29 @@
+.loader-bar {
+	@apply
+		absolute
+		top-0
+		h-1
+		bg-primary-main
+}
+
+.loader-bar.loading {
+	animation: loader-bar-loading infinite 2000ms forwards ease-out;
+}
+
+@keyframes loader-bar-loading {
+	0% {
+		@apply
+			left-0
+			w-0
+	}
+	50% {
+		@apply
+			left-1/2
+			w-[40%]
+	}
+	100% {
+		@apply
+			left-full
+			w-0
+	}
+}

@@ -9,7 +9,7 @@ import AccountPage from "./pages/AccountPage"
 import DashboardPage from "./pages/DashboardPage"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
-import TransactionsPage from "./pages/TransactionsPage"
+import TermsConditionsPage from "./pages/TermsConditionsPage"
 
 
 const App = () => {
@@ -25,7 +25,7 @@ const App = () => {
 						<Route path="/reset-password" element={<ResetPasswordPage />} />
 						<Route path="/account" element={<AccountPage />} />
 						<Route path="/buy" element={<BuyPage />} />
-						<Route path="/transactions" element={<TransactionsPage />} />
+						<Route path="/terms" element={<TermsConditionsPage />} />
 					</Routes>
 				</Layout>
 			</GlobalContextWrapper>

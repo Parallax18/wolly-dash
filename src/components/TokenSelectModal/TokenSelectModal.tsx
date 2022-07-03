@@ -4,11 +4,12 @@ import Card, { CardBody } from "../Card";
 
 import "./TokenSelectModal.css"
 
-import { CurrencyItem, getChainDisplayName, getTokenLabelString, tokenList as fullTokenList } from "../../util";
+import { CurrencyItem, getChainDisplayName, getTokenLabelString } from "../../util";
 import { FormContext } from "../Form";
 import SelectModal, { SelectModalProps } from "../SelectModal";
 import { TokenBonus } from "../../types/Api";
 import { ProjectContext } from "../../context/ProjectContext";
+import placeholder from "../../constants/placeholder";
 
 export type TokenSelectModalProps = Omit<SelectModalProps<CurrencyItem>, "items"> & {
 	bonuses?: TokenBonus[]
@@ -44,7 +45,7 @@ export const TokenSelectItem: Component<TokenSelectItemProps> = ({
 
 	return  (
 		<>
-			<img className="token-img" src={token.imageUrl} />
+			<img className="token-img" src={token.imageUrl || placeholder.tokenImage} />
 			<span className="token-symbol">{token.symbol}</span>
 			{!compact && <span className="token-name">- {getTokenLabelString(tokenList, token)}</span>}
 			{bonusItem && <span className="token-bonus">+{bonusItem.percentage}%</span>}

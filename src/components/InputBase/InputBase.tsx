@@ -79,6 +79,7 @@ const InputBase: Component<InputBaseProps> = React.forwardRef(({
 			{rightContent && (
 				rightContent
 			)}
+			
 			{hintText && (
 				<Loadable
 					component="p"

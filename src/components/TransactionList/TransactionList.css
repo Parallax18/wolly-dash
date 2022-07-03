@@ -1,14 +1,25 @@
-.transactions-page {
+.transactions-wrapper {
 	@apply
-		p-4
+		h-full
+}
+
+.transactions-list {
+	@apply
+		shadow-card
+		rounded-card
+		overflow-hidden
+}
+
+.transaction-item:not(:last-child) {
+	@apply
+		border-b-1
+		border-divider
 }
 
 .transaction-item {
 	@apply
 		flex
 		bg-background-paper
-		px-4
-		py-3
 		rounded-item
 
 		<md:overflow-x-auto
@@ -20,6 +31,9 @@
 		top-0
 		font-semibold
 		z-[2]
+		pr-8
+		px-4
+		py-3
 }
 
 .transaction-item .item-value {
@@ -27,9 +41,34 @@
 		flex
 		items-center
 		flex-1
+		font-semibold
+		leading-[1.1em]
+}
+
+.transaction-item .value-group {
+	@apply
+		flex flex-col
+}
+
+.transaction-item .value-sub {
+	@apply
+		text-text-secondary
+		text-sm
 }
 
 .transaction-item .token-value {
+	@apply
+		w-32
+		flex-grow-0
+}
+
+.transaction-item .action-value {
+	flex-shrink: 0 !important;
+	flex-grow: 0 !important;
+	@apply
+		!min-w-16
+		!w-16
+		mr-3
 }
 
 .transaction-item .token-image {
@@ -43,6 +82,34 @@
 .transaction-item .token-value span {
 	@apply
 		font-semibold
+}
+
+.transaction-item-body {
+	@apply
+		flex flex-row
+		!pr-12
+		justify-between
+		<md:justify-start
+}
+
+
+.transaction-body-item {
+	@apply
+		flex
+		flex-col
+		p-2
+}
+
+.transaction-body-label {
+	@apply
+		font-bold
+		text-sm
+		mb-1
+}
+
+.transaction-body-value {
+	@apply
+		my-auto
 }
 
 .transaction-details {

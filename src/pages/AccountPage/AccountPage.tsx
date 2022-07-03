@@ -18,6 +18,42 @@ import Button from "../../components/Button"
 import PhoneInput from "../../components/PhoneInput"
 
 const AccountPage: Component = () => {
+	
+	return (
+		<Page path="/account" userRestricted>
+			<div className="gap-wrapper">
+				<div className="account-page gap-4 !m-0">
+					<ProfileCard />
+					<WalletCard />
+				</div>
+			</div>
+		</Page>
+	)
+}
+
+export const WalletCard: Component = () => {
+	const authContext = useContext(AuthContext)
+
+	const initialValues = {
+		wallet_address: authContext.user
+	}
+
+	return (
+		<Card>
+			<CardTitle>
+				Wallet Address
+			</CardTitle>
+			<CardBody className="flex flex-col">
+				<Form onSubmit={() => {}} initialValues={initialValues}>
+
+				</Form>
+			</CardBody>
+		</Card>
+	)
+}
+
+
+export const ProfileCard: Component = () => {
 	const authContext = useContext(AuthContext)
 	const alertContext = useContext(AlertContext)
 	const [ changed, setChanged ] = useState(false)
@@ -53,6 +89,7 @@ const AccountPage: Component = () => {
 				alertContext.addAlert({
 					type: "success", label: "Successfully updated user"
 				})
+				setChanged(false)
 			})
 			.catch((err) => {
 				alertContext.addAlert({
@@ -60,71 +97,65 @@ const AccountPage: Component = () => {
 				})
 			})
 	}
-	
+
 	return (
-		<Page path="/account" userRestricted>
-			<div className="gap-wrapper">
-				<div className="account-page gap-4 !m-0">
-					<Card className="max-w-150 flex-[2]">
-						<CardTitle>
-							Your Profile
-						</CardTitle>
-						<CardBody className="flex flex-col">
-							<Form
-								initialValues={initialValues}
-								validationSchema={userUpdateSchema}
-								onSubmit={onSubmit}
-								onUpdate={() => !changed && setChanged(true)}
-							>
-								<FormInput
-									field="first_name"
-									icon={NameIcon}
-									placeholder="First Name"
-									autoComplete="given-name"
-									autoCapitalize="words"
-								/>
-								<FormInput
-									field="last_name"
-									icon={NameIcon}
-									placeholder="Last Name"
-									autoComplete="family-name"
-									autoCapitalize="words"
-								/>
-								<Input
-									disabled
-									icon={EmailIcon}
-									value={authContext.user?.email}
-									placeholder="Email"
-									autoCapitalize="off"
-									autoComplete="email"
-								/>
-								<PhoneInput
-									numberField="phone_number"
-									codeField="country_code"
-								/>
-								<NationalityInput field="nationality" />
-								<Button
-									color="primary"
-									className="mt-4"
-									disabled={!changed}
-									loading={editUserRequest.fetching}
-								>
-									Save Changes
-								</Button>
-							</Form>
-							<Button
-								color="primary"
-								buttonStyle="outlined"
-								className="mt-8"
-								onClick={() => authContext.logout()}
-							>
-								Logout
-							</Button>
-						</CardBody>
-					</Card>
-				</div>
-			</div>
-		</Page>
+		<Card className="max-w-150 flex-[2]">
+			<CardTitle>
+				Your Profile
+			</CardTitle>
+			<CardBody className="flex flex-col">
+				<Form
+					initialValues={initialValues}
+					validationSchema={userUpdateSchema}
+					onSubmit={onSubmit}
+					onUpdate={() => !changed && setChanged(true)}
+				>
+					<FormInput
+						field="first_name"
+						icon={NameIcon}
+						placeholder="First Name"
+						autoComplete="given-name"
+						autoCapitalize="words"
+					/>
+					<FormInput
+						field="last_name"
+						icon={NameIcon}
+						placeholder="Last Name"
+						autoComplete="family-name"
+						autoCapitalize="words"
+					/>
+					<Input
+						disabled
+						icon={EmailIcon}
+						value={authContext.user?.email}
+						placeholder="Email"
+						autoCapitalize="off"
+						autoComplete="email"
+					/>
+					<PhoneInput
+						numberField="phone_number"
+						codeField="country_code"
+					/>
+					<NationalityInput field="nationality" />
+					<Button
+						color="primary"
+						className="mt-4"
+						disabled={!changed}
+						loading={editUserRequest.fetching}
+					>
+						Save Changes
+					</Button>
+				</Form>
+				<Button
+					color="primary"
+					buttonStyle="outlined"
+					className="mt-8"
+					onClick={() => authContext.logout()}
+				>
+					Logout
+				</Button>
+			</CardBody>
+		</Card>
 	)
 }
 

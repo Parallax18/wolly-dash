@@ -139,3 +139,12 @@ export interface MinimumAmountResponse {
 	token_id: string,
 	min_amount_fiat: number,
 }
+
+export interface PriceChartDataItem {
+	date: string,
+	price: number,
+}
+
+export interface PriceChartResponse {
+	price_chart: PriceChartDataItem[]
+}

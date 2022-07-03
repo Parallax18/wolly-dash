@@ -4,7 +4,7 @@ import { minMax } from "./number";
 import { MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { AuthContext } from "../context/AuthContext";
-import { APIError, BonusCalculations, LoginResponse, MinimumAmountResponse, PricesResponse, Project, Stage, Tokens, Transaction, TransactionsResponse, User } from "../types/Api";
+import { APIError, BonusCalculations, LoginResponse, MinimumAmountResponse, PriceChartResponse, PricesResponse, Project, Stage, Tokens, Transaction, TransactionsResponse, User } from "../types/Api";
 
 export type URLString = `http://${string}.${string}` | `https://${string}.${string}` | `/${string}`
 export type CreateRequestOptions = AxiosRequestConfig & {
@@ -164,8 +164,8 @@ export const useRequest = <T = Record<string, unknown>, K = Record<string, unkno
 				setDownloadProgress(1)
 				setSuccess(false)
 				setFinished(true);
-				setError((error.response?.data as APIError).message || error.message)
-				setResponseStatusCode(error.response?.status)
+				setError((error?.response?.data as APIError)?.message || error?.message)
+				setResponseStatusCode(error?.response?.status)
 
 				reject(responseError)
 			})
@@ -312,7 +312,7 @@ export const useEditUserRequest = (): CreateRequestResponse<
 
 export type GetUserRequest = CreateRequestResponse<
 	User,
-	(userId: string) => Promise<AxiosResponse<User>>
+	(userId: string, accessToken?: string) => Promise<AxiosResponse<User>>
 >
 
 export const useGetUserRequest = (suppliedTokenRef?: MutableRefObject<Tokens>): GetUserRequest => {
@@ -446,7 +446,10 @@ export const useGetTransactions = (): GetTransactionsRequest => {
 
 	const sendRequest = (userId: string) => {
 		return request.sendRequest({
-			url: "/" + userId + "/transactions"
+			url: "/" + userId + "/transactions",
+			params: {
+				limit: 2
+			}
 		})
 	}
 
@@ -506,6 +509,28 @@ export const useResetPasswordRequest = (): ResetPasswordRequest => {
 				token,
 				password: newPassword
 			}
+		})
+	}
+
+	return { ...request, sendRequest }
+}
+
+export type PriceChartPeriod = "day" | "week" | "month" | "all"
+
+export type PriceChartRequest = CreateRequestResponse<
+	PriceChartResponse,
+	(period: PriceChartPeriod) => Promise<AxiosResponse<PriceChartResponse>>
+>
+
+export const usePriceChartRequest = (): PriceChartRequest => {
+	const request = useRequest<PriceChartResponse>("/price-chart")
+
+	const sendRequest = (period: PriceChartPeriod) => {
+		return request.sendRequest({
+			params: {
+				period
+			}
+			
 		})
 	}
 
