@@ -16,7 +16,7 @@ export interface ThemeContextData {
 }
 
 export const ThemeContextWrapper: Component = ({ children }) => {
-	const [ themeKey, setThemeKey ] = useLocalState("dark", "theme")
+	const [ themeKey, setThemeKey ] = useLocalState<string>("dark", "theme")
 
 	const ThemeData: ThemeContextData = {
 		theme: themes[themeKey],
