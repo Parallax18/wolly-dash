@@ -1,8 +1,10 @@
 .dashboard-page.dashboard-page {
 	@apply
+		flex
 		py-2
 		px-4
 		!m-0
+		<lg:flex-col-reverse
 }
 
 .dashboard-page .card-group {

@@ -49,7 +49,7 @@ export interface TieredBonus {
 export interface Stage {
 	id: string,
 	name: string
-	type: "string",
+	type: string,
 	token_price: number,
 	start_date: string,
 	end_date: string,

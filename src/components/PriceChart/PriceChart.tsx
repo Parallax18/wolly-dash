@@ -53,7 +53,7 @@ const PriceChart: Component = () => {
 				</div>
 				<div className="chart-container">
 					<Loadable variant="block" loadClass="h-full w-full">
-						<ResponsiveContainer width={"100%"} height={"100%"}>
+						<ResponsiveContainer width={"100%"} height={"100%"} className="responsive-container">
 							<LineChart data={dataset}>
 								<YAxis
 									tick={labelStyles}
