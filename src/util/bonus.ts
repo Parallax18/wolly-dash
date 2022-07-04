@@ -74,7 +74,7 @@ export const getCountdownString = (timeLeft: number) => {
 
 		let currentValue = Math.floor(timeLeft / divisor)
 		if (currentValue > 0) {
-			totalStr = `${totalStr} ${currentValue} ${plural(currentValue, currentKey, `${currentValue}s`)}`
+			totalStr = `${totalStr} ${currentValue} ${plural(currentValue, currentKey, `${currentKey}s`)}`
 		}
 
 		timeLeft = timeLeft - (currentValue * divisor);
