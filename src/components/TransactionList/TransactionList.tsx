@@ -44,26 +44,32 @@ const TransactionList: Component = () => {
 
 	return (
 		<Loader loading={getTransactionsRequest.fetching}>
-		
-			<div className="transactions-list">
-				<div className="transactions-wrapper">
-					{(getTransactionsRequest.fetching ? new Array(2).fill(defaultTransaction) : transactions).map((txn, i) => (
-						<TransactionItem
-							key={i}
-							transaction={txn}
-							onActionClick={() => {
-								setSelectedTransaction(txn)
-								setDetailsOpen(true)
-							}}
-						/>
-					))}
+			<Pagination
+				page={page}
+				onNext={() => setPage((page) => page+1)}
+				onPrevious={() => setPage((page) => Math.max(page-1, 0))}
+				prevDisabled={page - 1 <= 0}
+			>
+				<div className="transactions-list">
+					<div className="transactions-wrapper">
+						{(getTransactionsRequest.fetching ? new Array(5).fill(defaultTransaction) : transactions).map((txn, i) => (
+							<TransactionItem
+								key={i}
+								transaction={txn}
+								onActionClick={() => {
+									setSelectedTransaction(txn)
+									setDetailsOpen(true)
+								}}
+							/>
+						))}
+					</div>
 				</div>
-			</div>
-			<TransactionDetails
-				transaction={selectedTransaction}
-				open={detailsOpen}
-				onClose={() => setDetailsOpen(false)}
-			/>
+				<TransactionDetails
+					transaction={selectedTransaction}
+					open={detailsOpen}
+					onClose={() => setDetailsOpen(false)}
+				/>
+			</Pagination>
 		</Loader>
 	)
 }

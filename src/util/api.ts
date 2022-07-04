@@ -254,6 +254,7 @@ export interface UserArgs {
 	nationality: string,
 	password: string,
 	mobile?: string,
+	wallet?: string
 }
 
 export const useRegisterRequest = (): CreateRequestResponse<
@@ -505,8 +506,10 @@ export const useResetPasswordRequest = (): ResetPasswordRequest => {
 	const sendRequest = (token: string, newPassword: string) => {
 		return request.sendRequest({
 			method: "POST",
+			params: {
+				token
+			},
 			data: {
-				token,
 				password: newPassword
 			}
 		})
@@ -531,6 +534,43 @@ export const usePriceChartRequest = (): PriceChartRequest => {
 				period
 			}
 			
+		})
+	}
+
+	return { ...request, sendRequest }
+}
+
+export type SendVerificationEmailRequest = CreateRequestResponse<
+	null,
+	() => Promise<AxiosResponse<null>>
+>
+
+export const useSendVerificationEmailRequest = (): SendVerificationEmailRequest => {
+	const request = useAuthRequest<null>("/auth/send-verification-email")
+
+	const sendRequest = () => {
+		return request.sendRequest({
+			method: "POST"
+		})
+	}
+
+	return { ...request, sendRequest }
+}
+
+export type VerifyEmailRequest = CreateRequestResponse<
+	null,
+	(token: string) => Promise<AxiosResponse<null>>
+>
+
+export const useVerifyEmailRequest = (): VerifyEmailRequest => {
+	const request = useAuthRequest<null>("/auth/verify-email")
+
+	const sendRequest = (token: string) => {
+		return request.sendRequest({
+			method: "POST",
+			params: {
+				token
+			}
 		})
 	}
 

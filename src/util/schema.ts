@@ -27,8 +27,13 @@ export const registerSchema =  Yup.object().shape({
 		.min(0.01, "Must be more than 0.01")
 })
 
-export const userUpdateSchema =  Yup.object().shape({
+export const userUpdateSchema = Yup.object().shape({
 	first_name: Yup.string().required("Can't be empty"),
 	last_name: Yup.string().required("Can't be empty"),
 	nationality: Yup.string().required("Can't be empty")
 })
+
+const walletAddressRegex = /^0x[0-9a-f]{40}$/i
+
+export const walletAddressSchema = Yup.string()
+	.matches(walletAddressRegex, "Invalid wallet address")

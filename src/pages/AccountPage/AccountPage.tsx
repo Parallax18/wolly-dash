@@ -6,7 +6,9 @@ import Page from "../../components/Page"
 import { AlertContext } from "../../context/AlertContext"
 import { AuthContext } from "../../context/AuthContext"
 import { Component } from "../../types/Util"
-import { errorToString, getCountryCodeFromDialCode, getDialCodeFromCountryCode, pick, splitPhoneNumber, useEditUserRequest, userUpdateSchema } from "../../util"
+import { errorToString, getCountryCodeFromDialCode, getDialCodeFromCountryCode, pick, splitPhoneNumber, useEditUserRequest, userUpdateSchema, useSendVerificationEmailRequest, walletAddressSchema } from "../../util"
+
+import * as Yup from "yup"
 
 import "./AccountPage.css"
 
@@ -16,6 +18,10 @@ import Input from "../../components/Input"
 import NationalityInput from "../../components/NationalityInput"
 import Button from "../../components/Button"
 import PhoneInput from "../../components/PhoneInput"
+
+import VerifiedIcon from "../../svg/icons/verified.svg"
+import UnverifiedIcon from "../../svg/icons/unverified.svg"
+import WalletIcon from "../../svg/icons/payments.svg"
 
 const AccountPage: Component = () => {
 	
@@ -32,10 +38,21 @@ const AccountPage: Component = () => {
 }
 
 export const WalletCard: Component = () => {
+	const [ changed, setChanged ] = useState(false)
 	const authContext = useContext(AuthContext)
+	const alertContext = useContext(AlertContext)
+
+	const editUserRequest = useEditUserRequest()
 
 	const initialValues = {
-		wallet_address: authContext.user
+		wallet: authContext.user?.wallet || ""
+	}
+
+	const onSubmit = (values: any) => {
+		if (!authContext.user) return;
+		editUserRequest.sendRequest(authContext.user?.id, {wallet: values.wallet})
+			.then(() => alertContext.addAlert({type: "success", label: "Successfully saved wallet address"}))
+			.catch((err) => alertContext.addAlert({type: "error", label: errorToString(err, "Error saving wallet address")}))
 	}
 
 	return (
@@ -44,8 +61,26 @@ export const WalletCard: Component = () => {
 				Wallet Address
 			</CardTitle>
 			<CardBody className="flex flex-col">
-				<Form onSubmit={() => {}} initialValues={initialValues}>
-
+				<Form
+					initialValues={initialValues}
+					validationSchema={Yup.object().shape({wallet: walletAddressSchema})}
+					onSubmit={onSubmit}
+					onUpdate={() => !changed && setChanged(true)}
+				>
+					<FormInput
+						field="wallet"
+						icon={WalletIcon}
+						placeholder="Wallet Address"
+						autoCapitalize="off"
+					/>
+					<Button
+						color="primary"
+						className="mt-4"
+						disabled={!changed}
+						loading={editUserRequest.fetching}
+					>
+						Save Changes
+					</Button>
 				</Form>
 			</CardBody>
 		</Card>
@@ -98,6 +133,8 @@ export const ProfileCard: Component = () => {
 			})
 	}
 
+	const sendVerificationEmailRequest = useSendVerificationEmailRequest()
+
 	return (
 		<Card className="profile-card">
 			<CardTitle>
@@ -132,6 +169,14 @@ export const ProfileCard: Component = () => {
 						autoCapitalize="off"
 						autoComplete="email"
 					/>
+					<Input
+						disabled
+						icon={authContext.user?.is_email_verified === false ? UnverifiedIcon : VerifiedIcon}
+						value={authContext.user?.is_email_verified === false ? "Email not verified" : "Email is verified"}
+						placeholder="Verified"
+						autoCapitalize="off"
+						autoComplete="email"
+					/>
 					<PhoneInput
 						numberField="phone_number"
 						codeField="country_code"
@@ -146,10 +191,25 @@ export const ProfileCard: Component = () => {
 						Save Changes
 					</Button>
 				</Form>
+				{authContext.user?.is_email_verified === false && (
+					<Button
+						color="primary"
+						buttonStyle="outlined"
+						className="mt-4"
+						loading={sendVerificationEmailRequest.fetching}
+						onClick={
+							() => sendVerificationEmailRequest.sendRequest()
+								.then(() => alertContext.addAlert({type: "success", label: "Successfully sent verification email"}))
+								.catch((err) => alertContext.addAlert({type: "error", label: errorToString(err, "Error sending verification email")}))
+						}
+					>
+						Resend Verification Email
+					</Button>
+				)}
 				<Button
 					color="primary"
 					buttonStyle="outlined"
-					className="mt-8"
+					className="mt-4"
 					onClick={() => authContext.logout()}
 				>
 					Logout

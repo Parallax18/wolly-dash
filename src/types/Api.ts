@@ -13,6 +13,8 @@ export interface User {
 	role: "user" | "admin",
 	purchased: boolean,
 	signup_date: string,
+	is_email_verified: boolean,
+	wallet: string | null,
 	tokens: {
 		base: number,
 		bonuses: number,

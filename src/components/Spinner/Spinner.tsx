@@ -11,7 +11,7 @@ export interface SpinnerProps {
 
 const Spinner: React.FC<SpinnerProps> = ({ size = 16, className, color = "primary" }) => {
 	return (
-		<span className={clsx("spinner-container", className, color)} style={{width: `${size/4}rem`, height: `${size/4}rem`}}>
+		<div className={clsx("spinner-container", className, color)} style={{width: `${size/4}rem`, height: `${size/4}rem`}}>
 			<svg
 				className="spinner"
 				viewBox="0 0 66 66"
@@ -23,7 +23,7 @@ const Spinner: React.FC<SpinnerProps> = ({ size = 16, className, color = "primar
 					strokeLinecap="round"
 				></circle>
 			</svg>
-		</span>
+		</div>
 	)
 }
 

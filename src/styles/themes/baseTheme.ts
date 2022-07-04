@@ -115,7 +115,7 @@ const baseTheme: Record<string, any> = {
 		loadingTo: "rgba(255,255,255,0.2)"
 	},
 	border: {
-		main: "rgba(255,255,255,0.7)",
+		main: "rgba(255,255,255,0.4)",
 		input: "#262626",
 		highlight: "#ffffff"
 	},

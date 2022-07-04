@@ -12,7 +12,7 @@ import EmailIcon from "../../svg/icons/email-outline.svg"
 import PasswordIcon from "../../svg/icons/lock-outline.svg"
 import NameIcon from "../../svg/icons/account-circle-outline.svg"
 
-import { useRegisterRequest, UserArgs, registerSchema, pick, getDialCodeFromCountryCode, errorToString, dollarItem } from "../../util"
+import { useRegisterRequest, UserArgs, registerSchema, pick, getDialCodeFromCountryCode, errorToString, dollarItem, useSendVerificationEmailRequest } from "../../util"
 import NationalityInput from "../../components/NationalityInput"
 import Form, { FormRender } from "../../components/Form"
 import FormInput from "../../components/FormInput"
@@ -42,6 +42,7 @@ const RegisterPage: Component = () => {
 	const alertContext = useContext(AlertContext)
 	const { activeStage, activeStageRequest } = useContext(StageContext)
 	const { currencyTokenList, currProjectRequest } = useContext(ProjectContext)
+	const sendVerificationEmailRequest = useSendVerificationEmailRequest()
 
 	const registerRequest = useRegisterRequest()
 
@@ -82,6 +83,21 @@ const RegisterPage: Component = () => {
 				type: "success",
 				label: "Successfully registered"
 			})
+			sendVerificationEmailRequest.sendRequest()
+				.then(() => {
+					alertContext.addAlert({
+						type: "success",
+						label: "Successfully sent verification email"
+					})
+				})
+				.catch((err) => {
+					alertContext.addAlert({
+						type: "error",
+						label: errorToString(err, "Error sending verification email")
+					})
+				})
+
+			
 		}).catch((err) => {
 			alertContext.addAlert({
 				type: "error",

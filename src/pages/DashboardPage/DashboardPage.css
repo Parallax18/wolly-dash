@@ -4,7 +4,7 @@
 		py-2
 		px-4
 		!m-0
-		<lg:flex-col-reverse
+		<xl:flex-col-reverse
 }
 
 .dashboard-page .card-group {
@@ -50,4 +50,9 @@
 .dashboard-card .value.large {
 	@apply
 		text-3xl
+}
+
+.dashboard-card .countdown-container {
+	@apply
+		mx-auto
 }

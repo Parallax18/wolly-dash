@@ -32,7 +32,7 @@ export const TransactionsContextWrapper: Component = ({ children }) => {
 			createTransactionRequest.sendRequest(args)
 				.then((res) => {
 					resolve(res)
-					setTransactions((transactions) => [...transactions, res.data])
+					setTransactions((transactions) => [res.data, ...transactions].splice(0, 5))
 				})
 				.catch((err) => reject(err))
 		})

@@ -50,11 +50,17 @@ export const AlertContextWrapper: Component = ({ children }) => {
 	const addAlert = useCallback((newAlert: AlertArgument) => {
 		const newId = alertId
 		alertId++;
-		setAlerts((alerts) => [...(alerts || []), {duration: -1, ...newAlert, id: newId, hiding: false}])
-		if (!newAlert.duration || newAlert.duration < 0) return;
+		const newTotalAlert = {
+			duration: 4000,
+			...newAlert,
+			id: newId,
+			hiding: false
+		}
+		setAlerts((alerts) => [...(alerts || []), newTotalAlert])
+		if (!newTotalAlert.duration || newTotalAlert.duration < 0) return;
 		setTimeout(() => {
 			removeAlert(newId)
-		}, newAlert.duration)
+		}, newTotalAlert.duration)
 	}, [])
 
 	const AlertData: AlertContextData = {

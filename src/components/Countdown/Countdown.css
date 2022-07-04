@@ -1,0 +1,54 @@
+.countdown-container {
+	@apply
+		flex
+		shadow-card
+}
+
+.countdown-item {
+	@apply
+		relative
+		flex flex-col
+		bg-background-contrast
+		text-4xl
+		w-[3em]
+		items-center
+		overflow-hidden
+		<xs:text-2xl
+}
+
+.countdown-item:first-child {
+	@apply
+		rounded-l-card
+}
+
+.countdown-item:last-child {
+	@apply
+		rounded-r-card
+}
+
+.countdown-item:not(:last-child)::before {
+	content: ":";
+	@apply
+		absolute
+		bottom-[0.55em]
+		right-0
+}
+
+.countdown-item-label {
+	font-size: clamp(0.7rem, 0.4em, 0.4em);
+	line-height: 0.5em;
+	@apply
+		block
+		bg-background-default
+		w-full
+		text-center
+		pt-[1em]
+		pb-[0.5em]
+		text-text-secondary
+}
+
+.countdown-item-value {
+	@apply
+		mt-[0.3em]
+		mb-[0.5em]
+}
