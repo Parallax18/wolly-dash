@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite --port 4050",
+    "dev": "vite --port 4050 --host",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "create": "node dev_scripts/create",

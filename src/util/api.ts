@@ -123,7 +123,7 @@ export const useRequest = <T = Record<string, unknown>, K = Record<string, unkno
 	const sendRequest = async (newOptions?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
 		setUploadProgress(0)
 		setDownloadProgress(0)
-		setRequestData(newOptions?.data)
+		setRequestData({...newOptions?.data, ...newOptions?.params})
 		setFetching(true)
 		setSuccess(false)
 		setFinished(false)
@@ -221,9 +221,12 @@ export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, u
 			request.sendRequest(totalOptions)
 				.then((res) => resolve(res))
 				.catch((err: AxiosError) => {
+					console.log(err, err.code)
 					if (err.code?.toString() === "401") {
+						console.log("401 received, refreshing tokens")
 						refreshTokens()
 							.then((res) => {
+								console.log("Successfully refreshed tokens")
 								return request.sendRequest({
 									...totalOptions,
 									headers: {
@@ -231,9 +234,12 @@ export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, u
 										"Authorization": "BEARER " + res.data.access?.token
 									}
 								})
-							.catch((err: AxiosError) => reject(err))
-									.then((res) => resolve(res as AxiosResponse<T>))
-									.catch((err: AxiosError) => reject(err))
+								.then((res) => resolve(res as AxiosResponse<T>))
+								.catch((err: AxiosError) => reject(err))
+							})
+							.catch((err: AxiosError) => {
+								console.log("Error refreshing tokens")
+								reject(err)
 							})
 					}
 					reject(err)
@@ -439,11 +445,12 @@ export const useCreateTransaction = (): CreateTransactionRequest => {
 
 export type GetTransactionsRequest = CreateRequestResponse<
 	TransactionsResponse,
-	(userId: string) => Promise<AxiosResponse<TransactionsResponse>>
+	(userId: string) => Promise<AxiosResponse<TransactionsResponse>>,
+	{userId: string}
 >
 
 export const useGetTransactions = (): GetTransactionsRequest => {
-	const request = useAuthRequest<TransactionsResponse>("/users")
+	const request = useAuthRequest<TransactionsResponse, {userId: string}>("/users")
 
 	const sendRequest = (userId: string) => {
 		return request.sendRequest({

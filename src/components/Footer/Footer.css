@@ -2,7 +2,6 @@
 	@apply
 		flex
 		w-full
-		h-full
 		border-divider
 		border-t
 		+md:border-l
