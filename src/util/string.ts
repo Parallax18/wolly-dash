@@ -153,3 +153,8 @@ export const errorToString = (err: any, defaultString: string): string => {
 	if (!err || !err.code || !err.message) return defaultString;
 	return err.message;
 }
+
+export const plural = (num: number, singleStr: string, pluralStr: string): string => {
+	if (num === 1) return singleStr
+	return pluralStr;
+}

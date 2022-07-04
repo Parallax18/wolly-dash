@@ -1,14 +1,16 @@
 .banners-container {
 	@apply
-		w-full
+		w-[calc(100%-2rem)]
 		flex flex-col
 		z-[5]
+		overflow-x-hidden
 }
 
 .banner-hidden-clearfix {
 	@apply
 		invisible
-		w-full
+		w-[calc(100%-2rem)]
+
 }
 
 .fixed-banner-wrapper {
@@ -38,7 +40,7 @@
 	opacity: 0;
 	pointer-events: none;
 	@apply
-		absolute
+		fixed
 		top-0
 		!-translate-y-full
 }

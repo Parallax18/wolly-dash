@@ -65,6 +65,7 @@ export const AuthContextWrapper: Component = ({ children }) => {
 			}
 		},
 		login: (newUser: User, tokens: Tokens) => {
+			localStorage.setItem("banners", "{}")
 			setLoggedIn(true)
 			setUser(newUser)
 			setTokens(tokens)

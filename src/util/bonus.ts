@@ -1,6 +1,6 @@
 import { LimitedSignupBonus, Stage } from "../types/Api";
 import { getTimeString } from "./data";
-import { capitalize } from "./string";
+import { capitalize, plural } from "./string";
 
 export const limitedSignupBonusValid = (signupDate: string, bonus: LimitedSignupBonus): boolean => {
 	let endDate = new Date(new Date(signupDate).getTime() + bonus.minutes_after_signup * 60 * 1000)
@@ -58,10 +58,10 @@ export const getBonusBanners = (bonuses: Stage["bonuses"] | undefined, signupDat
 }
 
 const divisorMap = {
-	days: 1000 * 60 * 60 * 24,
-	hours: 1000 * 60 * 60,
-	mins: 1000 * 60,
-	secs: 1000,
+	day: 1000 * 60 * 60 * 24,
+	hour: 1000 * 60 * 60,
+	min: 1000 * 60,
+	sec: 1000,
 }
 
 const divisorMapEntries = Object.entries(divisorMap)
@@ -74,7 +74,7 @@ export const getCountdownString = (timeLeft: number) => {
 
 		let currentValue = Math.floor(timeLeft / divisor)
 		if (currentValue > 0) {
-			totalStr = `${totalStr} ${currentValue} ${currentKey}`
+			totalStr = `${totalStr} ${currentValue} ${plural(currentValue, currentKey, `${currentValue}s`)}`
 		}
 
 		timeLeft = timeLeft - (currentValue * divisor);

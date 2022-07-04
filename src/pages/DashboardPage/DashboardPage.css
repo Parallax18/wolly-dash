@@ -9,7 +9,7 @@
 		mx-auto
 
 		<xl:flex-col-reverse
-		pb-20
+		!pb-12
 }
 
 .dashboard-page .card-group {

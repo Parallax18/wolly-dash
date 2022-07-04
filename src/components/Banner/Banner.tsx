@@ -42,34 +42,30 @@ export const Banners: Component = () => {
 		<div className="banners-container">
 			<div className="fixed-banner-wrapper">
 				{banners.map((banner, i) => (
-					<>
-						<Banner
-							key={banner.key}
-							open={(bannerOpens?.[banner.key]?.open !== null && bannerOpens?.[banner.key]?.open !== undefined) ? bannerOpens?.[banner.key]?.open : true}
-							onClose={() => setBannerOpens({
-								...bannerOpens,
-								[banner.key]: {open: false, closedAt: new Date().toISOString()}
-							})}
-						>
-							{banner.label}
-						</Banner>
-					</>
+					<Banner
+						key={banner.key}
+						open={(bannerOpens?.[banner.key]?.open !== null && bannerOpens?.[banner.key]?.open !== undefined) ? bannerOpens?.[banner.key]?.open : true}
+						onClose={() => setBannerOpens({
+							...bannerOpens,
+							[banner.key]: {open: false, closedAt: new Date().toISOString()}
+						})}
+					>
+						{banner.label}
+					</Banner>
 				))}
 			</div>
 			<div className="banner-hidden-clearfix">
 				{banners.map((banner, i) => (
-					<>
-						<Banner
-							key={banner.key}
-							open={(bannerOpens?.[banner.key]?.open !== null && bannerOpens?.[banner.key]?.open !== undefined) ? bannerOpens?.[banner.key]?.open : true}
-							onClose={() => setBannerOpens({
-								...bannerOpens,
-								[banner.key]: {open: false, closedAt: new Date().toISOString()}
-							})}
-						>
-							{banner.label}
-						</Banner>
-					</>
+					<Banner
+						key={banner.key}
+						open={(bannerOpens?.[banner.key]?.open !== null && bannerOpens?.[banner.key]?.open !== undefined) ? bannerOpens?.[banner.key]?.open : true}
+						onClose={() => setBannerOpens({
+							...bannerOpens,
+							[banner.key]: {open: false, closedAt: new Date().toISOString()}
+						})}
+					>
+						{banner.label}
+					</Banner>
 				))}
 			</div>
 		</div>
