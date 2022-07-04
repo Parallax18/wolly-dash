@@ -1,17 +1,9 @@
 .banners-container {
 	@apply
 		flex flex-col
-		fixed
+		sticky
 		top-0
-		left-80
-		pr-80
-		w-full
 		z-[5]
-		
-		<md:left-0
-		<md:bottom-16
-		<md:top-[initial]
-		<md:pr-0
 }
 
 .banner {
@@ -25,18 +17,24 @@
 		py-1
 		text-center
 		transition-opacity
+		pr-8
+		w-full
 }
 
 .banner:not(.open) {
 	opacity: 0;
 	pointer-events: none;
+	@apply
+		absolute
+		top-0
+		!-translate-y-full
 }
 
 .banner .close-button {
 	@apply
 		absolute
 		top-1/2
-		right-0
+		right-2
 		!-translate-y-1/2
 		text-primary-contrastText
 		<md:right-0

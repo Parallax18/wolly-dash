@@ -23,8 +23,8 @@ const Layout: Component = ({ children }) => {
 			{loggedIn && (
 				<Sidebar />
 			)}
-			{loggedIn && <Banners />}
 			<div className={clsx("page-container", {"logged-in": loggedIn})}>
+				{loggedIn && <Banners />}
 				{children}
 				<Footer />
 			</div>

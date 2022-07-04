@@ -18,6 +18,18 @@ export const Banners: Component = () => {
 	const [ banners, setBanners ] = useState(getBonusBanners(activeStage?.bonuses, user?.signup_date))
 
 	useEffect(() => {
+		let newBannerOpens: Record<string, {open: boolean, closedAt: string}> = {}
+		Object.entries(bannerOpens).map(([key, value]) => {
+			if (Date.now() - new Date(value.closedAt).getTime() > 60 * 60 * 24 * 1000) {
+				newBannerOpens[key] = {open: true, closedAt: ""}
+			} else {
+				newBannerOpens[key] = value
+			}
+		})
+		setBannerOpens(newBannerOpens)
+	}, [])
+
+	useEffect(() => {
 		if (!activeStage?.bonuses || !user?.signup_date) return;
 		setBanners(getBonusBanners(activeStage?.bonuses, user?.signup_date))
 	}, [activeStage?.bonuses, user?.signup_date])
