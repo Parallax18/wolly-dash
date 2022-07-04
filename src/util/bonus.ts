@@ -17,6 +17,7 @@ const nameMap: Record<string, string> = {
 	"base_bonus": "Stage Bonus",
 	"spending_bonus": "$ Amount Purchase Bonus",
 	"limited_time_bonus": "Limited Time Bonus",
+	"limited_time_signup_bonus": "Signup Bonus",
 	"first_purchase_bonus": "First Purchase Bonus",
 	"tiered_fiat_bonus": "Payment Token Bonus"
 }
