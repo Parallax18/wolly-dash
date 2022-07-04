@@ -1,0 +1,30 @@
+.footer {
+	@apply
+		flex
+		w-full
+		h-full
+		border-divider
+		border-t
+		+md:border-l
+		bg-background-paperDark
+		px-12
+		py-8
+}
+
+.footer-item {
+	@apply
+		flex-1
+		flex flex-col
+}
+
+.footer-item .social-img {
+	@apply
+		text-text-primary
+		w-5
+		h-5
+}
+
+.footer-item .footer-title {
+	@apply
+		text-lg
+}

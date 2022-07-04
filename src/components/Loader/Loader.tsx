@@ -147,7 +147,7 @@ export const LoadableParagraph: Component<LoadableParagraphProps> = ({
 			component={component || "p"}
 			loadClass="paragraph-container overflow-hidden"
 			loadElement={
-				<div className={clsx("gap-1.5", "overflow-x-hidden", loadClass)}>
+				<div className={clsx("flex-gap-x-1.5", "overflow-x-hidden", loadClass)}>
 					{new Array(length).fill(0).map((_, i) => (
 						<div key={i} className="loadable text" style={{
 							["--length" as any]: `${randoms[i]}rem`

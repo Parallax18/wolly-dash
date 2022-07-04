@@ -8,6 +8,7 @@ import AccountPage from "./pages/AccountPage"
 
 import DashboardPage from "./pages/DashboardPage"
 import LoginPage from "./pages/LoginPage"
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage"
 import RegisterPage from "./pages/RegisterPage"
 import TermsConditionsPage from "./pages/TermsConditionsPage"
 import VerifyEmailPage from "./pages/VerifyEmailPage"
@@ -28,6 +29,7 @@ const App = () => {
 						<Route path="/account" element={<AccountPage />} />
 						<Route path="/buy" element={<BuyPage />} />
 						<Route path="/terms" element={<TermsConditionsPage />} />
+						<Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
 					</Routes>
 				</Layout>
 			</GlobalContextWrapper>

@@ -103,6 +103,7 @@ export interface Project {
 		symbol: string,
 	},
 	payment_tokens: PaymentToken[],
+	social_media: Record<string, string>
 
 }
 

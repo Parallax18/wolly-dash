@@ -11,6 +11,7 @@ import "./Layout.css"
 import { StageContext } from "../../context/StageContext"
 import { getTimeLeftLimitedSignupBonus, getTimeString, limitedSignupBonusValid } from "../../util"
 import { Banners } from "../Banner"
+import Footer from "../Footer"
 
 const Layout: Component = ({ children }) => {
 	const { loggedIn } = useContext(AuthContext)
@@ -25,6 +26,7 @@ const Layout: Component = ({ children }) => {
 			{loggedIn && <Banners />}
 			<div className={clsx("page-container", {"logged-in": loggedIn})}>
 				{children}
+				<Footer />
 			</div>
 		</>
 	)

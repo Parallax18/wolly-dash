@@ -75,7 +75,7 @@ const baseTheme: Record<string, any> = {
 		paperHighlight: "#484c52",
 		paperLight: "#393c40",
 		paper: "#292B30",
-		paperDark: "#181818",
+		paperDark: "#212226",
 		navbar: "#000",
 		contrast: "#1A1D22",
 		default: "#1a1d22",

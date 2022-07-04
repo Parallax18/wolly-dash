@@ -1,18 +1,18 @@
-.terms-page {
+.privacy-policy {
 	@apply
 		p-6
 		max-w-200
 		mx-auto
 }
 
-.terms-page h1, .terms-page h2, .terms-page h3 {
+.privacy-policy h1, .privacy-policy h2 {
 	@apply
 		mb-4
 		pt-2
 		leading-[1.2em]
 }
 
-.terms-page p {
+.privacy-policy p {
 	@apply
 		mb-3
 }

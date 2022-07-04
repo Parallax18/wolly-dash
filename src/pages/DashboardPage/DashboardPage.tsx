@@ -22,7 +22,7 @@ const DashboardPage: Component = () => {
 
 	return (
 		<Page title="Dashboard" path="/" userRestricted>
-			<div className="dashboard-page gap-6 <md:gap-2 <sm:!p-2">
+			<div className="dashboard-page gap-6 <md:gap-2 <sm:!p-4">
 				<Loader loading={loading}>
 					<div className="flex flex-[2] flex-col flex-gap-y-6">
 						<div className="dashboard-card">
@@ -41,13 +41,13 @@ const DashboardPage: Component = () => {
 						</div>
 					</div>
 					<div className="flex flex-[1.25] flex-col flex-gap-y-6">
-						<Card className="dashboard-card p-4">
+						<div className="dashboard-card">
 							<div className="card-header small">
 								{activeStage?.name}
 							</div>
 							<Loadable component="span" className="value large">{currentProject?.symbol} ${formatNumber(activeStage?.token_price || 0)}</Loadable>
 							<Loadable component="span" className="value small">{formatLargeNumber(activeStage?.total_tokens || 0)} Tokens</Loadable>
-						</Card>
+						</div>
 						{activeStage?.end_date && (
 							<Card className="dashboard-card p-4">
 								<div className="card-header small">

@@ -2,8 +2,7 @@
 	@apply
 		flex flex-col
 		w-full
-		flex-1
-		h-full
+		h-[var(--screen-height)]
 		items-center justify-center
 		text-left
 }
