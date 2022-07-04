@@ -36,7 +36,7 @@ export const Banners: Component = () => {
 
 	useInterval(() => {
 		setBanners(getBonusBanners(activeStage?.bonuses, user?.signup_date))
-	}, 60*1000)
+	}, 1000)
 
 	return (
 		<div className="banners-container">

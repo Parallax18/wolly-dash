@@ -47,11 +47,9 @@ const Form: Component<FormProps> = ({
 	const updateValue = (key: string, value: any) => {
 		setValues((val) => {
 			let newValues = {...val, [key]: value}
-			console.log("UPDATING VALUES")
 			onUpdate?.(newValues, key)
 			return newValues
 		})
-		console.log("UPDATING ERRORS")
 		updateErrors()
 	}
 	const updateChanged = (key: string, changed: boolean) => {
@@ -61,7 +59,6 @@ const Form: Component<FormProps> = ({
 
 	useEffect(() => {
 		if (!propValues) return;
-		console.log("PROP VALUES CHANGED")
 		valuesRef.current = propValues as Record<string, any>
 		updateErrors()
 	}, [propValues])

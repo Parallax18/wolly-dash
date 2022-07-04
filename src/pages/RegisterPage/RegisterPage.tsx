@@ -78,7 +78,6 @@ const RegisterPage: Component = () => {
 			mobile
 		} as UserArgs).then((res) => {
 			authContext.login(res.data.user, res.data.tokens)
-			console.log(vals.token)
 			navigate(`/buy?usd_amount=${vals.usd_amount}&token_id=${vals.token.id}`, {replace: true})
 			alertContext.addAlert({
 				type: "success",

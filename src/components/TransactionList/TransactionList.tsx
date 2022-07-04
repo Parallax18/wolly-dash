@@ -51,7 +51,6 @@ const TransactionList: Component = () => {
 
 	const next = () => {
 		let after = getTransactionsRequest.data?.after?.[0]?.["@ref"].id
-		console.log(after)
 		if (!user || !after) return;
 		getTransactionsRequest
 			.sendRequest(user?.id, after)
@@ -70,33 +69,41 @@ const TransactionList: Component = () => {
 
 	return (
 		<Loader loading={getTransactionsRequest.fetching}>
-			<Pagination
-				page={page}
-				onNext={() => next()}
-				onPrevious={() => prev()}
-				prevDisabled={getTransactionsRequest.data?.before === undefined || getTransactionsRequest.fetching}
-				nextDisabled={getTransactionsRequest.data?.after === undefined  || getTransactionsRequest.fetching}
-			>
+			{(transactions.length || getTransactionsRequest.fetching) > 0 ? (
+				<Pagination
+					page={page}
+					onNext={() => next()}
+					onPrevious={() => prev()}
+					prevDisabled={getTransactionsRequest.data?.before === undefined || getTransactionsRequest.fetching}
+					nextDisabled={getTransactionsRequest.data?.after === undefined  || getTransactionsRequest.fetching}
+				>
+					<div className="transactions-list">
+						<div className="transactions-wrapper">
+							{(getTransactionsRequest.fetching ? new Array(5).fill(defaultTransaction) : getTransactionsRequest.data?.data || []).map((txn, i) => (
+								<TransactionItem
+									key={i}
+									transaction={txn}
+									onActionClick={() => {
+										setSelectedTransaction(txn)
+										setDetailsOpen(true)
+									}}
+								/>
+							))}
+						</div>
+					</div>
+					<TransactionDetails
+						transaction={selectedTransaction}
+						open={detailsOpen}
+						onClose={() => setDetailsOpen(false)}
+					/>
+				</Pagination>
+			) : (
 				<div className="transactions-list">
 					<div className="transactions-wrapper">
-						{(getTransactionsRequest.fetching ? new Array(5).fill(defaultTransaction) : getTransactionsRequest.data?.data || []).map((txn, i) => (
-							<TransactionItem
-								key={i}
-								transaction={txn}
-								onActionClick={() => {
-									setSelectedTransaction(txn)
-									setDetailsOpen(true)
-								}}
-							/>
-						))}
+						<div className="transaction-item">No transactions</div>
 					</div>
 				</div>
-				<TransactionDetails
-					transaction={selectedTransaction}
-					open={detailsOpen}
-					onClose={() => setDetailsOpen(false)}
-				/>
-			</Pagination>
+			)}
 		</Loader>
 	)
 }

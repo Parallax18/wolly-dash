@@ -64,10 +64,8 @@ const BuyPage: Component = () => {
 	useEffect(() => {
 		if (values.token !== undefined || !currencyTokenList || currencyTokenList?.length === 0) return
 		let found = currencyTokenList?.find((token) => {
-			console.log(token.symbol, token.id, params.token_id?.toString())
 			return token.id === params.token_id?.toString()
 		})
-		console.log("FOUND", found, currencyTokenList)
 		updateValue("token", found || currencyTokenList?.[0])
 	}, [values?.token, currencyTokenList])
 	

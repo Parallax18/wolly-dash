@@ -30,8 +30,8 @@ const DashboardPage: Component = () => {
 								<div className="card-header small">
 									Token Balance
 								</div>
-								<Loadable component="span" className="value large">${formatLargeNumber((user?.tokens?.total || 123123123) * (activeStage?.token_price || 0), 1000, 0, 2)}</Loadable>
-								<Loadable component="span" className="value small">{formatLargeNumber(user?.tokens?.total || 123123123)} {currentProject?.symbol}</Loadable>
+								<Loadable component="span" className="value large">${formatLargeNumber((user?.tokens?.total || 0) * (activeStage?.token_price || 0), 1000, 0, 2)}</Loadable>
+								<Loadable component="span" className="value small">{formatLargeNumber(user?.tokens?.total || 0)} {currentProject?.symbol}</Loadable>
 							</div>
 							<div className="dashboard-card flex-1">
 								<div className="card-header small">

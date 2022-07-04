@@ -3,8 +3,13 @@
 		flex
 		py-2
 		px-4
-		!m-0
+
+		max-w-240
+		w-full
+		mx-auto
+
 		<xl:flex-col-reverse
+		pb-20
 }
 
 .dashboard-page .card-group {
