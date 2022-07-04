@@ -25,28 +25,21 @@ const DashboardPage: Component = () => {
 			<div className="dashboard-page gap-6 <md:gap-2 <sm:!p-4">
 				<Loader loading={loading}>
 					<div className="flex flex-[2] flex-col flex-gap-y-6">
-						<div className="dashboard-card">
-							<div className="card-header small">
-								Token Balance
+						<div className="flex flex-gap-x-6">
+							<div className="dashboard-card flex-1">
+								<div className="card-header small">
+									Token Balance
+								</div>
+								<Loadable component="span" className="value large">${formatLargeNumber((user?.tokens?.total || 123123123) * (activeStage?.token_price || 0), 1000, 0, 2)}</Loadable>
+								<Loadable component="span" className="value small">{formatLargeNumber(user?.tokens?.total || 123123123)} {currentProject?.symbol}</Loadable>
 							</div>
-							<Loadable component="span" className="value large">${formatLargeNumber((user?.tokens?.total || 123123123) * (activeStage?.token_price || 0), 1000, 0, 2)}</Loadable>
-							<Loadable component="span" className="value small">{formatLargeNumber(user?.tokens?.total || 123123123)} {currentProject?.symbol}</Loadable>
-						</div>
-						{(activeStage?.type === "dynamic" || loading) && <PriceChart />}
-						<div className="dashboard-card">
-							<div className="card-header">
-								Recent Transactions
+							<div className="dashboard-card flex-1">
+								<div className="card-header small">
+									{activeStage?.name}
+								</div>
+								<Loadable component="span" className="value large">{currentProject?.symbol} ${formatNumber(activeStage?.token_price || 0)}</Loadable>
+								<Loadable component="span" className="value small">{formatLargeNumber(activeStage?.total_tokens || 0)} Tokens</Loadable>
 							</div>
-							<TransactionList />
-						</div>
-					</div>
-					<div className="flex flex-[1.25] flex-col flex-gap-y-6">
-						<div className="dashboard-card">
-							<div className="card-header small">
-								{activeStage?.name}
-							</div>
-							<Loadable component="span" className="value large">{currentProject?.symbol} ${formatNumber(activeStage?.token_price || 0)}</Loadable>
-							<Loadable component="span" className="value small">{formatLargeNumber(activeStage?.total_tokens || 0)} Tokens</Loadable>
 						</div>
 						{activeStage?.end_date && (
 							<Card className="dashboard-card p-4">
@@ -59,6 +52,13 @@ const DashboardPage: Component = () => {
 									/>
 							</Card>
 						)}
+						{(activeStage?.type === "dynamic" || loading) && <PriceChart />}
+						<div className="dashboard-card">
+							<div className="card-header">
+								Recent Transactions
+							</div>
+							<TransactionList />
+						</div>
 					</div>
 				</Loader>
 			</div>

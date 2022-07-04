@@ -36,6 +36,7 @@ export const AuthContextWrapper: Component = ({ children }) => {
 
 	const logout = () => {
 		console.log("LOGGING OUT")
+		localStorage.setItem("banners", "{}")
 		setLoggedIn(false)
 		setUser(null)
 		navigate("/login", {replace: true})
