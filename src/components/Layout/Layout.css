@@ -1,6 +1,6 @@
 .page-container {
 	@apply
-		overflow-hidden
+		overflow-x-hidden
 		flex flex-col
 		flex-1
 		min-h-[var(--screen-height)]

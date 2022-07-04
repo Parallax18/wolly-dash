@@ -5,6 +5,8 @@
 		h-[var(--screen-height)]
 		items-center justify-center
 		text-left
+		<xs:h-auto
+		<xs:min-h-[var(--screen-height)]
 }
 
 .form-background {

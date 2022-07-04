@@ -48,23 +48,21 @@ const BuyPage: Component = () => {
 
 	const { createTransactionRequest, createTransaction } = useContext(TransactionsContext)
 
-	const params = deserializeObjFromQuery(
-		new URLSearchParams(searchParams),
-		["usd_amount", "token_id"]
-	)
+	const params = new URLSearchParams(searchParams)
 
 	const initialValues = {
-		usd_amount: params.usd_amount as number || 1000,
+		usd_amount: Number.parseFloat(params.get("usd_amount") || "0") || 1000,
 		buy_token_amount: 1,
-		token: currencyTokenList?.find((token) => token.id === params.token_id) || currencyTokenList?.[0]
+		token: currencyTokenList?.find((token) => token.id === params.get("token_id")) || currencyTokenList?.[0]
 	}
 	
 	const [ values, setValues, valuesRef ] = useStateRef(initialValues)
 	
 	useEffect(() => {
-		if (values.token !== undefined || !currencyTokenList || currencyTokenList?.length === 0) return
+		if (values.token !== undefined || !currencyTokenList || currencyTokenList.length === 0) return
+
 		let found = currencyTokenList?.find((token) => {
-			return token.id === params.token_id?.toString()
+			return token.id === params.get("token_id")
 		})
 		updateValue("token", found || currencyTokenList?.[0])
 	}, [values?.token, currencyTokenList])

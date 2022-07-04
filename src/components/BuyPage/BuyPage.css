@@ -7,7 +7,7 @@
 .buy-page .card {
 	box-shadow: 0px 0px 50px rgba(0,0,0,0.6);
 	@apply
-		rounded-card
+		+xs:rounded-card
 		flex flex-col
 		relative overflow-auto
 }

@@ -17,6 +17,7 @@ export type TokenSelectModalProps = Omit<SelectModalProps<CurrencyItem>, "items"
 
 const TokenSelectModal = ({ bonuses, ...others }: TokenSelectModalProps): JSX.Element => {
 	const { currentProject, currencyTokenList } = useContext(ProjectContext)
+	console.log(currencyTokenList?.map((token) => `${token.symbol} ${token.id}`))
 
 	return (
 		<SelectModal<CurrencyItem>

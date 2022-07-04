@@ -113,6 +113,8 @@ const RegisterPage: Component = () => {
 		})
 	}
 
+	console.log(values.token?.id)
+
 	return (
 		<Page path="/register" title="Register" onlyLoggedOut>
 			<Form
