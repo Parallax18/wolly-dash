@@ -50,20 +50,25 @@ const BuyPage: Component = () => {
 
 	const params = deserializeObjFromQuery(
 		new URLSearchParams(searchParams),
-		["usd_amount", "token"]
+		["usd_amount", "token_id"]
 	)
 
 	const initialValues = {
 		usd_amount: params.usd_amount as number || 1000,
 		buy_token_amount: 1,
-		token: currencyTokenList?.[0]
+		token: currencyTokenList?.find((token) => token.id === params.token_id) || currencyTokenList?.[0]
 	}
 	
 	const [ values, setValues, valuesRef ] = useStateRef(initialValues)
 	
 	useEffect(() => {
-		if (values.token === undefined)
-		updateValue("token", currencyTokenList?.[0])
+		if (values.token !== undefined || !currencyTokenList || currencyTokenList?.length === 0) return
+		let found = currencyTokenList?.find((token) => {
+			console.log(token.symbol, token.id, params.token_id?.toString())
+			return token.id === params.token_id?.toString()
+		})
+		console.log("FOUND", found, currencyTokenList)
+		updateValue("token", found || currencyTokenList?.[0])
 	}, [values?.token, currencyTokenList])
 	
 	const minimumAmountRequest = useGetMinimumAmount()

@@ -21,12 +21,19 @@ import "./TransactionList.css"
 import Input from "../Input"
 import { CurrencyItemDisplay } from "../BuyPage"
 import placeholder from "../../constants/placeholder"
+import { AuthContext } from "../../context/AuthContext"
+import { AlertContext } from "../../context/AlertContext"
 
 const TransactionList: Component = () => {
 	const { transactions, getTransactionsRequest } = useContext(TransactionsContext)
 	const params = new URLSearchParams(location.search)
+	const { user } = useContext(AuthContext)
 	const [ selectedTransaction, setSelectedTransaction ] = useState<Transaction | undefined>()
 	const [ detailsOpen, setDetailsOpen ] = useState(false)
+
+	const alertContext = useContext(AlertContext)
+
+	const afterRef = useRef<string | undefined>()
 
 	const [ page, setPage ] = useState(1)
 
@@ -42,17 +49,37 @@ const TransactionList: Component = () => {
 		setDetailsOpen(true)
 	}, [params, transactions])
 
+	const next = () => {
+		let after = getTransactionsRequest.data?.after?.[0]?.["@ref"].id
+		console.log(after)
+		if (!user || !after) return;
+		getTransactionsRequest
+			.sendRequest(user?.id, after)
+			.then(() => setPage((page) => page + 1))
+			.catch(() => alertContext.addAlert({type: "error", label: "Error getting transactions"}))
+	}
+	
+	const prev = () => {
+		let before = getTransactionsRequest.data?.before?.[0]?.["@ref"].id
+		if (!user || !before) return;
+		getTransactionsRequest
+			.sendRequest(user?.id, undefined, before)
+			.then(() => setPage((page) => page - 1))
+			.catch(() => alertContext.addAlert({type: "error", label: "Error getting transactions"}))
+	}
+
 	return (
 		<Loader loading={getTransactionsRequest.fetching}>
 			<Pagination
 				page={page}
-				onNext={() => setPage((page) => page+1)}
-				onPrevious={() => setPage((page) => Math.max(page-1, 0))}
-				prevDisabled={page - 1 <= 0}
+				onNext={() => next()}
+				onPrevious={() => prev()}
+				prevDisabled={getTransactionsRequest.data?.before === undefined || getTransactionsRequest.fetching}
+				nextDisabled={getTransactionsRequest.data?.after === undefined  || getTransactionsRequest.fetching}
 			>
 				<div className="transactions-list">
 					<div className="transactions-wrapper">
-						{(getTransactionsRequest.fetching ? new Array(5).fill(defaultTransaction) : transactions).map((txn, i) => (
+						{(getTransactionsRequest.fetching ? new Array(5).fill(defaultTransaction) : getTransactionsRequest.data?.data || []).map((txn, i) => (
 							<TransactionItem
 								key={i}
 								transaction={txn}

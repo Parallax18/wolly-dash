@@ -4,7 +4,7 @@ import { fillObj, useStateRef } from "../../util"
 
 import * as Yup from "yup"
 import clsx from "clsx"
-import { createContext, FormEvent, useContext, useState } from "react"
+import { createContext, FormEvent, useContext, useEffect, useState } from "react"
 import { AlertContext } from "../../context/AlertContext"
 
 export interface FormContextValue {
@@ -47,15 +47,24 @@ const Form: Component<FormProps> = ({
 	const updateValue = (key: string, value: any) => {
 		setValues((val) => {
 			let newValues = {...val, [key]: value}
+			console.log("UPDATING VALUES")
 			onUpdate?.(newValues, key)
 			return newValues
 		})
+		console.log("UPDATING ERRORS")
 		updateErrors()
 	}
 	const updateChanged = (key: string, changed: boolean) => {
 		setChanged((changedVal) => ({...changedVal, [key]: changed}))
 		updateErrors()
 	}
+
+	useEffect(() => {
+		if (!propValues) return;
+		console.log("PROP VALUES CHANGED")
+		valuesRef.current = propValues as Record<string, any>
+		updateErrors()
+	}, [propValues])
 
 	const updateErrors = async (): Promise<boolean> => {
 		if (!validationSchema) return false;

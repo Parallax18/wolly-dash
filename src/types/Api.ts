@@ -132,7 +132,8 @@ export interface Transaction {
 }
 
 export type Paginated<T> ={ 
-	after: [],
+	after?: [{"@ref": {id: string}}],
+	before?: [{"@ref": {id: string}}],
 	data: T[]
 }
 

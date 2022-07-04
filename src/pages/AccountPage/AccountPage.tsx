@@ -22,6 +22,8 @@ import PhoneInput from "../../components/PhoneInput"
 import VerifiedIcon from "../../svg/icons/verified.svg"
 import UnverifiedIcon from "../../svg/icons/unverified.svg"
 import WalletIcon from "../../svg/icons/payments.svg"
+import { ProjectContext } from "../../context/ProjectContext"
+import { Loadable, Loader } from "../../components/Loader"
 
 const AccountPage: Component = () => {
 	
@@ -42,6 +44,8 @@ export const WalletCard: Component = () => {
 	const authContext = useContext(AuthContext)
 	const alertContext = useContext(AlertContext)
 
+	const { currentProject, currProjectRequest } = useContext(ProjectContext)
+
 	const editUserRequest = useEditUserRequest()
 
 	const initialValues = {
@@ -61,6 +65,9 @@ export const WalletCard: Component = () => {
 				Wallet Address
 			</CardTitle>
 			<CardBody className="flex flex-col">
+				<Loader loading={currProjectRequest.fetching}>
+					<Loadable component="p" className="mb-2">Make sure you use an {currentProject?.wallet?.type} wallet address.</Loadable>
+				</Loader>
 				<Form
 					initialValues={initialValues}
 					validationSchema={Yup.object().shape({wallet: walletAddressSchema})}
@@ -76,7 +83,7 @@ export const WalletCard: Component = () => {
 					<Button
 						color="primary"
 						className="mt-4"
-						disabled={!changed}
+						disabled={!changed || currProjectRequest.fetching}
 						loading={editUserRequest.fetching}
 					>
 						Save Changes

@@ -2,7 +2,14 @@
 	@apply
 		flex flex-col
 		flex-1
+		min-h-[var(--screen-height)]
 
-		+md:pl-80
 		<md:pb-16
+}
+
+
+.page-container.logged-in {
+	@apply
+		
+	+md:pl-80
 }

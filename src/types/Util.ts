@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 
 export interface Serializer<T> {
 	serialize: (value: T) => string,
@@ -16,7 +16,7 @@ export type Primitive = number | string | boolean | null | undefined
 export type WatchListSortType = "WATCH_STATUS" | "LAST_UPDATED" | "USER_SCORE" | "DATE_STARTED"
 
 
-type PropsWithChildren<P = unknown> = P & { children?: ReactNode | undefined };
+type PropsWithChildren<P = unknown> = P & { children?: ReactNode | ReactNode[] | undefined };
 
 export type Component<P = {}> = React.FC<PropsWithChildren<P>>;
 

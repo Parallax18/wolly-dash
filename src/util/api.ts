@@ -445,17 +445,19 @@ export const useCreateTransaction = (): CreateTransactionRequest => {
 
 export type GetTransactionsRequest = CreateRequestResponse<
 	TransactionsResponse,
-	(userId: string) => Promise<AxiosResponse<TransactionsResponse>>,
-	{userId: string}
+	(userId: string, after?: string, before?: string) => Promise<AxiosResponse<TransactionsResponse>>,
+	{userId: string, after?: string, before?: string}
 >
 
 export const useGetTransactions = (): GetTransactionsRequest => {
-	const request = useAuthRequest<TransactionsResponse, {userId: string}>("/users")
+	const request = useAuthRequest<TransactionsResponse, {userId: string, after?: string, before?: string}>("/users")
 
-	const sendRequest = (userId: string) => {
+	const sendRequest = (userId: string, after?: string, before?: string) => {
 		return request.sendRequest({
 			url: "/" + userId + "/transactions",
 			params: {
+				after,
+				before,
 				limit: 5
 			}
 		})
