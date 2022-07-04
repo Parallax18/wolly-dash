@@ -28,7 +28,7 @@ const Footer: Component = () => {
 				</div>
 			</Loader>
 			<div className="footer-item flex-gap-y-2">
-				<span className="footer-title">Privacy</span>
+				<span className="footer-title">Documents</span>
 				<div className="footer-body flex flex-col">
 					<Link to="/terms">Terms and Conditions</Link>
 					<Link to="/privacy-policy">Privacy Policy</Link>

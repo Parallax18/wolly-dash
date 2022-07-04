@@ -1,16 +1,18 @@
 .sidebar {
 	@apply
-		sticky
+		fixed
+		w-full
 		top-0
 		left-0
 		rounded-none
 		flex flex-col
 		min-w-80
+		w-auto
 		h-[var(--screen-height)]
 		z-10
 
 		<md:h-16
-		<md:top-initial
+		<md:top-[initial]
 		<md:bottom-0
 		<md:border-t-1
 		<md:border-divider

@@ -14,13 +14,14 @@ body {
 		m-0 p-0
 		flex-1
 		text-base
-
 }
+
 
 #root {
 	@apply
 		flex
 		flex-1
+		overflow-x-hidden
 
 		<md:flex-col-reverse
 }

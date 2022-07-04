@@ -2,4 +2,7 @@
 	@apply
 		flex flex-col
 		flex-1
+
+		+md:pl-80
+		<md:pb-16
 }
