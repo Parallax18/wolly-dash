@@ -1,14 +1,27 @@
 .banners-container {
 	@apply
+		w-full
 		flex flex-col
-		sticky
-		top-0
 		z-[5]
+}
+
+.banner-hidden-clearfix {
+	@apply
+		invisible
+		w-full
+}
+
+.fixed-banner-wrapper {
+	@apply
+	w-full
+	fixed
+	+md:pr-80
 }
 
 .banner {
 	box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 	@apply
+		w-full
 		relative
 		px-2
 		bg-primary-dark
