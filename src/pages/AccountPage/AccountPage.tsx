@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Card, { CardBody, CardTitle } from "../../components/Card"
 import Form from "../../components/Form"
 import FormInput from "../../components/FormInput"
@@ -66,7 +66,9 @@ export const WalletCard: Component = () => {
 			</CardTitle>
 			<CardBody className="flex flex-col">
 				<Loader loading={currProjectRequest.fetching}>
-					<Loadable component="p" className="mb-2">Make sure you use an {currentProject?.wallet?.type} wallet address.</Loadable>
+					<Loadable component="p" className="mb-2">
+						Make sure you use an <span className="font-semibold">{currentProject?.wallet?.type}</span> wallet address.
+					</Loadable>
 				</Loader>
 				<Form
 					initialValues={initialValues}
@@ -141,6 +143,18 @@ export const ProfileCard: Component = () => {
 	}
 
 	const sendVerificationEmailRequest = useSendVerificationEmailRequest()
+	
+	const [ timeLeft, setTimeLeft ] = useState(0)
+
+	useEffect(() => {
+		if (!sendVerificationEmailRequest.fetchedAt) return;
+		setTimeLeft(60)
+		let interval = setInterval(() => {
+			if (timeLeft - 1 === 0) clearInterval(interval)
+			setTimeLeft((timeLeft) => Math.max(timeLeft - 1, 0))
+		}, 1000)
+		return () => clearInterval(interval)
+	}, [sendVerificationEmailRequest.fetchedAt])
 
 	return (
 		<Card className="profile-card">
@@ -204,13 +218,14 @@ export const ProfileCard: Component = () => {
 						buttonStyle="outlined"
 						className="mt-4"
 						loading={sendVerificationEmailRequest.fetching}
+						disabled={timeLeft > 0}
 						onClick={
 							() => sendVerificationEmailRequest.sendRequest()
 								.then(() => alertContext.addAlert({type: "success", label: "Successfully sent verification email"}))
 								.catch((err) => alertContext.addAlert({type: "error", label: errorToString(err, "Error sending verification email")}))
 						}
 					>
-						Resend Verification Email
+						Resend Verification Email{timeLeft > 0 && ` (${timeLeft})`}
 					</Button>
 				)}
 				<Button
