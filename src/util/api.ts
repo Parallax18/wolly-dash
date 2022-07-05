@@ -212,9 +212,12 @@ export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, u
 		}
 
 		if (!totalOptions.headers) totalOptions.headers = {}
-		if (!token) return Promise.reject({
-			code: 401
-		});
+		if (!token) {
+			console.log("NO TOKEN PROVIDED, RETURNING 401")
+			return Promise.reject({
+				code: 401
+			})
+		}
 		totalOptions.headers["Authorization"] = "BEARER " + token
 
 		return new Promise((resolve, reject) => {
@@ -345,7 +348,7 @@ export const useRefreshTokensRequest = (suppliedTokenRef?: MutableRefObject<Toke
 		return request.sendRequest({
 			method: "POST",
 			data: {
-				refreshToken
+				refresh_token: refreshToken
 			}
 		})
 	}
