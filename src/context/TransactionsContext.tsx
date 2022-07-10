@@ -24,13 +24,13 @@ export const TransactionsContextWrapper: Component = ({ children }) => {
 	const getTransactions = () => {
 		if (!loggedIn || !user) return;
 		getTransactionsRequest.sendRequest(user.id).then((res) => {
+			fetchedRef.current = true;
 			setTransactions(res.data.data)
 		})
 	}
 
 	useEffect(() => {
 		if (!loggedIn || !user || (fetchedRef.current && getTransactionsRequest.requestData?.userId === user.id)) return;
-		fetchedRef.current = true
 		getTransactions()
 	}, [loggedIn, user])
 
