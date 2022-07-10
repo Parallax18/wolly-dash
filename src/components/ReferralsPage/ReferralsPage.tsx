@@ -16,11 +16,12 @@ import TwitterIcon from "../../svg/icons/twitter.svg"
 import TelegramIcon from "../../svg/icons/telegram.svg"
 import Dialog from "../Dialog"
 import { ReferralContext } from "../../context/ReferralContext"
+import { Loadable, Loader } from "../Loader"
 
 const ReferralsPage: Component = () => {
-	const { activeStage } = useContext(StageContext)
-	const { currentProject } = useContext(ProjectContext)
-	const { user } = useContext(AuthContext)
+	const { activeStage, activeStageRequest } = useContext(StageContext)
+	const { currentProject, currProjectRequest } = useContext(ProjectContext)
+	const { user, userRequest } = useContext(AuthContext)
 
 	const [ modalOpen, setModalOpen ] = useState(false)
 
@@ -30,15 +31,18 @@ const ReferralsPage: Component = () => {
 	const earn = activeStage?.bonuses.referrals.earn || 0
 	const spend = activeStage?.bonuses.referrals.spend || 0
 
+	const loading = activeStageRequest.fetching || currProjectRequest.fetching || userRequest.fetching
+
 	return (
 		<Page path="/referrals" title="Referrals">
 			<div className="referrals-page flex-gap-y-4">
 				<ReferralInfoCard
 					shareText={shareText}
 					shareUrl={shareUrl}
-					onHowToClick={() => setModalOpen(true)}
+					onHowToClick={() => !loading && setModalOpen(true)}
 					earn={earn}
 					spend={spend}
+					loading={loading}
 				/>
 				<ReferralStatsCard />
 				<ReferralHowToDialog
@@ -59,76 +63,83 @@ export const ReferralInfoCard: Component<{
 	earn: number,
 	spend: number,
 	shareUrl: string,
-	shareText: string
+	shareText: string,
+	loading?: boolean
 }> = (props) => {
 	return (
-		<Card className="referrals-card">
-			<CardBody className="flex flex-col flex-gap-y-4">
-				<div className="referrals-description flex-gap-y-1">
-					<h1>Refer & Earn Rewards</h1>
-					<p>Earn ${props.earn} per referral when they spend ${props.spend} or more</p>
-					<Button
-						color="primary"
-						compact
-						buttonStyle="transparent"
-						onClick={props.onHowToClick}
+		<Loader loading={!!props.loading}>
+			<Card className="referrals-card">
+				<CardBody className="flex flex-col flex-gap-y-4">
+					<div className="referrals-description flex-gap-y-1">
+						<Loadable component="h1">Refer & Earn Rewards</Loadable>
+						<Loadable component="p">Earn ${props.earn} per referral when they spend ${props.spend} or more</Loadable>
+						<Button
+							color="primary"
+							compact
+							buttonStyle="transparent"
+							onClick={props.onHowToClick}
+						>
+							How it Works?
+						</Button>
+					</div>
+					<Input
+						value={props.loading ? "" : props.shareUrl}
+						copyable
 					>
-						How it Works?
-					</Button>
-				</div>
-				<Input
-					value={props.shareUrl}
-					copyable
-				/>
-				<div className="referral-share-buttons gap-2">
-					<Button
-						compact
-						color="bg-light"
-						icon={FacebookIcon}
-						component="a"
-						target="_blank"
-						href={generateShareLink("facebook", props.shareText, props.shareUrl)}
-					>Share</Button>
-					<Button
-						compact
-						color="bg-light"
-						icon={TwitterIcon}
-						component="a"
-						target="_blank"
-						href={generateShareLink("twitter", props.shareText, props.shareUrl)}
-					>Tweet</Button>
-					<Button
-						compact
-						color="bg-light"
-						icon={TelegramIcon}
-						href={generateShareLink("telegram", props.shareText, props.shareUrl)}
-						target="_blank"
-						component="a"
-					>Post</Button>
-				</div>
-			</CardBody>
-		</Card>
+						<Loadable variant="block" loadClass="w-[calc(100%-4.5rem)] absolute left-4 h-5 top-1/2 -translate-y-1/2" />
+					</Input>
+					<div className="referral-share-buttons gap-2">
+						<Button
+							compact
+							color="bg-light"
+							icon={FacebookIcon}
+							component="a"
+							target="_blank"
+							href={generateShareLink("facebook", props.shareText, props.shareUrl)}
+						>Share</Button>
+						<Button
+							compact
+							color="bg-light"
+							icon={TwitterIcon}
+							component="a"
+							target="_blank"
+							href={generateShareLink("twitter", props.shareText, props.shareUrl)}
+						>Tweet</Button>
+						<Button
+							compact
+							color="bg-light"
+							icon={TelegramIcon}
+							href={generateShareLink("telegram", props.shareText, props.shareUrl)}
+							target="_blank"
+							component="a"
+						>Post</Button>
+					</div>
+				</CardBody>
+			</Card>
+		</Loader>
 	)
 }
 
 export const ReferralStatsCard: Component = () => {
-	const { referralStats } = useContext(ReferralContext)
-	const { activeStage } = useContext(StageContext)
+	const { referralStats, getReferralStatsRequest } = useContext(ReferralContext)
+	const { activeStage, activeStageRequest } = useContext(StageContext)
 
 	return (
-		<Card>
-			<CardTitle center>Referred Friends</CardTitle>
-			<CardBody className="referral-stats flex-gap-x-4">
-				<div className="referral-stat referred">
-					<p className="referral-stat-value">{referralStats?.referred}</p>
-					<span className="referral-stat-label">Referred</span>
-				</div>
-				<div className="referral-stat dollar">
-					<p className="referral-stat-value">${formatLargeNumber((referralStats?.earned_tokens || 0) * (activeStage?.token_price || 0), 1000, 0, 2)}</p>
-					<span className="referral-stat-label">Earned</span>
-				</div>
-			</CardBody>
-		</Card>
+		<Loader loading={getReferralStatsRequest.fetching || activeStageRequest.fetching}>
+			<Card>
+				<CardTitle center>Referred Friends</CardTitle>
+				<CardBody className="referral-stats flex-gap-x-4">
+					<div className="referral-stat referred">
+						<Loadable length={1} component="p" className="referral-stat-value">{referralStats?.referred}</Loadable>
+						<span className="referral-stat-label">Referred</span>
+					</div>
+					<div className="referral-stat dollar">
+						<Loadable length={2} component="p" className="referral-stat-value">${formatLargeNumber((referralStats?.earned_tokens || 0) * (activeStage?.token_price || 0), 1000, 0, 2)}</Loadable>
+						<span className="referral-stat-label">Earned</span>
+					</div>
+				</CardBody>
+			</Card>
+		</Loader>
 	)
 }
 
