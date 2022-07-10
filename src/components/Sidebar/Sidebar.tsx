@@ -8,14 +8,15 @@ import SettingsIcon from "../../svg/icons/settings-outline.svg"
 import LogoutIcon from "../../svg/icons/logout.svg"
 import Button from "../Button"
 import { Link, NavLink, useLocation } from "react-router-dom"
-import { routeMatchesExact, useGetCurrentProject } from "../../util"
+import { getURL, routeMatchesExact, useGetCurrentProject } from "../../util"
 import { AuthContext } from "../../context/AuthContext"
 import { useContext } from "react"
 
 import BuyIcon from "../../svg/icons/shopping-cart.svg"
 import TransactionsIcon from "../../svg/icons/payments.svg"
-
+import ReferralsIcon from "../../svg/icons/paid.svg"
 import HomeIcon from "../../svg/icons/home.svg"
+
 import { ProjectContext } from "../../context/ProjectContext"
 
 const navList = [
@@ -23,6 +24,7 @@ const navList = [
 	{label: "Dashboard", path: "/", icon: DashboardIcon},
 	{label: "Account", path: "/account", icon: AccountIcon},
 	{label: "Buy", path: "/buy", icon: BuyIcon},
+	{label: "Referrals", path: "/referrals", icon: ReferralsIcon},
 ]
 
 const bottomList = [
@@ -46,7 +48,7 @@ const Sidebar: Component = () => {
 				<div className="nav-list list +md:flex-gap-y-2">
 					{navList.map((navItem) => {
 						const matches = () => routeMatchesExact(navItem.path, location.pathname)
-						const path = navItem.path.replace("%MAIN_URL%", currentProject?.main_site_url || "")
+						const path = navItem.path.replace("%MAIN_URL%", getURL(currentProject?.main_site_url || ""))
 						return (
 							<Button
 								key={navItem.label}

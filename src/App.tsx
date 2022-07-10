@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import BuyPage from "./components/BuyPage"
 import ForgotPasswordPage from "./components/ForgotPasswordPage"
 import Layout from "./components/Layout"
+import ReferralsPage from "./components/ReferralsPage"
 import ResetPasswordPage from "./components/ResetPasswordPage"
 import { GlobalContextWrapper } from "./context/GlobalContext"
 import AccountPage from "./pages/AccountPage"
@@ -28,6 +29,7 @@ const App = () => {
 						<Route path="/verify-email" element={<VerifyEmailPage />} />
 						<Route path="/account" element={<AccountPage />} />
 						<Route path="/buy" element={<BuyPage />} />
+						<Route path="/referrals" element={<ReferralsPage />} />
 						<Route path="/terms" element={<TermsConditionsPage />} />
 						<Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
 					</Routes>

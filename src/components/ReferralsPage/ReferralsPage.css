@@ -1,0 +1,134 @@
+.referrals-page {
+	@apply
+		flex flex-col p-4
+		max-w-200
+		w-full
+		mx-auto
+
+		+md:flex-1
+		<md:min-h-[var(--screen-height)]
+}
+
+.referral-share-buttons {
+	@apply
+		flex
+		flex-wrap
+}
+
+.referral-share-buttons > .button {
+	@apply
+		flex-1
+		rounded
+}
+
+.referrals-description {
+	@apply
+		bg-background-paperLight
+		p-6
+		rounded-item
+}
+
+.referrals-description h1 {
+	@apply
+		text-2xl
+}
+
+
+.referral-stats {
+	@apply
+		flex !flex-row
+}
+
+
+.referral-stat {
+	@apply
+		relative
+		flex flex-col
+		items-center justify-center
+		p-4
+		flex-1
+}
+
+.referral-stat-value {
+	@apply
+		text-3xl
+		font-semibold
+}
+
+.referral-stat::before {
+	content: " ";
+	@apply
+		absolute
+		top-0
+		left-0
+		w-full
+		h-full
+		rounded
+		opacity-10
+}
+
+.referred .referral-stat-value {
+	@apply
+		text-primary-main
+}
+
+.referral-stat.referred::before {
+	@apply
+		bg-primary-dark
+}
+
+.dollar .referral-stat-value {
+	@apply
+		text-success-light
+}
+
+.referral-stat.dollar::before {
+	@apply
+		bg-success-dark
+}
+
+.referrals-how-root {
+	@apply
+		max-w-100
+		w-full
+
+}
+
+.referrals-how {
+	@apply
+		flex flex-col
+}
+
+.referrals-how-step {
+	@apply
+		relative
+		flex
+}
+
+.referrals-how-step .step-num {
+	@apply
+		flex-shrink-0
+		flex items-center justify-center
+		bg-background-contrast
+		rounded-full
+		w-8 h-8
+		mr-4
+		text-primary-light
+		mt-2
+}
+
+.referrals-how-step .step-text h2 {
+	@apply
+		text-lg
+}
+
+.referrals-how-step:not(:last-child)::after {
+	content: " ";
+	@apply
+		absolute
+		left-0
+		bottom-[-1rem]
+		w-full
+		h-[1px]
+		bg-divider
+}

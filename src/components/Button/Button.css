@@ -110,18 +110,18 @@
 		pointer-events-none
 }
 
-.button.contained {
+.button.style-contained {
 	@apply
 		bg-[var(--bg-color)]
 		text-[var(--text-color)]
 }
 
-.button.contained:not(.loading, .disabled):hover {
+.button.style-contained:not(.loading, .disabled):hover {
 	@apply
 		bg-[var(--bg-hover-color)]
 }
 
-.button.outlined {
+.button.style-outlined {
 	--text-color: var(--bg-color);
 	@apply
 		bg-transparent
@@ -129,10 +129,23 @@
 		text-[var(--text-color)]
 }
 
-.button.outlined:not(.loading, .disabled):hover {
+.button.style-outlined:not(.loading, .disabled):hover {
 	@apply
 		bg-[var(--theme-action-hover)]
 		border-[var(--bg-hover-color)]
+		text-[var(--bg-hover-color)]
+}
+
+.button.style-transparent {
+	--text-color: var(--bg-color);
+	@apply
+		bg-transparent
+		text-[var(--text-color)]
+}
+
+.button.style-transparent:not(.loading, .disabled):hover {
+	@apply
+		bg-[var(--theme-action-hover)]
 		text-[var(--bg-hover-color)]
 }
 
@@ -155,6 +168,18 @@
 .button .icon-container {
 	@apply
 		inline-flex items-center
+}
+
+.button .icon-container svg {
+	@apply
+		h-6
+		w-6
+}
+
+.button.compact .icon-container svg {
+	@apply
+		h-4
+		w-4
 }
 
 .button:not(.empty) .icon-container {

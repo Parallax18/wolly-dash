@@ -73,10 +73,20 @@ const RegisterPage: Component = () => {
 		let mobile: string | undefined = `${dialCode} ${vals.phone_number}`
 		if (!vals.phone_number) mobile = undefined;
 
-		registerRequest.sendRequest({
+		let args: UserArgs = {
 			...pick(vals, ["first_name", "last_name", "email", "nationality", "password"]),
 			mobile
-		} as UserArgs).then((res) => {
+		} as UserArgs
+
+		const params = new URLSearchParams(location.search)
+		let referral = params.get("referral")
+		if (referral) {
+			args.referrals = {
+				referred_by: referral
+			}
+		}
+
+		registerRequest.sendRequest(args).then((res) => {
 			authContext.login(res.data.user, res.data.tokens)
 			navigate(`/buy?usd_amount=${vals.usd_amount}&token_id=${vals.token.id}`, {replace: true})
 			alertContext.addAlert({
@@ -113,7 +123,6 @@ const RegisterPage: Component = () => {
 		})
 	}
 
-	console.log(values.token?.id)
 
 	return (
 		<Page path="/register" title="Register" onlyLoggedOut>

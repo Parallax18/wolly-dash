@@ -4,12 +4,10 @@ import { minMax } from "./number";
 import { MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { AuthContext } from "../context/AuthContext";
-import { APIError, BonusCalculations, LoginResponse, MinimumAmountResponse, PriceChartResponse, PricesResponse, Project, Stage, Tokens, Transaction, TransactionsResponse, User } from "../types/Api";
+import { APIError, BonusCalculations, LoginResponse, MinimumAmountResponse, PriceChartResponse, PricesResponse, Project, ReferralStatsResponse, Stage, Tokens, Transaction, TransactionsResponse, User } from "../types/Api";
+import { getURL } from "./data";
 
 export type URLString = `http://${string}.${string}` | `https://${string}.${string}` | `/${string}`
-export type CreateRequestOptions = AxiosRequestConfig & {
-	method?: Method
-}
 
 export type CreateRequestResponse<T, K, Q = Record<string, unknown>> = {
 	progress: number;
@@ -26,7 +24,13 @@ export type CreateRequestResponse<T, K, Q = Record<string, unknown>> = {
 	success: boolean;
 	error: string | undefined;
 	fetchedAt: number;
-  }
+}
+
+export type RequestConfig<T extends Record<string, any>> = AxiosRequestConfig & {requestData?: T}
+
+export type CreateRequestOptions<T = {}> = RequestConfig<T> & {
+	method?: Method
+}
 
 export type RequestStatus = "NOT_STARTED" | "UPLOADING" | "DOWNLOADING" | "FINISHED";
 export type DataHistoryItem<T> = {
@@ -36,7 +40,7 @@ export type DataHistoryItem<T> = {
 
 const baseUrl = import.meta.env.REACT_APP_API_BASE_URL;
 
-export const useRequest = <T = Record<string, unknown>, K = Record<string, unknown>>(url: URLString, options?: CreateRequestOptions): CreateRequestResponse<T, (options: AxiosRequestConfig) => Promise<AxiosResponse<T>>, K> => {
+export const useRequest = <T = Record<string, unknown>, K = Record<string, unknown>>(url: URLString, options?: CreateRequestOptions<K>): CreateRequestResponse<T, (options: RequestConfig<K>) => Promise<AxiosResponse<T>>, K> => {
 	const unmountedRef = useRef(false)
 	const [uploadProgress, setUploadProgress] = useState(0)
 	const [downloadProgress, setDownloadProgress] = useState(0)
@@ -97,7 +101,7 @@ export const useRequest = <T = Record<string, unknown>, K = Record<string, unkno
 	}
 
 	const axiosInstance = axios.create({
-		baseURL: url.startsWith("http") ? "" : baseUrl,
+		baseURL: getURL(baseUrl),
 		onUploadProgress: createProgressFunction(setUploadProgress),
 		onDownloadProgress: createProgressFunction(setDownloadProgress),
 		method: "GET",
@@ -120,10 +124,11 @@ export const useRequest = <T = Record<string, unknown>, K = Record<string, unkno
 	})
 
 	let lastReceived = 0;
-	const sendRequest = async (newOptions?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
+	const sendRequest = async (newOptions?: RequestConfig<K>): Promise<AxiosResponse<T>> => {
 		setUploadProgress(0)
 		setDownloadProgress(0)
-		setRequestData({...newOptions?.data, ...newOptions?.params})
+		if (url.includes("/transactions")) console.log("SETTING DATA TO", {...newOptions?.data, ...newOptions?.params})
+		setRequestData({...newOptions?.data, ...newOptions?.params, ...newOptions?.requestData})
 		setFetching(true)
 		setSuccess(false)
 		setFinished(false)
@@ -172,7 +177,7 @@ export const useRequest = <T = Record<string, unknown>, K = Record<string, unkno
 		})
 	}
 
-	let returnVal: CreateRequestResponse<T, (options: AxiosRequestConfig) => Promise<AxiosResponse<T>>, K> = {
+	let returnVal: CreateRequestResponse<T, (options: RequestConfig<K>) => Promise<AxiosResponse<T>>, K> = {
 		progress, uploadProgress, downloadProgress,
 		data, requestData, dataHistory,
 		requestStatus, responseStatusCode,
@@ -184,11 +189,11 @@ export const useRequest = <T = Record<string, unknown>, K = Record<string, unkno
 	return returnVal;
 }
 
-export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, unknown>>(url: URLString, options: CreateRequestOptions = {}, suppliedTokenRef?: MutableRefObject<Tokens>): CreateRequestResponse<T, (newOptions?: AxiosRequestConfig) => Promise<AxiosResponse>, K> => {
-	const request: CreateRequestResponse<T, (options: AxiosRequestConfig) => Promise<AxiosResponse<T>>, K> = useRequest<T, K>(url, options)
+export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, unknown>>(url: URLString, options: CreateRequestOptions<K> = {}, suppliedTokenRef?: MutableRefObject<Tokens>): CreateRequestResponse<T, (newOptions?: RequestConfig<K>) => Promise<AxiosResponse>, K> => {
+	const request: CreateRequestResponse<T, (options: RequestConfig<K>) => Promise<AxiosResponse<T>>, K> = useRequest<T, K>(url, options)
 	const { tokensRef, tokens, refreshTokens } = useContext(AuthContext)
 	
-	const newSendRequest = async (newOptions: AxiosRequestConfig = {}): Promise<AxiosResponse<T>> => {
+	const newSendRequest = async (newOptions: RequestConfig<K> = {}): Promise<AxiosResponse<T>> => {
 		let totalOptions = {
 			...options,
 			...newOptions
@@ -263,7 +268,10 @@ export interface UserArgs {
 	nationality: string,
 	password: string,
 	mobile?: string,
-	wallet?: string
+	wallet?: string,
+	referrals?: {
+		referred_by: string
+	}
 }
 
 export const useRegisterRequest = (): CreateRequestResponse<
@@ -462,6 +470,9 @@ export const useGetTransactions = (): GetTransactionsRequest => {
 				after,
 				before,
 				limit: 5
+			},
+			requestData: {
+				userId
 			}
 		})
 	}
@@ -582,6 +593,27 @@ export const useVerifyEmailRequest = (): VerifyEmailRequest => {
 			method: "POST",
 			params: {
 				token
+			}
+		})
+	}
+
+	return { ...request, sendRequest }
+}
+
+export type GetReferralStatsRequest = CreateRequestResponse<
+	ReferralStatsResponse,
+	(userId: string) => Promise<AxiosResponse<ReferralStatsResponse>>,
+	{userId: string}
+>
+
+export const useGetReferralStats = (): GetReferralStatsRequest => {
+	const request = useAuthRequest<ReferralStatsResponse, {userId: string}>("/users")
+
+	const sendRequest = (userId: string) => {
+		return request.sendRequest({
+			url: "/" + userId + "/referrals",
+			requestData: {
+				userId
 			}
 		})
 	}

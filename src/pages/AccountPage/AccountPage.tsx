@@ -29,8 +29,8 @@ const AccountPage: Component = () => {
 	
 	return (
 		<Page path="/account" userRestricted>
-			<div className="gap-wrapper">
-				<div className="account-page gap-4 !m-0">
+			<div className="account-page">
+				<div className="gap-wrapper gap-4 !m-0">
 					<ProfileCard />
 					<WalletCard />
 				</div>

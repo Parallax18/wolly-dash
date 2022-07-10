@@ -61,7 +61,8 @@
 		<md:!items-center <md:!justify-center
 		<md:text-xs
 		<md:!py-0
-		<md:w-22
+		<md:max-w-32
+		<md:flex-1
 }
 
 .sidebar .list > .button .icon-container {

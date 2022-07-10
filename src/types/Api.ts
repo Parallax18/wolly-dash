@@ -71,6 +71,10 @@ export interface Stage {
 		signup?: {
 			first_purchase_percentage?: 100,
 			limited_time?: LimitedSignupBonus
+		},
+		referrals: {
+			spend: number,
+			earn: number
 		}
 	}
 }
@@ -151,4 +155,9 @@ export interface PriceChartDataItem {
 
 export interface PriceChartResponse {
 	price_chart: PriceChartDataItem[]
+}
+
+export interface ReferralStatsResponse {
+	referred: number,
+	earned_tokens: number,
 }

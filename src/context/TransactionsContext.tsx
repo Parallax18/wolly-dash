@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios"
-import React, { createContext, useContext, useEffect, useState } from "react"
+import React, { createContext, useContext, useEffect, useRef, useState } from "react"
 import { Transaction } from "../types/Api"
 import { Component } from "../types/Util"
 import { CreateTransactionArgs, CreateTransactionRequest, GetTransactionsRequest, useCreateTransaction, useGetTransactions } from "../util"
@@ -19,12 +19,19 @@ export const TransactionsContextWrapper: Component = ({ children }) => {
 	const [ transactions, setTransactions ] = useState<Transaction[]>([])
 	const getTransactionsRequest = useGetTransactions();
 	const createTransactionRequest = useCreateTransaction();
+	const fetchedRef = useRef(false)
 
-	useEffect(() => {
-		if (!loggedIn || !user || (getTransactionsRequest.fetchedAt && getTransactionsRequest.requestData?.userId === user.id)) return;
+	const getTransactions = () => {
+		if (!loggedIn || !user) return;
 		getTransactionsRequest.sendRequest(user.id).then((res) => {
 			setTransactions(res.data.data)
 		})
+	}
+
+	useEffect(() => {
+		if (!loggedIn || !user || (fetchedRef.current && getTransactionsRequest.requestData?.userId === user.id)) return;
+		fetchedRef.current = true
+		getTransactions()
 	}, [loggedIn, user])
 
 	const createTransaction = (args: CreateTransactionArgs): Promise<AxiosResponse<Transaction>> => {
@@ -32,7 +39,7 @@ export const TransactionsContextWrapper: Component = ({ children }) => {
 			createTransactionRequest.sendRequest(args)
 				.then((res) => {
 					resolve(res)
-					setTransactions((transactions) => [res.data, ...transactions].splice(0, 5))
+					getTransactions()
 				})
 				.catch((err) => reject(err))
 		})

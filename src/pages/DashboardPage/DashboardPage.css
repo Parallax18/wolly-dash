@@ -8,6 +8,9 @@
 		w-full
 		mx-auto
 
+		+md:flex-1
+		<md:min-h-[var(--screen-height)]
+
 		<xl:flex-col-reverse
 		!pb-12
 }

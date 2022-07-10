@@ -10,7 +10,7 @@
 
 .dialog:not(.open) {
 	@apply
-		translate-y-0
+		translate-y-[4rem]
 		top-full
 }
 

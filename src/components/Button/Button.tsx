@@ -16,7 +16,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 	color?: "base" | "primary" | "secondary" | "accent" | "transparent" | "bg-light" | "bg-contrast" | "bg-paper",
 	size?: "default" | "tiny",
 	textColor?: "unselected" | "secondary" | "default"
-	buttonStyle?: "contained" | "outlined",
+	buttonStyle?: "contained" | "outlined" | "transparent",
 	component?: ComponentType,
 	disabled?: boolean,
 	compact?: boolean,
@@ -48,7 +48,7 @@ const Button: Component<ButtonProps> = ({
 			}}
 			className={clsx("button", className, {
 				[color]: true,
-				[buttonStyle]: true,
+				[`style-${buttonStyle}`]: true,
 				[`text-col-${textColor}`]: !!textColor,
 				empty: !children,
 				icon: icon !== undefined,

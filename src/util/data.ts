@@ -129,3 +129,20 @@ export const getTimeString = (ms: number) => {
 	if (!timeLabel) timeLabel = entries[entries.length - 1][0];
 	return `${Math.floor(ms / map[timeLabel])} ${timeLabel}`
 }
+
+export const getURL = (urlStr: string): string => {
+	if (urlStr.startsWith("http")) return urlStr
+	if (urlStr.startsWith("/")) return urlStr
+	return `http://${urlStr}`
+}
+
+export const generateShareLink = (site: "facebook" | "twitter" | "telegram", message: string, url: string): string => {
+	if (site === "facebook") {
+		return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
+	} else if (site === "twitter") {
+		return `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`
+	} else if (site === "telegram") {
+		return `https://telegram.me/share/url?url=${encodeURI(url)}&text=${encodeURIComponent(message)}`
+	}
+	return "";
+}

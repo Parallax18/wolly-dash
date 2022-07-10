@@ -1,9 +1,16 @@
 .account-page {
 	@apply
+		+md:flex-1
+		<md:min-h-[var(--screen-height)]
+}
+
+.account-page .gap-wrapper {
+	@apply
 		flex flex-1
 		items-start
 		p-2
 		<lg:flex-col
+
 }
 
 .account-page .input-root .left-container {
