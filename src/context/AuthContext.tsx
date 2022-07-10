@@ -5,7 +5,9 @@ import { Component } from "../types/Util"
 import { Tokens, User } from "../types/Api"
 import { GetUserRequest, useGetUserRequest, useLocalState, useLocalStateRef, useRefreshTokensRequest } from "../util"
 
-export const AuthContext = createContext<AuthContextData>({} as AuthContextData)
+export const AuthContext = createContext<AuthContextData>({
+	refreshTokens: () => Promise.reject({code: 401, message: "Context not provided"})
+} as AuthContextData)
 
 export interface AuthContextData {
 	tokens: Tokens,
@@ -56,6 +58,39 @@ export const AuthContextWrapper: Component = ({ children }) => {
 			})
 	}, [loggedIn, user])
 
+	const refreshTokens = (): Promise<any> => {
+		if (refreshingRef.current && refreshingPromiseRef.current !== null){
+			return refreshingPromiseRef.current;
+		}
+		refreshingPromiseRef.current = new Promise((resolve, reject) => {
+			refreshingRef.current = true
+			if (!tokens.refresh?.token || Date.now() > new Date(tokens.refresh?.expires).getTime()) {
+				AuthData.logout()
+				console.log("LOGGING OUT DUE TO EXPIRED REFRESH")
+				return Promise.reject();
+			}
+
+			console.log("Sending refresh token request within AuthContext")
+			refreshTokensRequest.sendRequest(tokens.refresh?.token)
+				.then((res: AxiosResponse<Tokens, any> | AxiosError) => {
+					res = res as AxiosResponse<Tokens, any>
+					setTokens(res.data as Tokens)
+					resolve(res)
+				})
+				.catch((err) => {
+
+					AuthData.logout()
+					console.error(err)
+					reject(err)
+				})
+				.finally(() => {
+					refreshingRef.current = false
+					refreshingPromiseRef.current = null
+				})
+		})
+		return refreshingPromiseRef.current
+	}
+
 	const AuthData: AuthContextData = {
 		tokens, tokensRef, user, loggedIn, tokensFetchedAt: refreshTokensRequest.fetchedAt,
 		setTokens,
@@ -72,36 +107,7 @@ export const AuthContextWrapper: Component = ({ children }) => {
 		},
 		userRequest: getUserRequest,
 		logout,
-		refreshTokens: (): Promise<any> => {
-			if (refreshingRef.current && refreshingPromiseRef.current !== null){
-				return refreshingPromiseRef.current;
-			}
-			refreshingPromiseRef.current = new Promise((resolve, reject) => {
-				refreshingRef.current = true
-				if (!tokens.refresh?.token || Date.now() > new Date(tokens.refresh?.expires).getTime()) {
-					AuthData.logout()
-					console.log("LOGGING OUT DUE TO EXPIRED REFRESH")
-					return Promise.reject();
-				}
-				refreshTokensRequest.sendRequest(tokens.refresh?.token)
-					.then((res: AxiosResponse<Tokens, any> | AxiosError) => {
-						res = res as AxiosResponse<Tokens, any>
-						setTokens(res.data as Tokens)
-						resolve(res)
-					})
-					.catch((err) => {
-
-						AuthData.logout()
-						console.error(err)
-						reject(err)
-					})
-					.finally(() => {
-						refreshingRef.current = false
-						refreshingPromiseRef.current = null
-					})
-			})
-			return refreshingPromiseRef.current
-		}
+		refreshTokens
 	}
 
 	return (

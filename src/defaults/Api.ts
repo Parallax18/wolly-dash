@@ -25,5 +25,6 @@ export const defaultTransaction: Transaction = {
 		bonuses: {},
 		total: 0
 	},
-	user_id: ""
+	user_id: "",
+	type: "purchase"
 }

@@ -31,6 +31,7 @@ import * as Yup from "yup"
 import { defaultTransaction } from "../../defaults/Api"
 import placeholder from "../../constants/placeholder"
 import { TransactionDetails } from "../TransactionList"
+import Info from "../Info"
 
 const BuyPage: Component = () => {
 	const [ timeRemaining, setTimeRemaining ] = useState(0);
@@ -259,7 +260,9 @@ const BuyPage: Component = () => {
 						</div>
 						<div className="form-item">
 							<span>
-								Bonuses
+								Eligible Bonuses <Info>
+								Bonuses may change depending on your pending transactions e.g. referral bonus for a transaction might not be awarded if a previous transaction completes and obtains a referral bonus
+								</Info>
 							</span>
 							<Loader loading={bonusLoading}>
 								<Collapse
@@ -293,7 +296,7 @@ const BuyPage: Component = () => {
 								</span>
 							</span>
 							<div className="summary-container">
-								You spend
+								You send
 								<span className="font-semibold mx-1">
 									{toDisplay(values.buy_token_amount)} {values.token?.symbol}
 								</span>

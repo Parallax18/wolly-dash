@@ -40,6 +40,11 @@
 		flex flex-col
 }
 
+.transaction-item .transaction-chip {
+	@apply
+		font-normal w-24 justify-center mr-1
+}
+
 .transaction-item .value-sub {
 	@apply
 		text-text-secondary
@@ -51,6 +56,7 @@
 	@apply
 		w-32
 		flex-grow-0
+		!flex-shrink-0
 }
 
 .transaction-item .action-value {

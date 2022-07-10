@@ -26,7 +26,10 @@ export type CreateRequestResponse<T, K, Q = Record<string, unknown>> = {
 	fetchedAt: number;
 }
 
-export type RequestConfig<T extends Record<string, any>> = AxiosRequestConfig & {requestData?: T}
+export type RequestConfig<T extends Record<string, any>> = AxiosRequestConfig & {
+	requestData?: T,
+	refreshTokens?: () => Promise<AxiosResponse<Tokens>>
+}
 
 export type CreateRequestOptions<T = {}> = RequestConfig<T> & {
 	method?: Method
@@ -189,10 +192,12 @@ export const useRequest = <T = Record<string, unknown>, K = Record<string, unkno
 	return returnVal;
 }
 
+let tokenPromise: Promise<AxiosResponse<Tokens>> | null = null;
+
 export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, unknown>>(url: URLString, options: CreateRequestOptions<K> = {}, suppliedTokenRef?: MutableRefObject<Tokens>): CreateRequestResponse<T, (newOptions?: RequestConfig<K>) => Promise<AxiosResponse>, K> => {
 	const request: CreateRequestResponse<T, (options: RequestConfig<K>) => Promise<AxiosResponse<T>>, K> = useRequest<T, K>(url, options)
 	const { tokensRef, tokens, refreshTokens } = useContext(AuthContext)
-	
+
 	const newSendRequest = async (newOptions: RequestConfig<K> = {}): Promise<AxiosResponse<T>> => {
 		let totalOptions = {
 			...options,
@@ -205,10 +210,14 @@ export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, u
 		if (!expires || Date.now() > new Date(expires || 0).getTime()) {
 			let success = true
 			let error = false
-			let tokenRes = await refreshTokens().catch((err) => {
+
+			console.log("REFRESHING TOKENS")
+			if (!tokenPromise) tokenPromise = refreshTokens().catch((err) => {
 				error = err
 				success = false
-			});
+			}) as any;
+
+			let tokenRes = await tokenPromise;
 			if (!success) {
 				return Promise.reject(error)
 			}
@@ -228,27 +237,32 @@ export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, u
 		return new Promise((resolve, reject) => {
 			request.sendRequest(totalOptions)
 				.then((res) => resolve(res))
-				.catch((err: AxiosError) => {
+				.catch(async (err: AxiosError) => {
 					console.log(err, err.code)
 					if (err.code?.toString() === "401") {
 						console.log("401 received, refreshing tokens")
-						refreshTokens()
-							.then((res) => {
-								console.log("Successfully refreshed tokens")
-								return request.sendRequest({
-									...totalOptions,
-									headers: {
-										...totalOptions.headers,
-										"Authorization": "BEARER " + res.data.access?.token
-									}
-								})
-								.then((res) => resolve(res as AxiosResponse<T>))
-								.catch((err: AxiosError) => reject(err))
-							})
+						let success = true;
+						if (!tokenPromise) tokenPromise = refreshTokens()
 							.catch((err: AxiosError) => {
 								console.log("Error refreshing tokens")
+								success	= false
 								reject(err)
-							})
+							}) as any
+						else console.log("Tokens already refreshing")
+
+						let res = await tokenPromise as AxiosResponse<Tokens>
+						if (!success) return;
+
+						console.log("Successfully refreshed tokens")
+						return request.sendRequest({
+							...totalOptions,
+							headers: {
+								...totalOptions.headers,
+								"Authorization": "BEARER " + res.data.access?.token
+							}
+						})
+						.then((res) => resolve(res as AxiosResponse<T>))
+						.catch((err: AxiosError) => reject(err))
 					}
 					reject(err)
 				})
@@ -353,6 +367,8 @@ export const useRefreshTokensRequest = (suppliedTokenRef?: MutableRefObject<Toke
 	const request = useAuthRequest<Tokens, {refreshToken: string}>("/auth/refresh-tokens", {}, suppliedTokenRef)
 
 	const sendRequest = (refreshToken: string) => {
+		console.log("SENDING REQUEST WITH TOKEN", suppliedTokenRef?.current)
+
 		return request.sendRequest({
 			method: "POST",
 			data: {

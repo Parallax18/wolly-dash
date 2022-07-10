@@ -115,12 +115,14 @@ export type TransactionItemProps = {
 	onActionClick: (txn: Transaction) => void
 }
 
-const statusColorMap: Record<Transaction["status"], [string, string]> = {
+const statusColorMap: Record<Transaction["status"] | Transaction["type"], [string, string]> = {
 	completed: ["bg-success-main", "text-success-contrastText"],
 	expired: ["bg-error-main", "text-error-contrastText"],
 	failed: ["bg-error-main", "text-error-contrastText"],
 	pending: ["bg-warning-main", "text-warning-contrastText"],
 	processing: ["bg-info-main", "text-info-contrastText"],
+	referral: ["bg-info-main", "text-info-contrastText"],
+	purchase: ["bg-info-main", "text-info-contrastText"],
 }
 
 export const TransactionItem: Component<TransactionItemProps> = ({ transaction, onActionClick }) => {
@@ -132,19 +134,27 @@ export const TransactionItem: Component<TransactionItemProps> = ({ transaction, 
 			className="transaction-item flex-gap-x-1"
 		>
 			<span className="item-value token-value">
-				<Loadable component="img" className="token-image" src={paymentToken.imageUrl || placeholder.tokenImage } />
+				<Loadable component="img" className={clsx("token-image", {"invisible": transaction.type === "referral"})} src={paymentToken.imageUrl || placeholder.tokenImage } />
 			</span>
-			<span className="item-value">
-				<div className="value-group">
-					<Loadable component="span">
-						{formatLargeNumber(transaction.initial_purchase_amount_crypto)} 
-						{" "}{paymentToken.symbol}
+			{transaction.type === "purchase" ? (
+				<span className="item-value">
+					<div className="value-group">
+						<Loadable component="span">
+							{formatLargeNumber(transaction.initial_purchase_amount_crypto)} 
+							{" "}{paymentToken.symbol}
+						</Loadable>
+						<Loadable component="span" className="value-sub">
+							${formatLargeNumber(transaction.initial_purchase_amount_fiat)}
+						</Loadable>
+					</div>
+				</span>
+			) : (
+				<span className="item-value">
+					<Loadable component={Chip} compact className={clsx(statusColorMap[transaction.type], "transaction-chip")}>
+						{capitalize(transaction.type)}
 					</Loadable>
-					<Loadable component="span" className="value-sub">
-						${formatLargeNumber(transaction.initial_purchase_amount_fiat)}
-					</Loadable>
-				</div>
-			</span>
+				</span>
+			)}
 			<span className="item-value">
 				<div className="value-group">
 					<Loadable component="span">
@@ -157,7 +167,7 @@ export const TransactionItem: Component<TransactionItemProps> = ({ transaction, 
 			</span>
 			<span className="item-value">
 				<div className="value-group">
-					<Loadable component={Chip} compact className={clsx(statusColorMap[transaction.status], "font-normal w-22 justify-center mr-1")}>
+					<Loadable component={Chip} compact className={clsx(statusColorMap[transaction.status], "transaction-chip")}>
 						{capitalize(transaction.status)}
 					</Loadable>
 				</div>

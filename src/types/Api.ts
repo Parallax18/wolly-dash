@@ -132,7 +132,8 @@ export interface Transaction {
 	completed_date: string | null,
 	actual_purchase_amount_crypto: number | null,
 	actual_purchase_amount_fiat: number | null,
-	user_id: string
+	user_id: string,
+	type: "purchase" | "referral"
 }
 
 export type Paginated<T> ={ 
