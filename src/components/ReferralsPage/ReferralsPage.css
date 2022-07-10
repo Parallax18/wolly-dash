@@ -43,6 +43,7 @@
 .referral-stat {
 	@apply
 		relative
+		z-[2]
 		flex flex-col
 		items-center justify-center
 		p-4
@@ -53,6 +54,8 @@
 	@apply
 		text-3xl
 		font-semibold
+		<sm:text-2xl
+		<xs:text-xl
 }
 
 .referral-stat::before {
@@ -65,6 +68,7 @@
 		h-full
 		rounded
 		opacity-10
+		pointer-events-none
 }
 
 .referred .referral-stat-value {
