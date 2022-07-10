@@ -13,7 +13,7 @@ import "./ReferralsPage.css"
 
 import FacebookIcon from "../../svg/icons/facebook.svg"
 import TwitterIcon from "../../svg/icons/twitter.svg"
-import TelegramIcon from "../../svg/icons/Telegram.svg"
+import TelegramIcon from "../../svg/icons/telegram.svg"
 import Dialog from "../Dialog"
 import { ReferralContext } from "../../context/ReferralContext"
 
