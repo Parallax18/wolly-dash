@@ -153,8 +153,8 @@ export const ReferralHowToDialog: Component<{open: boolean, onClose: () => void,
 				<CardBody className="referrals-how flex-gap-y-8">
 					{[
 						{title: "Share Link", desc: "Share your unique referral link with friends and have them sign up through it"},
-						{title: "Top Up", desc: `Once a friend registers, they should buy $${props.spend}`},
-						{title: "Earn $", desc: `Both you and your friend will earn $${props.earn}`},
+						{title: "Top Up", desc: `Once a friend registers, have them make a purchase of at least $${props.spend}`},
+						{title: "Earn $", desc: `Both you and your friend will earn $${props.earn} in tokens`},
 					].map((item, i) => (
 						<div className="referrals-how-step" key={i}>
 							<span className="step-num">{i+1}</span>
