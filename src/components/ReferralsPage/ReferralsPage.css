@@ -21,6 +21,21 @@
 		rounded
 }
 
+.referral-share-buttons.can-share a {
+	@apply
+		<md:hidden
+}
+
+.referral-share-buttons.can-share button {
+	@apply
+		+md:hidden
+}
+
+.referral-share-buttons:not(.can-share) button {
+	@apply
+		hidden
+}
+
 .referrals-description {
 	@apply
 		flex flex-col

@@ -14,9 +14,13 @@ import "./ReferralsPage.css"
 import FacebookIcon from "../../svg/icons/facebook.svg"
 import TwitterIcon from "../../svg/icons/twitter.svg"
 import TelegramIcon from "../../svg/icons/telegram.svg"
+import ShareIcon from "../../svg/icons/share.svg"
+
 import Dialog from "../Dialog"
+
 import { ReferralContext } from "../../context/ReferralContext"
 import { Loadable, Loader } from "../Loader"
+import clsx from "clsx"
 
 const ReferralsPage: Component = () => {
 	const { activeStage, activeStageRequest } = useContext(StageContext)
@@ -88,7 +92,7 @@ export const ReferralInfoCard: Component<{
 					>
 						<Loadable variant="block" loadClass="w-[calc(100%-4.5rem)] absolute left-4 h-5 top-1/2 -translate-y-1/2" />
 					</Input>
-					<div className="referral-share-buttons gap-2">
+					<div className={clsx("referral-share-buttons gap-2", {"can-share": !!navigator.share})}>
 						<Button
 							compact
 							color="bg-light"
@@ -113,6 +117,18 @@ export const ReferralInfoCard: Component<{
 							target="_blank"
 							component="a"
 						>Post</Button>
+						<Button
+							compact
+							color="bg-light"
+							icon={ShareIcon}
+							onClick={() => {
+								if (!navigator.share) return;
+								navigator.share({
+									url: props.shareUrl,
+									text: props.shareText
+								})
+							}}
+						>Share</Button>
 					</div>
 				</CardBody>
 			</Card>
