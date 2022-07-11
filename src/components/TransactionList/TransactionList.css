@@ -38,11 +38,18 @@
 .transaction-item .value-group {
 	@apply
 		flex flex-col
+		w-full
 }
 
 .transaction-item .transaction-chip {
 	@apply
-		font-normal w-24 justify-center mr-1
+		font-normal
+		max-w-24
+		justify-center
+		mr-1
+		w-full
+		<md:p-1
+		<sm:text-xs
 }
 
 .transaction-item .value-sub {

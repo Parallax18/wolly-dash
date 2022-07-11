@@ -37,7 +37,6 @@ export const AuthContextWrapper: Component = ({ children }) => {
 	const refreshingPromiseRef = useRef<Promise<any> | null>(null)
 
 	const logout = () => {
-		console.log("LOGGING OUT")
 		localStorage.setItem("banners", "{}")
 		setLoggedIn(false)
 		setUser(null)
@@ -52,7 +51,6 @@ export const AuthContextWrapper: Component = ({ children }) => {
 			.then((res) => {
 				setUser((res as AxiosResponse).data as User)
 			}).catch((err) => {
-				console.log("ERR", err)
 				if (err?.message === "Email must be verified" || err?.message === "Password change required") return
 				logout()
 			})
@@ -66,11 +64,9 @@ export const AuthContextWrapper: Component = ({ children }) => {
 			refreshingRef.current = true
 			if (!tokens.refresh?.token || Date.now() > new Date(tokens.refresh?.expires).getTime()) {
 				AuthData.logout()
-				console.log("LOGGING OUT DUE TO EXPIRED REFRESH")
 				return Promise.reject();
 			}
 
-			console.log("Sending refresh token request within AuthContext")
 			refreshTokensRequest.sendRequest(tokens.refresh?.token)
 				.then((res: AxiosResponse<Tokens, any> | AxiosError) => {
 					res = res as AxiosResponse<Tokens, any>

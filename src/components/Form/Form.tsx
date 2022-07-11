@@ -89,7 +89,6 @@ const Form: Component<FormProps> = ({
 		e.preventDefault();
 		setChanged(fillObj(initialValues, true))
 		let errors = await updateErrors()
-		if (errors) return console.log("Errors cant submit");
 
 		onSubmit(values)
 	}

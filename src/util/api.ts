@@ -130,7 +130,6 @@ export const useRequest = <T = Record<string, unknown>, K = Record<string, unkno
 	const sendRequest = async (newOptions?: RequestConfig<K>): Promise<AxiosResponse<T>> => {
 		setUploadProgress(0)
 		setDownloadProgress(0)
-		if (url.includes("/transactions")) console.log("SETTING DATA TO", {...newOptions?.data, ...newOptions?.params})
 		setRequestData({...newOptions?.data, ...newOptions?.params, ...newOptions?.requestData})
 		setFetching(true)
 		setSuccess(false)
@@ -211,7 +210,6 @@ export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, u
 			let success = true
 			let error = false
 
-			console.log("REFRESHING TOKENS")
 			if (!tokenPromise) tokenPromise = refreshTokens().catch((err) => {
 				error = err
 				success = false
@@ -219,7 +217,7 @@ export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, u
 
 			let tokenRes = await tokenPromise;
 			if (!success) {
-				return Promise.reject(error)
+				throw error
 			}
 			tokenRes = tokenRes as AxiosResponse<Tokens>
 			token = tokenRes.data?.access?.token
@@ -227,7 +225,6 @@ export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, u
 
 		if (!totalOptions.headers) totalOptions.headers = {}
 		if (!token) {
-			console.log("NO TOKEN PROVIDED, RETURNING 401")
 			return Promise.reject({
 				code: 401
 			})
@@ -238,22 +235,17 @@ export const useAuthRequest = <T = Record<string, unknown>, K = Record<string, u
 			request.sendRequest(totalOptions)
 				.then((res) => resolve(res))
 				.catch(async (err: AxiosError) => {
-					console.log(err, err.code)
 					if (err.code?.toString() === "401") {
-						console.log("401 received, refreshing tokens")
 						let success = true;
 						if (!tokenPromise) tokenPromise = refreshTokens()
 							.catch((err: AxiosError) => {
-								console.log("Error refreshing tokens")
 								success	= false
 								reject(err)
 							}) as any
-						else console.log("Tokens already refreshing")
 
 						let res = await tokenPromise as AxiosResponse<Tokens>
 						if (!success) return;
 
-						console.log("Successfully refreshed tokens")
 						return request.sendRequest({
 							...totalOptions,
 							headers: {
@@ -367,8 +359,6 @@ export const useRefreshTokensRequest = (suppliedTokenRef?: MutableRefObject<Toke
 	const request = useAuthRequest<Tokens, {refreshToken: string}>("/auth/refresh-tokens", {}, suppliedTokenRef)
 
 	const sendRequest = (refreshToken: string) => {
-		console.log("SENDING REQUEST WITH TOKEN", suppliedTokenRef?.current)
-
 		return request.sendRequest({
 			method: "POST",
 			data: {
