@@ -16,7 +16,7 @@ import "./DashboardPage.css"
 
 const DashboardPage: Component = () => {
 	const { currentProject, currProjectRequest } = useContext(ProjectContext)
-	const { activeStage, activeStageRequest, presaleEnded } = useContext(StageContext)
+	const { activeStage, activeStageRequest, presaleEnded, getActiveStage } = useContext(StageContext)
 	const { user, userRequest } = useContext(AuthContext)
 	const { finalPrice, getFinalPrice } = useContext(PriceContext)
 
@@ -55,7 +55,9 @@ const DashboardPage: Component = () => {
 								<Countdown
 									className="mt-2"
 									endDate={new Date(activeStage?.end_date)}
-									onCountdownFinish={() => getFinalPrice()}
+									onCountdownFinish={() => {
+										setTimeout(getActiveStage, 1000)
+									}}
 								/>
 							</Card>
 						)}
