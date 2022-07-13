@@ -45,8 +45,6 @@ const Sidebar: Component = () => {
 
 	const location = useLocation()
 
-	console.log("ENDED", presaleEnded)
-
 	return (
 		<Card className="sidebar">
 			<CardTitle center>

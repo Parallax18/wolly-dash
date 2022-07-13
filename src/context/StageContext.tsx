@@ -29,7 +29,6 @@ export const StageContextWrapper: Component = ({ children }) => {
 				setActiveStage(res.data)
 			})
 			.catch((err) => {
-				console.log("ERR", err)
 				if (err?.message?.toLowerCase().includes("token sale has ended")) setPresaleEnded(true)
 			});
 	}, [])

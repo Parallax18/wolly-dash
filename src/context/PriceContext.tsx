@@ -38,7 +38,6 @@ export const PriceContextWrapper: Component = ({ children }) => {
 	const finalPriceRequest = useGetFinalPrice()
 
 	useEffect(() => {
-		console.log("GETTING FINAL PRICE")
 		getFinalPrice()
 	}, [presaleEnded])
 
