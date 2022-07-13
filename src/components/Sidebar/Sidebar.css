@@ -80,13 +80,13 @@
 
 .sidebar .list > .button span {
 	@apply
-		absolute
-		bottom-2
-		whitespace-nowrap
+		<md:absolute
+		<md:bottom-2
+		<md:whitespace-nowrap
 }
 .sidebar .list > .button svg {
 	@apply
-		mb-3
+		<md:mb-3
 
 }
 
