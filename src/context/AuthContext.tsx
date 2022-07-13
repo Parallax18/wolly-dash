@@ -74,9 +74,7 @@ export const AuthContextWrapper: Component = ({ children }) => {
 					resolve(res)
 				})
 				.catch((err) => {
-
 					AuthData.logout()
-					console.error(err)
 					reject(err)
 				})
 				.finally(() => {

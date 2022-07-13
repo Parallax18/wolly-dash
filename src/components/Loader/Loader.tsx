@@ -119,7 +119,6 @@ export const Loadable: Component<LoadableProps> = ({
 			{component && !loadValue.loading && (
 				<Comp
 					{...others}
-					component={component}
 				>
 					{children}
 				</Comp>

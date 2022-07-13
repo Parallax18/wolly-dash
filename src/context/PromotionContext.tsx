@@ -20,7 +20,6 @@ export const PromotionContextWrapper: ComponentType = ({ children }) => {
 		if (!user?.id || !loggedIn || getPromotionImagesRequest.fetchedAt) return;
 		getPromotionImagesRequest.sendRequest()
 			.then((res) => {
-				console.log("DATA", res.data)
 				setPromotionImages(res.data)
 			})
 	}, [user, loggedIn, getPromotionImagesRequest.fetchedAt])

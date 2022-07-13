@@ -64,7 +64,7 @@ const Sidebar: Component = () => {
 			</CardTitle>
 			<CardBody>
 				<div className="nav-list list +md:flex-gap-y-2">
-					{navList.map((navItem) => {
+					{navList.map((navItem, i) => {
 						const matches = () => routeMatchesExact(navItem.path, location.pathname)
 						const path = navItem.path.replace("%MAIN_URL%", getURL(currentProject?.main_site_url || ""))
 						const args: Args = { presaleEnded, promotionImages, promotionsFetching: getPromotionImagesRequest.fetching }

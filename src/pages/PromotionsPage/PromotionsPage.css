@@ -1,10 +1,19 @@
 .promotions-page {
+
 	@apply
-		flex flex-col p-4
+		flex flex-col
+		p-2
 		max-w-200
 		w-full
-		mx-auto
+		!mx-auto
+		my-0
 
 		+md:flex-1
+
 		<md:min-h-[var(--screen-height)]
+}
+
+.promotions-images-container {
+	@apply
+		grid-cols-2	
 }

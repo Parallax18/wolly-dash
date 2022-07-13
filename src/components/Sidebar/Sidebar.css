@@ -78,6 +78,18 @@
 		<md:flex-1
 }
 
+.sidebar .list > .button span {
+	@apply
+		absolute
+		bottom-2
+		whitespace-nowrap
+}
+.sidebar .list > .button svg {
+	@apply
+		mb-3
+
+}
+
 .sidebar .list > .button .icon-container {
 	@apply
 		<md:mr-0
