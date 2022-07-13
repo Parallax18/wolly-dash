@@ -13,7 +13,7 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage"
 import RegisterPage from "./pages/RegisterPage"
 import TermsConditionsPage from "./pages/TermsConditionsPage"
 import VerifyEmailPage from "./pages/VerifyEmailPage"
-
+import PromotionsPage from "./pages/PromotionsPage"
 
 const App = () => {
 	return (
@@ -29,6 +29,7 @@ const App = () => {
 						<Route path="/verify-email" element={<VerifyEmailPage />} />
 						<Route path="/account" element={<AccountPage />} />
 						<Route path="/buy" element={<BuyPage />} />
+						<Route path="/promotions" element={<PromotionsPage />} />
 						<Route path="/referrals" element={<ReferralsPage />} />
 						<Route path="/terms" element={<TermsConditionsPage />} />
 						<Route path="/privacy-policy" element={<PrivacyPolicyPage />} />

@@ -1,0 +1,10 @@
+.promotions-page {
+	@apply
+		flex flex-col p-4
+		max-w-200
+		w-full
+		mx-auto
+
+		+md:flex-1
+		<md:min-h-[var(--screen-height)]
+}

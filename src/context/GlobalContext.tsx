@@ -3,6 +3,7 @@ import { AlertContextWrapper } from "./AlertContext";
 import { AuthContextWrapper } from "./AuthContext";
 import { PriceContextWrapper } from "./PriceContext";
 import { ProjectContextWrapper } from "./ProjectContext";
+import { PromotionContextWrapper } from "./PromotionContext";
 import { ReferralContextWrapper } from "./ReferralContext";
 import { StageContextWrapper } from "./StageContext";
 import { ThemeContextWrapper } from "./ThemeContext";
@@ -18,7 +19,9 @@ export const GlobalContextWrapper: Component = ({ children }) => {
 							<TransactionsContextWrapper>
 								<PriceContextWrapper>
 									<ReferralContextWrapper>
-										{children}
+										<PromotionContextWrapper>
+											{children}
+										</PromotionContextWrapper>
 									</ReferralContextWrapper>
 								</PriceContextWrapper>
 							</TransactionsContextWrapper>

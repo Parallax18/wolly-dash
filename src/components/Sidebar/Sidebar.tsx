@@ -1,4 +1,4 @@
-import type { Component } from "../../types/Util"
+import type { Component, ComponentType } from "../../types/Util"
 import Card, { CardBody, CardTitle } from "../Card"
 import "./Sidebar.css"
 
@@ -16,20 +16,31 @@ import BuyIcon from "../../svg/icons/shopping-cart.svg"
 import TransactionsIcon from "../../svg/icons/payments.svg"
 import ReferralsIcon from "../../svg/icons/paid.svg"
 import HomeIcon from "../../svg/icons/home.svg"
+import PromotionsIcon from "../../svg/icons/offer.svg"
 
 import { ProjectContext } from "../../context/ProjectContext"
 import { StageContext } from "../../context/StageContext"
+import { PromotionContext } from "../../context/PromotionContext"
 
-export interface DisabledArgs {
-	presaleEnded: boolean
+interface Args {
+	presaleEnded: boolean,
+	promotionsFetching: boolean,
+	promotionImages: Record<string, string>
 }
 
-const navList = [
+const navList: {
+	label: string,
+	path: string,
+	icon: ComponentType,
+	disabled?: (args: Args) => boolean,
+	visible?: (args: Args) => boolean
+}[] = [
 	{label: "Main Site", path: "%MAIN_URL%", icon: HomeIcon},
 	{label: "Dashboard", path: "/", icon: DashboardIcon},
 	{label: "Account", path: "/account", icon: AccountIcon},
-	{label: "Buy", path: "/buy", icon: BuyIcon, disabled: ({ presaleEnded }: DisabledArgs) => presaleEnded},
+	{label: "Buy", path: "/buy", icon: BuyIcon, disabled: ({ presaleEnded }) => presaleEnded},
 	{label: "Referrals", path: "/referrals", icon: ReferralsIcon},
+	{label: "Promotions", path: "/promotions", icon: PromotionsIcon, visible: ({ promotionsFetching, promotionImages }) => !promotionsFetching && Object.entries(promotionImages).length > 0},
 ]
 
 const bottomList = [
@@ -41,6 +52,7 @@ const bottomList = [
 const Sidebar: Component = () => {
 	const { currentProject } = useContext(ProjectContext)
 	const { presaleEnded } = useContext(StageContext)
+	const { getPromotionImagesRequest, promotionImages } = useContext(PromotionContext)
 	const authContext = useContext(AuthContext)
 
 	const location = useLocation()
@@ -55,6 +67,8 @@ const Sidebar: Component = () => {
 					{navList.map((navItem) => {
 						const matches = () => routeMatchesExact(navItem.path, location.pathname)
 						const path = navItem.path.replace("%MAIN_URL%", getURL(currentProject?.main_site_url || ""))
+						const args: Args = { presaleEnded, promotionImages, promotionsFetching: getPromotionImagesRequest.fetching }
+						if (navItem.visible !== undefined && !navItem.visible(args)) return <></>
 						return (
 							<Button
 								key={navItem.label}
@@ -65,7 +79,7 @@ const Sidebar: Component = () => {
 								color={matches() ? "primary" : "transparent"}
 								className="!justify-start"
 								icon={navItem.icon}
-								disabled={navItem.disabled !== undefined && navItem.disabled({ presaleEnded })}
+								disabled={navItem.disabled !== undefined && navItem.disabled(args)}
 							>
 								{navItem.label}
 							</Button>

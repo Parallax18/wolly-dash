@@ -639,3 +639,18 @@ export const useGetReferralStats = (): GetReferralStatsRequest => {
 
 	return { ...request, sendRequest }
 }
+
+export type GetPromotionImagesRequest = CreateRequestResponse<
+	Record<string, string>,
+	() => Promise<AxiosResponse<Record<string, string>>>
+>
+
+export const useGetPromotionImages = (): GetPromotionImagesRequest => {
+	const request = useAuthRequest<Record<string, string>>("/banners")
+
+	const sendRequest = () => {
+		return request.sendRequest({})
+	}
+
+	return { ...request, sendRequest }
+}
