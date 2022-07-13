@@ -29,11 +29,11 @@ const ReferralsPage: Component = () => {
 
 	const [ modalOpen, setModalOpen ] = useState(false)
 
-	const shareText = `Use my referral link to get $${activeStage?.bonuses.referrals.earn}`
+	const shareText = `Use my referral link to get $${activeStage?.bonuses?.referrals?.earn}`
 	const shareUrl = `${getURL(currentProject?.frontend_url || "")}/register?referral=${user?.id}`
 
-	const earn = activeStage?.bonuses.referrals.earn || 0
-	const spend = activeStage?.bonuses.referrals.spend || 0
+	const earn = activeStage?.bonuses?.referrals?.earn || 0
+	const spend = activeStage?.bonuses?.referrals?.spend || 0
 
 	const loading = activeStageRequest.fetching || currProjectRequest.fetching || userRequest.fetching
 
