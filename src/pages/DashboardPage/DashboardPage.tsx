@@ -7,6 +7,7 @@ import Page from "../../components/Page"
 import PriceChart from "../../components/PriceChart"
 import TransactionList from "../../components/TransactionList"
 import { AuthContext } from "../../context/AuthContext"
+import { PriceContext } from "../../context/PriceContext"
 import { ProjectContext } from "../../context/ProjectContext"
 import { StageContext } from "../../context/StageContext"
 import { Component } from "../../types/Util"
@@ -15,10 +16,13 @@ import "./DashboardPage.css"
 
 const DashboardPage: Component = () => {
 	const { currentProject, currProjectRequest } = useContext(ProjectContext)
-	const { activeStage, activeStageRequest } = useContext(StageContext)
+	const { activeStage, activeStageRequest, presaleEnded } = useContext(StageContext)
 	const { user, userRequest } = useContext(AuthContext)
+	const { finalPrice, getFinalPrice } = useContext(PriceContext)
 
 	const loading = currProjectRequest.fetching || activeStageRequest.fetching || userRequest.fetching
+
+	const tokenPrice = presaleEnded ? finalPrice : (activeStage?.token_price || 0)
 
 	return (
 		<Page title="Dashboard" path="/" userRestricted>
@@ -30,15 +34,17 @@ const DashboardPage: Component = () => {
 								<div className="card-header small">
 									Token Balance
 								</div>
-								<Loadable component="span" className="value large">${formatLargeNumber((user?.tokens?.total || 0) * (activeStage?.token_price || 0), 1000, 0, 2)}</Loadable>
+								<Loadable component="span" className="value large">${formatLargeNumber((user?.tokens?.total || 0) * tokenPrice, 1000, 0, 2)}</Loadable>
 								<Loadable component="span" className="value small">{formatLargeNumber(user?.tokens?.total || 0)} {currentProject?.symbol}</Loadable>
 							</div>
 							<div className="dashboard-card flex-1">
 								<div className="card-header small">
-									{activeStage?.name}
+									{presaleEnded ? "Final Price" : (activeStage?.name || "Stage")}
 								</div>
-								<Loadable component="span" className="value large">{currentProject?.symbol} ${formatNumber(activeStage?.token_price || 0)}</Loadable>
-								<Loadable component="span" className="value small">{formatLargeNumber(activeStage?.total_tokens || 0)} Tokens</Loadable>
+								<Loadable component="span" className="value large">{currentProject?.symbol} ${formatNumber(tokenPrice)}</Loadable>
+								{!presaleEnded && (
+									<Loadable component="span" className="value small">{formatLargeNumber(activeStage?.total_tokens || 0)} Tokens</Loadable>
+								)}
 							</div>
 						</div>
 						{activeStage?.end_date && (
@@ -46,13 +52,14 @@ const DashboardPage: Component = () => {
 								<div className="card-header small">
 									{activeStage?.name} Ends In
 								</div>
-									<Countdown
-										className="mt-2"
-										endDate={new Date(activeStage?.end_date)}
-									/>
+								<Countdown
+									className="mt-2"
+									endDate={new Date(activeStage?.end_date)}
+									onCountdownFinish={() => getFinalPrice()}
+								/>
 							</Card>
 						)}
-						{(activeStage?.type === "dynamic" || loading) && <PriceChart />}
+						{(activeStage?.type === "dynamic" || loading) && !presaleEnded && <PriceChart />}
 						<div className="dashboard-card">
 							<div className="card-header">
 								Recent Transactions

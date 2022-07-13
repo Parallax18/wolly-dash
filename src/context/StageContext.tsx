@@ -7,23 +7,31 @@ export const StageContext = createContext<StageContextData>({} as StageContextDa
 
 export interface StageContextData {
 	activeStage?: Stage,
-	activeStageRequest: GetActiveStageRequest
+	activeStageRequest: GetActiveStageRequest,
+	presaleEnded: boolean
 }
 
 export const StageContextWrapper: Component = ({ children }) => {
 	const [ activeStage, setActiveStage ] = useState<Stage | undefined>(undefined)
+	const [ presaleEnded, setPresaleEnded ] = useState(false)
 
 	const activeStageRequest = useGetActiveStages()
 
 	const StageData: StageContextData = {
 		activeStage,
-		activeStageRequest
+		activeStageRequest,
+		presaleEnded
 	}
 
 	useEffect(() => {
-		activeStageRequest.sendRequest().then((res) => {
-			setActiveStage(res.data)
-		});
+		activeStageRequest.sendRequest()
+			.then((res) => {
+				setActiveStage(res.data)
+			})
+			.catch((err) => {
+				console.log("ERR", err)
+				if (err?.message?.toLowerCase().includes("token sale has ended")) setPresaleEnded(true)
+			});
 	}, [])
 
 	return (

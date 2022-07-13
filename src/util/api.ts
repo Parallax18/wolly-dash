@@ -4,7 +4,7 @@ import { minMax } from "./number";
 import { MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { AuthContext } from "../context/AuthContext";
-import { APIError, BonusCalculations, LoginResponse, MinimumAmountResponse, PriceChartResponse, PricesResponse, Project, ReferralStatsResponse, Stage, Tokens, Transaction, TransactionsResponse, User } from "../types/Api";
+import { APIError, BonusCalculations, FinalPriceResponse, LoginResponse, MinimumAmountResponse, PriceChartResponse, PricesResponse, Project, ReferralStatsResponse, Stage, Tokens, Transaction, TransactionsResponse, User } from "../types/Api";
 import { getURL } from "./data";
 
 export type URLString = `http://${string}.${string}` | `https://${string}.${string}` | `/${string}`
@@ -391,6 +391,19 @@ export const useGetPrices = (): CreateRequestResponse<
 	() => Promise<AxiosResponse<PricesResponse>>
 > => {
 	const request = useAuthRequest<PricesResponse>("/prices")
+
+	const sendRequest = () => {
+		return request.sendRequest({})
+	}
+
+	return { ...request, sendRequest }
+}
+
+export const useGetFinalPrice = (): CreateRequestResponse<
+	FinalPriceResponse,
+	() => Promise<AxiosResponse<FinalPriceResponse>>
+> => {
+	const request = useAuthRequest<FinalPriceResponse>("/prices/final")
 
 	const sendRequest = () => {
 		return request.sendRequest({})

@@ -18,12 +18,17 @@ import ReferralsIcon from "../../svg/icons/paid.svg"
 import HomeIcon from "../../svg/icons/home.svg"
 
 import { ProjectContext } from "../../context/ProjectContext"
+import { StageContext } from "../../context/StageContext"
+
+export interface DisabledArgs {
+	presaleEnded: boolean
+}
 
 const navList = [
 	{label: "Main Site", path: "%MAIN_URL%", icon: HomeIcon},
 	{label: "Dashboard", path: "/", icon: DashboardIcon},
 	{label: "Account", path: "/account", icon: AccountIcon},
-	{label: "Buy", path: "/buy", icon: BuyIcon},
+	{label: "Buy", path: "/buy", icon: BuyIcon, disabled: ({ presaleEnded }: DisabledArgs) => presaleEnded},
 	{label: "Referrals", path: "/referrals", icon: ReferralsIcon},
 ]
 
@@ -35,9 +40,12 @@ const bottomList = [
 
 const Sidebar: Component = () => {
 	const { currentProject } = useContext(ProjectContext)
+	const { presaleEnded } = useContext(StageContext)
 	const authContext = useContext(AuthContext)
 
 	const location = useLocation()
+
+	console.log("ENDED", presaleEnded)
 
 	return (
 		<Card className="sidebar">
@@ -59,6 +67,7 @@ const Sidebar: Component = () => {
 								color={matches() ? "primary" : "transparent"}
 								className="!justify-start"
 								icon={navItem.icon}
+								disabled={navItem.disabled !== undefined && navItem.disabled({ presaleEnded })}
 							>
 								{navItem.label}
 							</Button>

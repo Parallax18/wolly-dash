@@ -32,6 +32,7 @@ import { defaultTransaction } from "../../defaults/Api"
 import placeholder from "../../constants/placeholder"
 import { TransactionDetails } from "../TransactionList"
 import Info from "../Info"
+import Card, { CardBody, CardTitle } from "../Card"
 
 const BuyPage: Component = () => {
 	const [ timeRemaining, setTimeRemaining ] = useState(0);
@@ -39,7 +40,7 @@ const BuyPage: Component = () => {
 	const bonusCalculationRequest = useBonusCalculations()
 	const [ bonusUSDFixed, setBonusUSDFixed ] = useState(0)
 
-	const { activeStage, activeStageRequest } = useContext(StageContext)
+	const { activeStage, activeStageRequest, presaleEnded } = useContext(StageContext)
 	const { user } = useContext(AuthContext)
 	const { currentProject, currencyTokenList, currProjectRequest } = useContext(ProjectContext)
 
@@ -183,6 +184,16 @@ const BuyPage: Component = () => {
 
 	return (
 		<Page path="/buy" title="Buy" userRestricted>
+			{presaleEnded ? (
+				<div className="buy-page flex items-center justify-center p-4">
+					<Card className="presale-ended">
+						<CardTitle center>
+							Presale has Ended
+						</CardTitle>
+					</Card>
+				</div>
+			) : (
+			<>
 			<Form
 				className={clsx("buy-page", {"modal-open": tokenModalOpen})}
 				initialValues={values}
@@ -324,6 +335,8 @@ const BuyPage: Component = () => {
 				open={transactionDetailsOpen}
 				onClose={() => setTransactionDetailsOpen(false)}
 			/>
+			</>
+			)}
 		</Page>
 	)
 }

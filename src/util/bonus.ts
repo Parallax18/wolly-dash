@@ -29,7 +29,8 @@ export const getBonusName = (bonusKey: string) => {
 
 export interface BannerItem {
 	label: string,
-	key: string
+	key: string,
+	closable?: boolean
 }
 
 export const getBonusBanners = (bonuses: Stage["bonuses"] | undefined, signupDate: string | undefined): BannerItem[] => {
@@ -40,7 +41,8 @@ export const getBonusBanners = (bonuses: Stage["bonuses"] | undefined, signupDat
 	if (signupLimitedBonus && limitedSignupBonusValid(signupDate, signupLimitedBonus)) {
 		banners.push({
 			label: `Signup bonus available. +${signupLimitedBonus.percentage}% bonus if you purchase within ${getCountdownString(getTimeLeftLimitedSignupBonus(signupDate, signupLimitedBonus))}`,
-			key: "signup-limited"
+			key: "signup-limited",
+			closable: true
 		})
 	}
 
@@ -50,7 +52,8 @@ export const getBonusBanners = (bonuses: Stage["bonuses"] | undefined, signupDat
 	if (limitedDiff && limitedDiff > 0) {
 		banners.push({
 			label: `Limited time bonus available. +${limitedBonus?.percentage}% bonus if you purchase within ${getCountdownString(limitedDiff)}`,
-			key: "limited"
+			key: "limited",
+			closable: true
 		})
 	}
 

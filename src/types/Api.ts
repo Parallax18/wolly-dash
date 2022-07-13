@@ -85,6 +85,10 @@ export interface PricesResponse {
 	}
 }
 
+export interface FinalPriceResponse {
+	final_price: number
+}
+
 export interface PaymentToken {
 	id: string,
 	name: string,

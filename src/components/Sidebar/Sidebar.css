@@ -54,8 +54,21 @@
 		<md:hidden
 }
 
+.sidebar .list > .button.disabled svg {
+	@apply
+		!text-action-disabled
+		!fill-current
+}
+
+.sidebar .list > .button.disabled {
+	@apply
+		!bg-transparent
+		text-action-disabled
+}
+
 .sidebar .list > .button {
 	@apply
+		text-text-primary
 		<md:h-full
 		<md:flex <md:flex-col
 		<md:!items-center <md:!justify-center

@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Component, ComponentType } from "../../types/Util"
 import { capitalize, useInterval } from "../../util"
 import { Loadable } from "../Loader"
@@ -51,6 +51,10 @@ const Countdown: Component<CountdownProps> = ({
 	}, 1000)
 	
 	const diff = Math.max(endDate.getTime() - Date.now(), 0)
+
+	useEffect(() => {
+		if (Math.max(endDate.getTime() - Date.now()) < 0) onCountdownFinish?.()
+	}, [render])
 
 	const keys = useMemo(() => {
 		return timeKeys.sort((a, b) => divisorMap[b] - divisorMap[a])

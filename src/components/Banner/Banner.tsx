@@ -12,10 +12,22 @@ import { AuthContext } from "../../context/AuthContext"
 
 export const Banners: Component = () => {
 	const { loggedIn, user } = useContext(AuthContext)
-	const { activeStage } = useContext(StageContext)
-	
+	const { activeStage, presaleEnded } = useContext(StageContext)
+
+	const getBanners = () => {
+		 let banners = getBonusBanners(activeStage?.bonuses, user?.signup_date)
+		 if (presaleEnded) {
+			 banners.push({
+				 label: "Presale has ended, you can no longer buy",
+				 key: "presale-ended",
+				 closable: false
+			 })
+		 }
+		 return banners;
+	}
+
 	const [ bannerOpens, setBannerOpens ] = useLocalState<Record<string, {open: boolean, closedAt: string}>>({}, "banners")
-	const [ banners, setBanners ] = useState(getBonusBanners(activeStage?.bonuses, user?.signup_date))
+	const [ banners, setBanners ] = useState(getBanners())
 
 	useEffect(() => {
 		let newBannerOpens: Record<string, {open: boolean, closedAt: string}> = {}
@@ -30,12 +42,12 @@ export const Banners: Component = () => {
 	}, [])
 
 	useEffect(() => {
-		if (!activeStage?.bonuses || !user?.signup_date) return;
-		setBanners(getBonusBanners(activeStage?.bonuses, user?.signup_date))
-	}, [activeStage?.bonuses, user?.signup_date])
+		if ((!activeStage?.bonuses || !user?.signup_date) && !presaleEnded) return;
+		setBanners(getBanners())
+	}, [activeStage?.bonuses, user?.signup_date, presaleEnded])
 
 	useInterval(() => {
-		setBanners(getBonusBanners(activeStage?.bonuses, user?.signup_date))
+		setBanners(getBanners())
 	}, 1000)
 
 	return (
@@ -43,6 +55,7 @@ export const Banners: Component = () => {
 			<div className="fixed-banner-wrapper">
 				{banners.map((banner, i) => (
 					<Banner
+						closable={banner.closable}
 						key={banner.key}
 						open={(bannerOpens?.[banner.key]?.open !== null && bannerOpens?.[banner.key]?.open !== undefined) ? bannerOpens?.[banner.key]?.open : true}
 						onClose={() => setBannerOpens({
@@ -58,6 +71,7 @@ export const Banners: Component = () => {
 				{banners.map((banner, i) => (
 					<Banner
 						key={banner.key}
+						closable={banner.closable}
 						open={(bannerOpens?.[banner.key]?.open !== null && bannerOpens?.[banner.key]?.open !== undefined) ? bannerOpens?.[banner.key]?.open : true}
 						onClose={() => setBannerOpens({
 							...bannerOpens,
@@ -72,13 +86,15 @@ export const Banners: Component = () => {
 	)
 }
 
-export const Banner: Component<{onClose: () => void, open: boolean}> = ({ children, open, onClose }) => {
+export const Banner: Component<{onClose: () => void, open: boolean, closable?: boolean}> = ({ children, open, onClose, closable = true }) => {
 	return (
 		<div className={clsx("banner", {open})}>
 			{children}
-			<IconButton className="close-button" onClick={() => onClose()}>
-				<CloseIcon />
-			</IconButton>
+			{closable && (
+				<IconButton className="close-button" onClick={() => onClose()}>
+					<CloseIcon />
+				</IconButton>
+			)}
 		</div>
 	)
 }
