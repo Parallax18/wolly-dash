@@ -15,15 +15,15 @@ export const Banners: Component = () => {
 	const { activeStage, presaleEnded } = useContext(StageContext)
 
 	const getBanners = () => {
-		 let banners = getBonusBanners(activeStage?.bonuses, user?.signup_date)
 		 if (presaleEnded) {
-			 banners.push({
+			 return [{
 				 label: "Presale has ended",
 				 key: "presale-ended",
 				 closable: false
-			 })
+			 }]
+		 } else {
+			return getBonusBanners(activeStage?.bonuses, user?.signup_date)
 		 }
-		 return banners;
 	}
 
 	const [ bannerOpens, setBannerOpens ] = useLocalState<Record<string, {open: boolean, closedAt: string}>>({}, "banners")

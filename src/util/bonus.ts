@@ -38,7 +38,7 @@ export const getBonusBanners = (bonuses: Stage["bonuses"] | undefined, signupDat
 	let banners: BannerItem[] = []
 
 	let signupLimitedBonus = bonuses?.signup?.limited_time
-	if (signupLimitedBonus && limitedSignupBonusValid(signupDate, signupLimitedBonus)) {
+	if (signupLimitedBonus?.percentage && limitedSignupBonusValid(signupDate, signupLimitedBonus)) {
 		banners.push({
 			label: `Signup bonus available. +${signupLimitedBonus.percentage}% bonus if you purchase within ${getCountdownString(getTimeLeftLimitedSignupBonus(signupDate, signupLimitedBonus))}`,
 			key: "signup-limited",
@@ -49,7 +49,7 @@ export const getBonusBanners = (bonuses: Stage["bonuses"] | undefined, signupDat
 	let limitedBonus = bonuses?.limited_time
 	let limitedDiff = new Date(limitedBonus?.end_date || "").getTime() - Date.now()
 
-	if (limitedDiff && limitedDiff > 0) {
+	if (limitedBonus?.percentage && limitedDiff && limitedDiff > 0) {
 		banners.push({
 			label: `Limited time bonus available. +${limitedBonus?.percentage}% bonus if you purchase within ${getCountdownString(limitedDiff)}`,
 			key: "limited",
