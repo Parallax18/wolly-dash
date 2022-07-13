@@ -18,7 +18,7 @@ export const Banners: Component = () => {
 		 let banners = getBonusBanners(activeStage?.bonuses, user?.signup_date)
 		 if (presaleEnded) {
 			 banners.push({
-				 label: "Presale has ended, you can no longer buy",
+				 label: "Presale has ended",
 				 key: "presale-ended",
 				 closable: false
 			 })
