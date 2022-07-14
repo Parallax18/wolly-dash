@@ -207,8 +207,8 @@ const BuyPage: Component = () => {
 					Yup.object()
 						.shape({
 							usd_amount: Yup.number()
-								.min(minimum, `Can't spend less than ${formatNumber(minimum)}`)
-								.max(maximum, `Can't spend more than ${formatNumber(maximum)}`)
+								.min(minimum, `Can't spend less than $${formatNumber(minimum)}`)
+								.max(maximum, `Can't spend more than $${formatNumber(maximum)}`)
 						})
 					}
 			>
