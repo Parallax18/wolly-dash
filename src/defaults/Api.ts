@@ -1,4 +1,4 @@
-import { PaymentToken, Transaction } from "../types/Api";
+import { PaymentToken, PromotionImage, Transaction } from "../types/Api";
 
 export const defaultPaymentToken: PaymentToken = {
 	chain: "",
@@ -27,4 +27,9 @@ export const defaultTransaction: Transaction = {
 	},
 	user_id: "",
 	type: "purchase"
+}
+
+export const defaultPromotionImage: PromotionImage = {
+	image: "",
+	buy_params: {}
 }

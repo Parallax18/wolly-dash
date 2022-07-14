@@ -4,7 +4,7 @@ import { minMax } from "./number";
 import { MutableRefObject, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { AuthContext } from "../context/AuthContext";
-import { APIError, BonusCalculations, FinalPriceResponse, LoginResponse, MinimumAmountResponse, PriceChartResponse, PricesResponse, Project, ReferralStatsResponse, Stage, Tokens, Transaction, TransactionsResponse, User } from "../types/Api";
+import { APIError, BonusCalculations, FinalPriceResponse, LoginResponse, MinimumAmountResponse, PriceChartResponse, PricesResponse, Project, PromotionImageResponse, ReferralStatsResponse, Stage, Tokens, Transaction, TransactionsResponse, User } from "../types/Api";
 import { getURL } from "./data";
 
 export type URLString = `http://${string}.${string}` | `https://${string}.${string}` | `/${string}`
@@ -641,12 +641,12 @@ export const useGetReferralStats = (): GetReferralStatsRequest => {
 }
 
 export type GetPromotionImagesRequest = CreateRequestResponse<
-	Record<string, string>,
-	() => Promise<AxiosResponse<Record<string, string>>>
+	PromotionImageResponse,
+	() => Promise<AxiosResponse<PromotionImageResponse>>
 >
 
 export const useGetPromotionImages = (): GetPromotionImagesRequest => {
-	const request = useAuthRequest<Record<string, string>>("/banners")
+	const request = useAuthRequest<PromotionImageResponse>("/banners")
 
 	const sendRequest = () => {
 		return request.sendRequest({})

@@ -57,7 +57,7 @@ const BuyPage: Component = () => {
 		buy_token_amount: 1,
 		token: currencyTokenList?.find((token) => token.id === params.get("token_id")) || currencyTokenList?.[0]
 	}
-	
+
 	const [ values, setValues, valuesRef ] = useStateRef(initialValues)
 	
 	useEffect(() => {

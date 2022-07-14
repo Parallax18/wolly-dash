@@ -146,3 +146,7 @@ export const generateShareLink = (site: "facebook" | "twitter" | "telegram", mes
 	}
 	return "";
 }
+
+export const getParamsString = (args: Record<string, any>): string => {
+	return Object.entries(args).map(([key, value]) => `${key}=${value}`).join("&")
+}

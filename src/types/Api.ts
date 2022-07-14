@@ -166,3 +166,10 @@ export interface ReferralStatsResponse {
 	referred: number,
 	earned_tokens: number,
 }
+
+export type PromotionImage = {
+	image: string,
+	buy_params: Record<string, string | number>
+}
+
+export type PromotionImageResponse = Record<string, PromotionImage>

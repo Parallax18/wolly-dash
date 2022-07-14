@@ -10,7 +10,7 @@ import Button from "../Button"
 import { Link, NavLink, useLocation } from "react-router-dom"
 import { getURL, routeMatchesExact, useGetCurrentProject } from "../../util"
 import { AuthContext } from "../../context/AuthContext"
-import { useContext } from "react"
+import React, { useContext } from "react"
 
 import BuyIcon from "../../svg/icons/shopping-cart.svg"
 import TransactionsIcon from "../../svg/icons/payments.svg"
@@ -21,11 +21,12 @@ import PromotionsIcon from "../../svg/icons/offer.svg"
 import { ProjectContext } from "../../context/ProjectContext"
 import { StageContext } from "../../context/StageContext"
 import { PromotionContext } from "../../context/PromotionContext"
+import { PromotionImageResponse } from "../../types/Api"
 
 interface Args {
 	presaleEnded: boolean,
 	promotionsFetching: boolean,
-	promotionImages: Record<string, string>
+	promotionImages: PromotionImageResponse
 }
 
 const navList: {
@@ -68,7 +69,7 @@ const Sidebar: Component = () => {
 						const matches = () => routeMatchesExact(navItem.path, location.pathname)
 						const path = navItem.path.replace("%MAIN_URL%", getURL(currentProject?.main_site_url || ""))
 						const args: Args = { presaleEnded, promotionImages, promotionsFetching: getPromotionImagesRequest.fetching }
-						if (navItem.visible !== undefined && !navItem.visible(args)) return <></>
+						if (navItem.visible !== undefined && !navItem.visible(args)) return <React.Fragment key={navItem.label}></React.Fragment>
 						return (
 							<Button
 								key={navItem.label}
@@ -90,7 +91,7 @@ const Sidebar: Component = () => {
 					<div className="divider" />
 				</div>
 				<div className="bottom-list list +md:flex-gap-y-2">
-					{bottomList.map((navItem) => (
+					{bottomList.map((navItem, i) => (
 						<Button
 							key={navItem.label}
 							color="transparent"
