@@ -1,4 +1,5 @@
 .select-modal {
+	background-color: #695057;
 	@apply
 		absolute
 		z-4

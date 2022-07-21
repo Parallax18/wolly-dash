@@ -11,3 +11,12 @@
 .divider{
     height: 0.2px;
 }
+
+@media (max-width: 490px) {
+    .auth-main{
+        padding: 1rem;
+    }
+    .auth-img{
+        display: none;
+    }
+}

@@ -37,12 +37,13 @@
 }
 
 .referrals-description {
+	background-color: #695057;
 	@apply
-		flex flex-col
-		items-start
-		bg-background-paperLight
+		/* flex flex-col */
+		/* items-start */
+		/* bg-background-paperLight */
 		p-6
-		rounded-item
+		/* rounded-item */
 }
 
 .referrals-description h1 {

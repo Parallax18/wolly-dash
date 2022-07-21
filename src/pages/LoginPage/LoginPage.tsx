@@ -51,7 +51,7 @@ const LoginPage: Component = () => {
 		<Page path="/login" title="Login" onlyLoggedOut>
 
 				<main className="auth-main">
-				<FormPage  title="Sign in to dashboard">
+				<FormPage  title="Login to Your Account">
 						<Form
 							initialValues={initialValues}
 							onSubmit={onSubmit}

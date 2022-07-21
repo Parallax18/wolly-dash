@@ -5,8 +5,8 @@
 
 .transactions-list {
 	@apply
-		shadow-card
-		rounded-card
+		/* shadow-card */
+		/* rounded-card */
 		overflow-hidden
 }
 

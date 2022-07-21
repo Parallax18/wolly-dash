@@ -1,6 +1,5 @@
 .countdown-container {
 	width: max-content;
-	
 	@apply
 		flex
 		/* shadow-card */
@@ -59,7 +58,7 @@
 		right-0
 }
 
-.countdown-item-label {
+.countdowtem-label {
 	font-size: clamp(0.7rem, 0.4em, 0.4em);
 	line-height: 0.5em;
 	@apply
@@ -76,4 +75,23 @@
 	@apply
 		mt-[0.3em]
 		mb-[0.5em]
+}
+
+
+@media (max-width: 490px) {
+	.countdownItem-value{
+		font-size: 20px;
+		text-align: center;
+		margin-top: 0px;
+		margin-left: 4px;
+	}
+
+	.countdownItem{
+		width: max-content;
+		padding: 0.5rem;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
 }

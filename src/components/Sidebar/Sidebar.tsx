@@ -61,7 +61,8 @@ const Sidebar: Component = () => {
 	return (
 		<Card className="sidebar">
 			<CardTitle center>
-				Dashboard
+				{/* Dashboard */}
+				<img src="/image/rev-logo.svg" />
 			</CardTitle>
 			<CardBody>
 				<div className="nav-list list +md:flex-gap-y-2">
