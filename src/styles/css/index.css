@@ -1,12 +1,18 @@
+
 html {
-	color-scheme: dark;
+	color-scheme: light;
 	@apply
 		flex flex-col
 		min-h-full
 }
 
+.app-link{
+  color: #B65BFF;
+}
+
 body {
-	background-color: var(--theme-background-default);
+	/* background-color: var(--theme-background-default); */
+  background: linear-gradient(to right, #934b38, #683b3b, #472f3d, #2b253f, #191e40);
 	color: var(--theme-text-primary);
 	font-family: var(--theme-font-primary);
 	@apply

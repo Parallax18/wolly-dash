@@ -49,37 +49,51 @@ const LoginPage: Component = () => {
 
 	return (
 		<Page path="/login" title="Login" onlyLoggedOut>
-			<FormPage title="Sign in to dashboard" background={"/image/background/hexagons.svg"}>
-				<Form
-					initialValues={initialValues}
-					onSubmit={onSubmit}
-				>
-					<FormInput
-						field="email"
-						icon={EmailIcon}
-						placeholder="Email"
-						autoCapitalize="off"
-						autoComplete="email"
-					/>
-					<FormInput
-						field="password"
-						icon={PasswordIcon}
-						placeholder="Password"
-						visibilityToggle
-						autoCapitalize="off"
-						autoComplete="current-password"
-					/>
-					<Link to="/forgot-password" className="inline-block mb-4 text-right">Forgot password</Link>
-					<div className="login-footer flex-gap-y-4 flex flex-col <xs:mt-8">
-						<Button color="primary" loading={loginRequest.fetching}>
-							Login
-						</Button>
-						<span className="text-center">
-							Don't have an account? <Link to="/register">Register an account</Link>
-						</span>
-					</div>
-				</Form>
-			</FormPage>
+
+				<main className="auth-main">
+				<FormPage  title="Sign in to dashboard">
+						<Form
+							initialValues={initialValues}
+							onSubmit={onSubmit}
+						>
+							<FormInput
+								field="email"
+								
+								icon={EmailIcon}
+								placeholder="Email"
+								autoCapitalize="off"
+								autoComplete="email"
+							/>
+							<FormInput
+								field="password"
+								icon={PasswordIcon}
+								placeholder="Password"
+								visibilityToggle
+								autoCapitalize="off"
+								autoComplete="current-password"
+							/>
+							<Link to="/forgot-password" className="inline-block mb-4 text-right app-link">Forgot password</Link>
+							<div className="login-footer flex-gap-y-4 flex flex-col <xs:mt-8">
+								<Button loading={loginRequest.fetching} className="rounded-full" style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}>
+									Login
+								</Button>
+								<div className="flex items-center justify-center">
+									<div className="divider"/>
+									<p className="text-center w-[100%] text-xs">
+										Don't have an account? 
+									</p>
+									<div className="divider"/>
+								</div>
+								<Link to="/register" className="w-[100%]" >
+									<Button className="rounded-full secondary-btn w-[100%]" style={{color: 'white'}}>
+											Register an account
+									</Button>
+								</Link>
+							</div>
+						</Form>
+				</FormPage>
+				<img src="/image/auth-img.svg" className="auth-img" />
+				</main>
 		</Page>
 	)
 }

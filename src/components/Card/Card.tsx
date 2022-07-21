@@ -74,7 +74,7 @@ export const CardBody: Component<CardBodyProps> = ({
 	return (
 		<Comp
 			component={component}
-			className={clsx("card-body", others.className)}
+			className={clsx(others.className)}
 		>
 			{children}
 		</Comp>

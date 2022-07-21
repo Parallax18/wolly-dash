@@ -1,8 +1,9 @@
 .button {
 	-webkit-appearance: none;
-	--bg-color: #fff;
+	--bg-color: #695057;
 	--bg-hover-color: #ccc;
 	--text-color: #000;
+	
 	@apply
 		relative
 		flex
@@ -31,8 +32,8 @@
 }
 
 .button.base {
-	--bg-color: #fff;
-	--bg-hover-color: var(--theme-action-hoverBackground);
+	--bg-color: #695057;
+	/* --bg-hover-color: var(--theme-action-hoverBackground); */
 	--text-color: #000;
 }
 

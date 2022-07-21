@@ -63,14 +63,14 @@ const Countdown: Component<CountdownProps> = ({
 	return (
 		<Comp
 			{...others}
-			className={clsx("countdown-container", others.className)}
+			className={clsx("countdown-wrapper", others.className)}
 		>
 			{keys.map((key) => (
-				<div className="countdown-item" key={key}>
-					<span className="countdown-item-label">
+				<div className="countdownItem" key={key}>
+					<span className="countdownItem-label">
 						{capitalize(key)}
 					</span>
-					<Loadable component="span" className="countdown-item-value">
+					<Loadable component="span" className="countdownItem-value">
 						{getTimeValue(diff, key)}
 					</Loadable>
 				</div>

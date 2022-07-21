@@ -48,7 +48,7 @@ const DashboardPage: Component = () => {
 							</div>
 						</div>
 						{activeStage?.end_date && (
-							<Card className="dashboard-card p-4">
+							<Card className=" p-4">
 								<div className="card-header small">
 									{activeStage?.name} Ends In
 								</div>

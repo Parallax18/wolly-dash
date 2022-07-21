@@ -32,9 +32,10 @@
 }
 
 .input-container input::placeholder {
+	color: #a19fa1;
 	@apply
-		text-action-unselected
-		opacity-100
+		/* text-action-unselected */
+		/* opacity-100 */
 }
 
 .input-wrapper {

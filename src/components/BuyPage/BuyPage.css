@@ -5,9 +5,10 @@
 }
 
 .buy-page .card {
-	box-shadow: 0px 0px 50px rgba(0,0,0,0.6);
+	border: 1px solid #695057;
+	border-radius: 20px;
 	@apply
-		+xs:rounded-card
+		/* +xs:rounded-card */
 		flex flex-col
 		relative overflow-auto
 }

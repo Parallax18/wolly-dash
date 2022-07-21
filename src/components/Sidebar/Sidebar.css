@@ -1,11 +1,13 @@
 .sidebar {
+	background: #422d3e;
+	padding: 1rem;
 	@apply
 		fixed
 		top-0
 		left-0
 		rounded-none
 		flex flex-col
-		min-w-80
+		min-w-32
 		h-[var(--screen-height)]
 		z-10
 

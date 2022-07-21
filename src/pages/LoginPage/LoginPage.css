@@ -1,0 +1,13 @@
+.auth-main{
+    display: flex;
+    padding: 3rem;
+}
+
+.auth-img{
+    width: 50%;
+    height: 80%;
+}
+
+.divider{
+    height: 0.2px;
+}

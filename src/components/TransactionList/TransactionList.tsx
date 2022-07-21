@@ -167,7 +167,7 @@ export const TransactionItem: Component<TransactionItemProps> = ({ transaction, 
 			</span>
 			<span className="item-value">
 				<div className="value-group">
-					<Loadable component={Chip} compact className={clsx(statusColorMap[transaction.status], "transaction-chip")}>
+					<Loadable component={Chip} compact  className={clsx(statusColorMap[transaction.status], "transaction-chip")}>
 						{capitalize(transaction.status)}
 					</Loadable>
 				</div>

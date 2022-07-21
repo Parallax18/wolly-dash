@@ -32,10 +32,48 @@ const AccountPage: Component = () => {
 			<div className="account-page">
 				<div className="gap-wrapper gap-4 !m-0">
 					<ProfileCard />
-					<WalletCard />
+					<div>
+						<WalletCard />
+						<MailVerificationCard />
+					</div>
 				</div>
 			</div>
 		</Page>
+	)
+}
+
+export const MailVerificationCard: Component = () => {
+	const authContext = useContext(AuthContext)
+	const sendVerificationEmailRequest = useSendVerificationEmailRequest()
+	const [ timeLeft, setTimeLeft ] = useState(0)
+	const alertContext = useContext(AlertContext)
+
+	return(
+		<Card className="wallet-card mt-10">
+		{authContext.user?.is_email_verified === false && (
+					<Button
+						color="primary"
+						className="mt-4 rounded-full w-[100%]"
+						loading={sendVerificationEmailRequest.fetching}
+						disabled={timeLeft > 0}
+						style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}
+						onClick={
+							() => sendVerificationEmailRequest.sendRequest()
+								.then(() => alertContext.addAlert({type: "success", label: "Successfully sent verification email"}))
+								.catch((err) => alertContext.addAlert({type: "error", label: errorToString(err, "Error sending verification email")}))
+						}
+					>
+						Resend Verification Email{timeLeft > 0 && ` (${timeLeft})`}
+					</Button>
+				)}
+				<Button
+					buttonStyle="transparent"
+					className="mt-4 w-[100%]"
+					onClick={() => authContext.logout()}
+				>
+					Logout
+				</Button>
+		</Card>
 	)
 }
 
@@ -84,9 +122,10 @@ export const WalletCard: Component = () => {
 					/>
 					<Button
 						color="primary"
-						className="mt-4"
+						className="mt-4 rounded-full"
 						disabled={!changed || currProjectRequest.fetching}
 						loading={editUserRequest.fetching}
+						style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}
 					>
 						Save Changes
 					</Button>
@@ -205,37 +244,16 @@ export const ProfileCard: Component = () => {
 					<NationalityInput field="nationality" />
 					<Button
 						color="primary"
-						className="mt-4"
+						className="mt-4 rounded-full"
 						disabled={!changed}
 						loading={editUserRequest.fetching}
+						
+						style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}
 					>
-						Save Changes
+						Updated Profile
 					</Button>
 				</Form>
-				{authContext.user?.is_email_verified === false && (
-					<Button
-						color="primary"
-						buttonStyle="outlined"
-						className="mt-4"
-						loading={sendVerificationEmailRequest.fetching}
-						disabled={timeLeft > 0}
-						onClick={
-							() => sendVerificationEmailRequest.sendRequest()
-								.then(() => alertContext.addAlert({type: "success", label: "Successfully sent verification email"}))
-								.catch((err) => alertContext.addAlert({type: "error", label: errorToString(err, "Error sending verification email")}))
-						}
-					>
-						Resend Verification Email{timeLeft > 0 && ` (${timeLeft})`}
-					</Button>
-				)}
-				<Button
-					color="primary"
-					buttonStyle="outlined"
-					className="mt-4"
-					onClick={() => authContext.logout()}
-				>
-					Logout
-				</Button>
+				
 			</CardBody>
 		</Card>
 	)

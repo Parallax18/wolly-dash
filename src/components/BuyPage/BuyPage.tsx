@@ -195,7 +195,7 @@ const BuyPage: Component = () => {
 			) : (
 			<>
 			<Form
-				className={clsx("buy-page", {"modal-open": tokenModalOpen})}
+				className={clsx("buy-page rounded-xl", {"modal-open": tokenModalOpen})}
 				initialValues={values}
 				values={values}
 				onUpdate={(newVals) => {
@@ -215,7 +215,7 @@ const BuyPage: Component = () => {
 				<Loader loading={currProjectRequest.fetching}>
 					<FormPage
 						title={`Buy ${currentProject?.symbol.toUpperCase() || "Tokens"}`}
-						classes={{body: "flex-gap-y-6", wrapper: "relative"}}
+						classes={{body: "flex-gap-y-6 p-5", wrapper: "relative"}}
 						outsideElement={
 							<SelectModalWrapper open={tokenModalOpen}>
 								<FormTokenSelectModal
@@ -321,11 +321,13 @@ const BuyPage: Component = () => {
 						<div className="flex-1 !mb-0" />
 						<Button
 							color="primary"
+							className="w-[100%]"
 							rounded
 							loading={createTransactionRequest.fetching}
 							disabled={currProjectRequest.fetching || activeStageRequest.fetching || minimumAmountRequest.fetching || bonusLoading}
+							style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}
 						>
-							Pay
+							Make Payment
 						</Button>
 					</FormPage>
 				</Loader>

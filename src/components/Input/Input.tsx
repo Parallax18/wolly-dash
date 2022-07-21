@@ -51,7 +51,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
 	return (
 		<InputBase
 			label={label}
-			className={clsx("input-container", className, {round: round})}
+			className={clsx("input-container",)}
 			active={selected}
 			labelFixed={selected || val.length > 0}
 			inputStyle={inputStyle}
@@ -60,6 +60,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
 			icon={icon}
 			leftContent={leftContent}
 			rightContent={rightContent}
+			flush='bottom'
 		>
 			<div className="input-wrapper">
 				<input

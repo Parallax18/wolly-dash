@@ -52,7 +52,7 @@ const InputBase: Component<InputBaseProps> = React.forwardRef(({
 			{...others}
 			ref={ref}
 			className={clsx(
-				"input-root",
+				"inputBase",
 				classes?.root,
 				className,
 				inputStyle,
@@ -67,11 +67,11 @@ const InputBase: Component<InputBaseProps> = React.forwardRef(({
 				}
 			)}
 		>
-			{icon && (
+			{/* {icon && (
 				<div className="left-container icon-container">
 					<Icon className="icon" />
 				</div>
-			)}
+			)} */}
 			{leftContent && (
 				leftContent
 			)}

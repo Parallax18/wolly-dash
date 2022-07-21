@@ -18,6 +18,7 @@ const FormInput: Component<FormInputProps> = ({
 		<Input
 			{...others}
 			value={formContext.values[field]}
+			
 			onInput={(e) => {
 				formContext.updateValue(field, e.currentTarget.value)
 				others.onInput?.(e)

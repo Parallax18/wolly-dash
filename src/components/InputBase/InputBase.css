@@ -1,6 +1,6 @@
 .input-root {
 	--label-width: 0rem;
-	--input-root-bg: var(--theme-background-contrast);
+	/* --input-root-bg: var(--theme-background-contrast); */
 	--outline-col: var(--theme-primary-main);
 	@apply
 		relative
@@ -25,7 +25,7 @@
 	--input-root-bg: var(--theme-background-paperLight);	
 }
 
-.input-root > * {
+.inputBase > * {
 	@apply
 		z-[2]
 }
@@ -50,18 +50,18 @@
 		outline-4
 }
 
-.input-root.error {
+.inputBase.error {
 	--outline-col: var(--theme-error-main);
 	@apply
 		outline-4
 }
 
-.input-root.has-hint {
+.inputBase.has-hint {
 	@apply
 		!mb-8
 }
 
-.input-root .hint-text {
+.inputBase .hint-text {
 	@apply
 		absolute
 		left-0
@@ -72,7 +72,7 @@
 		font-semibold
 }
 
-.input-root.error .hint-text {
+.inputBase.error .hint-text {
 	@apply
 		text-[var(--theme-error-light)]
 }
@@ -102,35 +102,43 @@
 		transition-background-color
 }
 
-.input-root.input-root .icon-container svg {
+.inputBase.input-root .icon-container svg {
 	@apply
 		fill-current
 		text-action-unselected
 		transition-all
 }
 
-.input-root.light svg {
+.inputBase.light svg {
 	@apply
 		text-text-primary
 }
 
-.input-root.active .icon-container svg {
+.inputBase.active .icon-container svg {
 	@apply
 		text-text-primary
 }
 
-.input-root button:hover svg {
+.inputBase button:hover svg {
 	@apply
 		text-text-primary
 }
 
-.input-root.active .icon-container::after {
+.inputBase.active .icon-container::after {
 	@apply
 		bg-text-primary
 }
 
-.input-root .child-container {
+.inputBase .child-container {
 	@apply
 		flex-1
 		relative
+}
+
+
+.inputBase{
+	border-bottom: 1px solid #765f71;
+}
+.inputBase > input::placeholder{
+	color: #765f71;
 }

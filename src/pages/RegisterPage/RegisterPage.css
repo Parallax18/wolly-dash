@@ -2,3 +2,8 @@
 	@apply
 		w-18
 }
+
+.auth-main{
+    display: flex;
+    padding: 3rem;
+}

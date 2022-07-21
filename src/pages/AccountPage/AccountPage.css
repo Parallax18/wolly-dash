@@ -19,13 +19,21 @@
 }
 
 .profile-card {
+	border: 1px solid #695057;
+	padding: 3rem;
+	border-radius: 20px;
+	width: 100%;
 	@apply
-		w-[calc(100%-1rem)]
-		max-w-150 flex-[2]
+		/* w-[calc(100%-1rem)] */
+		/* max-w-150 flex-[2] */
+		/* +lg:min-w-80 */
 		<md:max-w-none
 }
 
 .wallet-card {
+	border: 1px solid #695057;
+	padding: 3rem;
+	border-radius: 20px;
 	@apply
 		w-[calc(100%-1rem)]
 		max-w-150 flex-[1.5]

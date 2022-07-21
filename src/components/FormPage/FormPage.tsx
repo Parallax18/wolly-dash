@@ -24,7 +24,7 @@ const FormPage: Component<FormPageProps> = (props) => {
 			{props.background && <img className="form-background" src={props.background} />}
 			<div className={clsx("form-card-wrapper", props.classes?.wrapper)}>
 				<Card className={clsx("form-card", props.classes?.card)}>
-					<CardTitle center className={clsx(props.classes?.title)}>
+					<CardTitle  className={clsx(props.classes?.title)}>
 						{props.title}
 					</CardTitle>
 					<CardBody className={clsx(props.classes?.body)}>

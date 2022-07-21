@@ -69,7 +69,7 @@ const PriceChart: Component = () => {
 									tickFormatter={() => ""}
 									height={20}
 									padding={{left: 0, right: 0}}
-									stroke={labelStyles.fill}
+									stroke={'#B65BFF'}
 									dataKey={"date"}
 									tickLine={false}
 									axisLine={false}
@@ -78,12 +78,12 @@ const PriceChart: Component = () => {
 								<Line
 									type="monotone"
 									dataKey="price"
-									stroke={theme.primary.main}
-									strokeWidth={3}
+									stroke={'#B65BFF'}
+									strokeWidth={1}
 									dot={false}
 								/>
 								<Tooltip
-									wrapperClassName="!bg-background-contrast"
+									wrapperStyle={{background: 'red'}}
 									labelFormatter={tooltipDateFormatter}
 									formatter={(value: number) => `$${formatNumber(value)}`}
 								/>

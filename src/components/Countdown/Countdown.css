@@ -1,20 +1,44 @@
 .countdown-container {
+	width: max-content;
+	
 	@apply
 		flex
-		shadow-card
+		/* shadow-card */
+}
+
+.countdown-wrapper{
+	display: flex;
+	border: 1px solid #422d3e;
+	width: max-content;
+	border-radius: 20px;
+	background: #695057;
 }
 
 .countdown-item {
 	@apply
 		relative
 		flex flex-col
-		bg-background-contrast
+		/* bg-background-contrast */
 		text-4xl
 		w-[3em]
 		items-center
 		overflow-hidden
 		<sm:text-3xl
 		<xs:text-2xl
+}
+
+.countdownItem{
+	width: 100px;
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.countdownItem-value{
+	font-size: 30px;
+	text-align: center;
+	margin-top: 10px;
 }
 
 .countdown-item:first-child {
@@ -40,7 +64,7 @@
 	line-height: 0.5em;
 	@apply
 		block
-		bg-background-default
+		/* bg-background-default */
 		w-full
 		text-center
 		pt-[1em]

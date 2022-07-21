@@ -145,7 +145,7 @@ export const ReferralStatsCard: Component = () => {
 			<Card>
 				<CardTitle center>Referred Friends</CardTitle>
 				<CardBody className="referral-stats flex-gap-x-4">
-					<div className="referral-stat referred">
+					<div className=" referred">
 						<Loadable length={1} component="p" className="referral-stat-value">{referralStats?.referred}</Loadable>
 						<span className="referral-stat-label">Referred</span>
 					</div>

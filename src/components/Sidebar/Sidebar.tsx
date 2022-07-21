@@ -38,7 +38,7 @@ const navList: {
 }[] = [
 	{label: "Main Site", path: "%MAIN_URL%", icon: HomeIcon},
 	{label: "Dashboard", path: "/", icon: DashboardIcon},
-	{label: "Account", path: "/account", icon: AccountIcon},
+	{label: "Profile", path: "/account", icon: AccountIcon},
 	{label: "Buy", path: "/buy", icon: BuyIcon, disabled: ({ presaleEnded }) => presaleEnded},
 	{label: "Referrals", path: "/referrals", icon: ReferralsIcon},
 	{label: "Promotions", path: "/promotions", icon: PromotionsIcon, visible: ({ promotionsFetching, promotionImages }) => !promotionsFetching && Object.entries(promotionImages).length > 0},
@@ -76,11 +76,12 @@ const Sidebar: Component = () => {
 								component={path.startsWith("http") ? "a" : NavLink}
 								{...(path.startsWith("http") ? {href: path} : {to: path})}
 								target={path.startsWith("http") ? "_blank" : undefined}
-								textColor={matches() ? "default" : "secondary"}
-								color={matches() ? "primary" : "transparent"}
-								className="!justify-start"
+								// textColor={matches() ? "default" : "black"}
+								color={matches() ? "" : "transparent"}
+								className="!justify-start text-sm"
 								icon={navItem.icon}
 								disabled={navItem.disabled !== undefined && navItem.disabled(args)}
+								style={{color: matches()?'#B65BFF':'#FEF5ED'}}
 							>
 								{navItem.label}
 							</Button>
@@ -95,7 +96,7 @@ const Sidebar: Component = () => {
 						<Button
 							key={navItem.label}
 							color="transparent"
-							className="!justify-start"
+							className="!justify-start text-sm"
 							icon={navItem.icon}
 							onClick={() => navItem.onClick?.({ logout: authContext.logout })}
 						>

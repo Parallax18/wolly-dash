@@ -10,10 +10,10 @@ const Footer: Component = () => {
 	const { currentProject, currProjectRequest } = useContext(ProjectContext)
 
 	return (
-		<div className="footer">
+		<div>
 			<Loader loading={currProjectRequest.fetching}>
 				<div className="footer-item flex-gap-y-2">
-					<span className="footer-title">Socials</span>
+					{/* <span className="footer-title">Socials</span> */}
 					<div className="footer-body flex flex-gap-x-3">
 						{(currProjectRequest.fetching ? [["",""],["",""],["",""]] : Object.entries(currentProject?.social_media || {})).map(([key, link], i) => (
 							<Loadable variant="block" loadClass="h-5 w-5" key={i}>
@@ -27,11 +27,11 @@ const Footer: Component = () => {
 					</div>
 				</div>
 			</Loader>
-			<div className="footer-item flex-gap-y-2">
+			<div className="footer-item flex-gap-y-2 text-[#695057]">
 				<span className="footer-title">Documents</span>
-				<div className="footer-body flex flex-col">
-					<Link to="/terms">Terms and Conditions</Link>
-					<Link to="/privacy-policy">Privacy Policy</Link>
+				<div className="footer-body flex flex-col text-[#695057]">
+					<Link to="/terms" className="text-[#695057]">Terms and Conditions</Link>
+					<Link to="/privacy-policy" className="text-[#695057]">Privacy Policy</Link>
 				</div>
 			</div>
 		</div>

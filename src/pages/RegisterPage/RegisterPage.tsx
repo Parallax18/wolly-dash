@@ -126,112 +126,124 @@ const RegisterPage: Component = () => {
 
 	return (
 		<Page path="/register" title="Register" onlyLoggedOut>
-			<Form
-				className="register-page flex-1"
-				initialValues={initialValues}
-				onSubmit={onSubmit}
-				validationSchema={registerSchema}
-				values={values}
-				onUpdate={(newVals) => setValues(newVals as unknown as typeof values)}
-			>
-				<FormPage
-					title="Register an account"
-					background={"/image/background/hexagons.svg"}
-					classes={{body: "flex flex-col flex-gap-y-4", wrapper: "relative"}}
-					outsideElement={(
-						<SelectModalWrapper open={tokenModalOpen}>
-							<FormTokenSelectModal
-								field="token"
-								open={tokenModalOpen}
-								onClose={() => setTokenModalOpen(false)}
-								bonuses={activeStage?.bonuses.payment_tokens}
-							/>
-						</SelectModalWrapper>
-					)}
+			<main className="auth-main">
+				<Form
+					className="register-page flex-1"
+					initialValues={initialValues}
+					onSubmit={onSubmit}
+					validationSchema={registerSchema}
+					values={values}
+					onUpdate={(newVals) => setValues(newVals as unknown as typeof values)}
 				>
-					<div className="flex flex-gap-x-2">
-						<FormInput
-							field="first_name"
-							icon={NameIcon}
-							placeholder="First Name"
-							autoComplete="given-name"
-							autoCapitalize="words"
-							className="flex-[1.3]"
-						/>
-						<FormInput
-							field="last_name"
-							placeholder="Last Name"
-							autoComplete="family-name"
-							autoCapitalize="words"
-							className="flex-1"
-						/>
-					</div>
-					<FormInput
-						field="email"
-						icon={EmailIcon}
-						placeholder="Email"
-						autoComplete="email"
-						autoCapitalize="off"
-					/>
-					<FormInput
-						field="password"
-						icon={PasswordIcon}
-						placeholder="Password"
-						autoCapitalize="off"
-						visibilityToggle
-					/>
-					<PhoneInput
-						numberField="phone_number"
-						codeField="country_code"
-					/>
-					<NationalityInput field="nationality" />
-					<Loader loading={activeStageRequest.fetching || currProjectRequest.fetching}>
-						<div className="flex flex-col flex-gap-y-4">
-							<h2 className="text-lg">Purchase Details</h2>
-							<CurrencyItemDisplay
-								component={Button}
-								className="py-3 !justify-start w-full group"
-								color="bg-contrast"
-								type="button"
-								onClick={() => setTokenModalOpen(true)}
-								currencyItem={values.token}
-								bonuses={activeStage?.bonuses.payment_tokens}
-								classes={{bonusChip: "bg-background-paperLight group-hover:bg-background-paperHighlight transition-background-color"}}
-							>
-								<DropdownIcon className="h-3 w-3 ml-auto text-action-unselected group-hover:text-text-primary transition-color" />
-							</CurrencyItemDisplay>
-							<div className="flex flex-col">
-								<FormNumberInput
-									field="usd_amount"
-									placeholder="Purchase Amount $"
-									autoCapitalize="off"
-									rightContent={<CurrencyItemDisplay className="w-auto" currencyItem={dollarItem} />}
+					<FormPage
+						title="Register"
+						classes={{body: "flex flex-col flex-gap-y-4", wrapper: "relative"}}
+						outsideElement={(
+							<SelectModalWrapper open={tokenModalOpen}>
+								<FormTokenSelectModal
+									field="token"
+									open={tokenModalOpen}
+									onClose={() => setTokenModalOpen(false)}
+									bonuses={activeStage?.bonuses.payment_tokens}
 								/>
-								<TieredBonusButtons
-									bonuses={activeStage?.bonuses.tiered_fiat || []}
-									onSelect={(item) => updateValue("usd_amount", item.amount)}
-									usdAmount={values.usd_amount}
-								/>
-							</div>
-						</div>
-						<div className="flex items-center">
-							<FormCheckbox
-								field="terms_accepted"
-								className="inline-block"
+							</SelectModalWrapper>
+						)}
+					>
+						{/* <div className="flex flex-gap-x-2"> */}
+							<FormInput
+								field="first_name"
+								icon={NameIcon}
+								placeholder="First Name"
+								autoComplete="given-name"
+								autoCapitalize="words"
+								className="flex-[1.3]"
 							/>
-							<span className="ml-3">I agree to the Terms and Conditions and Privacy Policy</span>
-						</div>
-						<div className="login-footer flex-gap-y-4 flex flex-col mt-2 <xs:mt-2">
-							<Button color="primary" loading={registerRequest.fetching}>
-								Create Account
-							</Button>
-							<span className="text-center">
-								Already have account? <Link to="/login">Sign in</Link>
-							</span>
-						</div>
-					</Loader>
-				</FormPage>
-			</Form>
+							<FormInput
+								field="last_name"
+								placeholder="Last Name"
+								autoComplete="family-name"
+								autoCapitalize="words"
+								className="flex-1"
+							/>
+						{/* </div> */}
+						<FormInput
+							field="email"
+							icon={EmailIcon}
+							placeholder="Email"
+							autoComplete="email"
+							autoCapitalize="off"
+						/>
+						<FormInput
+							field="password"
+							icon={PasswordIcon}
+							placeholder="Password"
+							autoCapitalize="off"
+							visibilityToggle
+						/>
+						<PhoneInput
+							numberField="phone_number"
+							codeField="country_code"
+						/>
+						<NationalityInput field="nationality" />
+						<Loader loading={activeStageRequest.fetching || currProjectRequest.fetching}>
+							<div className="flex flex-col flex-gap-y-4">
+								<h2 className="text-lg">Purchase Details</h2>
+								<CurrencyItemDisplay
+									component={Button}
+									className="py-3 !justify-start w-full group"
+									color="bg-contrast"
+									type="button"
+									onClick={() => setTokenModalOpen(true)}
+									currencyItem={values.token}
+									bonuses={activeStage?.bonuses.payment_tokens}
+									classes={{bonusChip: "bg-background-paperLight group-hover:bg-background-paperHighlight transition-background-color"}}
+								>
+									<DropdownIcon className="h-3 w-3 ml-auto text-action-unselected group-hover:text-text-primary transition-color" />
+								</CurrencyItemDisplay>
+								<div className="flex flex-col">
+									<FormNumberInput
+										field="usd_amount"
+										placeholder="Purchase Amount $"
+										autoCapitalize="off"
+										rightContent={<CurrencyItemDisplay className="w-auto" currencyItem={dollarItem} />}
+									/>
+									<TieredBonusButtons
+										bonuses={activeStage?.bonuses.tiered_fiat || []}
+										onSelect={(item) => updateValue("usd_amount", item.amount)}
+										usdAmount={values.usd_amount}
+									/>
+								</div>
+							</div>
+							<div className="flex items-center">
+								<FormCheckbox
+									field="terms_accepted"
+									className="inline-block"
+								/>
+								<span className="ml-3">I agree to the Terms and Conditions and Privacy Policy</span>
+							</div>
+							<div className="login-footer flex-gap-y-4 flex flex-col mt-2 <xs:mt-2">
+								<Button loading={registerRequest.fetching} className="rounded-full" style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}>
+									Create Account
+								</Button>
+								
+								<div className="flex items-center justify-center">
+									<div className="divider"/>
+									<p className="text-center w-[100%] text-xs">
+										Already have account?
+									</p>
+									<div className="divider"/>
+								</div>
+								<Link to="/login">
+								<Button className="rounded-full secondary-btn w-[100%]" style={{color: 'white'}}>
+											Log In
+									</Button>
+								</Link>
+							</div>
+						</Loader>
+					</FormPage>
+				</Form>
+				<img src="/image/auth-img.svg" className="auth-img" />
+			</main>
 		</Page>
 	)
 }
