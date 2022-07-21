@@ -1,7 +1,7 @@
 .card {
 	@apply
 		/* rounded-card */
-		/* shadow-card */
+		shadow-card
 		/* bg-background-paper */
 		inline-block
 }

@@ -222,7 +222,7 @@ const RegisterPage: Component = () => {
 								<span className="ml-3">I agree to the Terms and Conditions and Privacy Policy</span>
 							</div>
 							<div className="login-footer flex-gap-y-4 flex flex-col mt-2 <xs:mt-2">
-								<Button loading={registerRequest.fetching} className="rounded-full" style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}>
+								<Button loading={registerRequest.fetching} className="rounded-full" style={{background: '#158FFF', color: 'white'}}>
 									Create Account
 								</Button>
 								

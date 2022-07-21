@@ -49,16 +49,14 @@ const LoginPage: Component = () => {
 
 	return (
 		<Page path="/login" title="Login" onlyLoggedOut>
-
 				<main className="auth-main">
-				<FormPage  title="Sign in to dashboard">
+				<FormPage   title="Login to Your Account">
 						<Form
 							initialValues={initialValues}
 							onSubmit={onSubmit}
 						>
 							<FormInput
 								field="email"
-								
 								icon={EmailIcon}
 								placeholder="Email"
 								autoCapitalize="off"
@@ -74,7 +72,7 @@ const LoginPage: Component = () => {
 							/>
 							<Link to="/forgot-password" className="inline-block mb-4 text-right app-link">Forgot password</Link>
 							<div className="login-footer flex-gap-y-4 flex flex-col <xs:mt-8">
-								<Button loading={loginRequest.fetching} className="rounded-full" style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}>
+								<Button loading={loginRequest.fetching} className="rounded-full" style={{background: '#158FFF', color: 'white'}}>
 									Login
 								</Button>
 								<div className="flex items-center justify-center">
@@ -92,7 +90,7 @@ const LoginPage: Component = () => {
 							</div>
 						</Form>
 				</FormPage>
-				<img src="/image/auth-img.svg" className="auth-img" />
+				{/* <img src="/image/auth-img.svg" className="auth-img" /> */}
 				</main>
 		</Page>
 	)

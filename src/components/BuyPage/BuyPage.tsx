@@ -325,7 +325,7 @@ const BuyPage: Component = () => {
 							rounded
 							loading={createTransactionRequest.fetching}
 							disabled={currProjectRequest.fetching || activeStageRequest.fetching || minimumAmountRequest.fetching || bonusLoading}
-							style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}
+							style={{background: '#158FFF', color: 'white'}}
 						>
 							Make Payment
 						</Button>

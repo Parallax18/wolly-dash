@@ -56,7 +56,7 @@ export const MailVerificationCard: Component = () => {
 						className="mt-4 rounded-full w-[100%]"
 						loading={sendVerificationEmailRequest.fetching}
 						disabled={timeLeft > 0}
-						style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}
+						style={{background: '#158FFF', color: 'white'}}
 						onClick={
 							() => sendVerificationEmailRequest.sendRequest()
 								.then(() => alertContext.addAlert({type: "success", label: "Successfully sent verification email"}))
@@ -125,7 +125,7 @@ export const WalletCard: Component = () => {
 						className="mt-4 rounded-full"
 						disabled={!changed || currProjectRequest.fetching}
 						loading={editUserRequest.fetching}
-						style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}
+						style={{background: '#158FFF', color: 'white'}}
 					>
 						Save Changes
 					</Button>
@@ -248,7 +248,7 @@ export const ProfileCard: Component = () => {
 						disabled={!changed}
 						loading={editUserRequest.fetching}
 						
-						style={{background: 'linear-gradient(to bottom, #b157fd, #8735ef)', color: 'white'}}
+						style={{background: '#158FFF', color: 'white'}}
 					>
 						Updated Profile
 					</Button>

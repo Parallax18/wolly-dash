@@ -1,6 +1,7 @@
 .auth-main{
     display: flex;
     padding: 3rem;
+    background: url('/public/image/FreeWoly-bg.svg')
 }
 
 .auth-img{
