@@ -53,7 +53,7 @@ export const MailVerificationCard: Component = () => {
 		{authContext.user?.is_email_verified === false && (
 					<Button
 						color="primary"
-						className="mt-4 rounded-full w-[100%]"
+						className="mt-4 rounded-md w-[100%]"
 						loading={sendVerificationEmailRequest.fetching}
 						disabled={timeLeft > 0}
 						style={{background: '#158FFF', color: 'white'}}
@@ -104,7 +104,7 @@ export const WalletCard: Component = () => {
 			</CardTitle>
 			<CardBody className="flex flex-col">
 				<Loader loading={currProjectRequest.fetching}>
-					<Loadable component="p" className="mb-2">
+					<Loadable component="p" className="mb-2" style={{color: '#333'}}>
 						Make sure you use an <span className="font-semibold">{currentProject?.wallet?.type}</span> wallet address.
 					</Loadable>
 				</Loader>
@@ -122,7 +122,7 @@ export const WalletCard: Component = () => {
 					/>
 					<Button
 						color="primary"
-						className="mt-4 rounded-full"
+						className="mt-4 rounded-md"
 						disabled={!changed || currProjectRequest.fetching}
 						loading={editUserRequest.fetching}
 						style={{background: '#158FFF', color: 'white'}}
@@ -244,7 +244,7 @@ export const ProfileCard: Component = () => {
 					<NationalityInput field="nationality" />
 					<Button
 						color="primary"
-						className="mt-4 rounded-full"
+						className="mt-4 rounded-md"
 						disabled={!changed}
 						loading={editUserRequest.fetching}
 						

@@ -78,7 +78,7 @@ export const ReferralInfoCard: Component<{
 						<Loadable component="h1">Refer & Earn Rewards</Loadable>
 						<Loadable component="p">Earn ${props.earn} per referral when they spend ${props.spend} or more</Loadable>
 						<Button
-							color="primary"
+							style={{color: '#8e66de'}}
 							compact
 							buttonStyle="transparent"
 							onClick={props.onHowToClick}
@@ -95,27 +95,30 @@ export const ReferralInfoCard: Component<{
 					<div className={clsx("referral-share-buttons gap-2", {"can-share": !!navigator.share})}>
 						<Button
 							compact
-							color="bg-light"
+							// color="bg-light"
 							icon={FacebookIcon}
 							component="a"
 							target="_blank"
 							href={generateShareLink("facebook", props.shareText, props.shareUrl)}
+							style={{color: 'white'}}
 						>Share</Button>
 						<Button
 							compact
-							color="bg-light"
+							// color="bg-light"
 							icon={TwitterIcon}
 							component="a"
 							target="_blank"
+							style={{color: 'white'}}
 							href={generateShareLink("twitter", props.shareText, props.shareUrl)}
 						>Tweet</Button>
 						<Button
 							compact
-							color="bg-light"
+							// color="bg-light"
 							icon={TelegramIcon}
 							href={generateShareLink("telegram", props.shareText, props.shareUrl)}
 							target="_blank"
 							component="a"
+							style={{color: 'white'}}
 						>Post</Button>
 						<Button
 							compact

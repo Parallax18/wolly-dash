@@ -11,4 +11,14 @@
 
 .divider{
     height: 0.2px;
+    background: rgb(118, 118, 118);
+}
+
+@media (max-width: 490px) {
+    .auth-main{
+        padding: 1rem;
+    }
+    .auth-img{
+        display: none;
+    }
 }

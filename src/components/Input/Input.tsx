@@ -67,6 +67,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
 					{...others}
 					size={1}
 					value={val}
+					style={{color: "#333"}}
 					onInput={others.onInput ?? ((e) => _setValue(e.currentTarget.value))}
 					onFocus={(e) => {
 						setSelected(true)

@@ -222,19 +222,19 @@ const RegisterPage: Component = () => {
 								<span className="ml-3">I agree to the Terms and Conditions and Privacy Policy</span>
 							</div>
 							<div className="login-footer flex-gap-y-4 flex flex-col mt-2 <xs:mt-2">
-								<Button loading={registerRequest.fetching} className="rounded-full" style={{background: '#158FFF', color: 'white'}}>
+								<Button loading={registerRequest.fetching} className="rounded-md" style={{background: '#158FFF', color: 'white'}}>
 									Create Account
 								</Button>
 								
-								<div className="flex items-center justify-center">
+								<div className="flex items-center justify-center"> 
 									<div className="divider"/>
-									<p className="text-center w-[100%] text-xs">
+									<p className="text-center w-[100%] text-primary text-xs" style={{color: '#ccc'}}>
 										Already have account?
 									</p>
 									<div className="divider"/>
 								</div>
 								<Link to="/login">
-								<Button className="rounded-full secondary-btn w-[100%]" style={{color: 'white'}}>
+								<Button className="rounded-md secondary-btn w-[100%]" style={{color: 'white'}}>
 											Log In
 									</Button>
 								</Link>
@@ -242,7 +242,7 @@ const RegisterPage: Component = () => {
 						</Loader>
 					</FormPage>
 				</Form>
-				<img src="/image/auth-img.svg" className="auth-img" />
+				{/* <img src="/image/auth-img.svg" className="auth-img" /> */}
 			</main>
 		</Page>
 	)

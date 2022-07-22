@@ -7,3 +7,14 @@
     display: flex;
     padding: 3rem;
 }
+
+.auth-img{
+    display: block;
+}
+
+
+@media (max-width: 490px) {
+    .auth-img{
+        display: none;
+    }
+}

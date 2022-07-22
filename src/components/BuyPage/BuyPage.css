@@ -1,11 +1,12 @@
 .buy-page {
+	background-color: aliceblue;
 	@apply
 		h-full
 		flex-1
 }
 
 .buy-page .card {
-	border: 1px solid #695057;
+	background-color: #fff;
 	border-radius: 20px;
 	@apply
 		/* +xs:rounded-card */

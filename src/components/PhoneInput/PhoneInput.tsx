@@ -26,7 +26,7 @@ const PhoneInput: Component<PhoneInputProps> = (props) => {
 			placeholder="Phone Number"
 			leftContent={(
 				<FormSelect
-					className="phone-input-select"
+					className="phone-input-select flex"
 					searchable
 					field={props.codeField}
 					compact

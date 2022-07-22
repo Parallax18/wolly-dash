@@ -27,20 +27,22 @@
 }
 
 .dashboard-card .card-header {
+	color: #333;
 	@apply
-		flex
+		flexs
 		items-center
 		justify-between
 		mb-2
 		text-lg
-		text-text-primary
+		/* text-text-primary */
 		font-semibold
 }
 
 .dashboard-card .card-header.small {
+	color: #333;
 	@apply
-		text-text-secondary
-		text-base
+		/* text-text-secondary */
+		/* text-base */
 }
 
 .dashboard-card .card-header .chip {
@@ -51,6 +53,7 @@
 }
 
 .dashboard-card .value {
+	color: #333;
 	@apply
 		font-bold
 }
@@ -63,4 +66,8 @@
 .dashboard-card .countdown-container {
 	@apply
 		mx-auto
+}
+
+.bg-dash{
+	background: rgb(238, 248, 255);
 }

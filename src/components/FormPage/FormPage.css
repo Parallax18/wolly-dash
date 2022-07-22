@@ -1,12 +1,13 @@
 .form-page {
+
 	@apply
 		flex flex-col
 		w-full
-		h-[var(--screen-height)]
+		/* h-[var(--screen-height)] */
 		items-center justify-center
 		text-left
-		<xs:h-auto
-		<xs:min-h-[var(--screen-height)]
+		/* <xs:h-auto */
+		/* <xs:min-h-[var(--screen-height)] */
 }
 
 .form-background {
@@ -23,11 +24,12 @@
 }
 
 .form-card {
+	background: #fff;
 	@apply
-		overflow-y-auto
-		max-h-[calc(var(--screen-height)-2rem)]
+		/* overflow-y-auto */
+		/* max-h-[calc(var(--screen-height)-2rem)] */
 
-		<md:max-h-[calc(var(--screen-height)-4rem)]
+		/* <md:max-h-[calc(var(--screen-height)-4rem)] */
 		<xs:max-h-none
 		<xs:w-full
 		<xs:flex-1

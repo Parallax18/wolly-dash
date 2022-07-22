@@ -111,7 +111,8 @@ export const Loadable: Component<LoadableProps> = ({
 						...loadStyles,
 						"--length": `${length || random}em`,
 						marginTop: margin,
-						marginBottom: margin
+						marginBottom: margin,
+						// border: '1px solid red'
 					}}
 				/>
 			)}

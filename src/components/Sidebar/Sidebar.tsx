@@ -61,7 +61,8 @@ const Sidebar: Component = () => {
 	return (
 		<Card className="sidebar">
 			<CardTitle center>
-				Dashboard
+				{/* Dashboard */}
+				<img src="/image/logo.svg" />
 			</CardTitle>
 			<CardBody>
 				<div className="nav-list list +md:flex-gap-y-2">
@@ -77,11 +78,11 @@ const Sidebar: Component = () => {
 								{...(path.startsWith("http") ? {href: path} : {to: path})}
 								target={path.startsWith("http") ? "_blank" : undefined}
 								// textColor={matches() ? "default" : "black"}
-								color={matches() ? "" : "transparent"}
+								// color={matches() ? "#158FFF" : "transparent"}
 								className="!justify-start text-sm"
 								icon={navItem.icon}
 								disabled={navItem.disabled !== undefined && navItem.disabled(args)}
-								style={{color: matches()?'#B65BFF':'#FEF5ED'}}
+								style={{color: matches()?'#fff':'#B9B9B9', background: matches() ? "#158FFF" : "transparent", borderRadius: '0' }}
 							>
 								{navItem.label}
 							</Button>
@@ -98,6 +99,7 @@ const Sidebar: Component = () => {
 							color="transparent"
 							className="!justify-start text-sm"
 							icon={navItem.icon}
+							style={{color: '#ccc'}}
 							onClick={() => navItem.onClick?.({ logout: authContext.logout })}
 						>
 							{navItem.label}

@@ -1,7 +1,7 @@
 .button {
 	-webkit-appearance: none;
-	--bg-color: #695057;
-	--bg-hover-color: #ccc;
+	--bg-color: #C1E1FF;
+	--bg-hover-color: #7fb8ec;
 	--text-color: #000;
 	
 	@apply
@@ -32,7 +32,7 @@
 }
 
 .button.base {
-	--bg-color: #695057;
+	--bg-color: #C1E1FF;
 	/* --bg-hover-color: var(--theme-action-hoverBackground); */
 	--text-color: #000;
 }

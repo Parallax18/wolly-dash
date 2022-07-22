@@ -1,4 +1,5 @@
 .account-page {
+	background-color: aliceblue;
 	@apply
 		+md:flex-1
 		<md:min-h-[var(--screen-height)]
@@ -19,7 +20,7 @@
 }
 
 .profile-card {
-	border: 1px solid #695057;
+	background-color: #fff;
 	padding: 3rem;
 	border-radius: 20px;
 	width: 100%;
@@ -31,7 +32,7 @@
 }
 
 .wallet-card {
-	border: 1px solid #695057;
+	background: #fff;
 	padding: 3rem;
 	border-radius: 20px;
 	@apply

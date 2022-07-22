@@ -1,18 +1,20 @@
 .card {
+
+	padding: 2rem;
 	@apply
 		/* rounded-card */
-		shadow-card
+		/* shadow-card */
 		/* bg-background-paper */
 		inline-block
 }
 
 .card-title {
+	color: black;
 	@apply
 		relative
 		flex flex-col items-start
 		font-bold
 		text-2xl
-		text-white
 }
 
 .card-title-text-container {

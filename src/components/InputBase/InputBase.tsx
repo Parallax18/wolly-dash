@@ -51,6 +51,7 @@ const InputBase: Component<InputBaseProps> = React.forwardRef(({
 		<Comp
 			{...others}
 			ref={ref}
+			
 			className={clsx(
 				"inputBase",
 				classes?.root,

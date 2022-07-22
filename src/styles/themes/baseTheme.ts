@@ -28,9 +28,9 @@ const baseTheme: Record<string, any> = {
 		contrastText: "#fff"
 	},
 	primary: {
-		light: "#00B4DB",
-		main: "#0090b0",
-		dark: "#0083B0",
+		light: "#158FFF",
+		main: "#158FFF",
+		dark: "158FFF",
 		contrastText: "#000",
 	},
 	secondary: {

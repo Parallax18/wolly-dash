@@ -1,6 +1,5 @@
 .countdown-container {
 	width: max-content;
-	
 	@apply
 		flex
 		/* shadow-card */
@@ -8,10 +7,10 @@
 
 .countdown-wrapper{
 	display: flex;
-	border: 1px solid #422d3e;
+	/* border: 1px solid #422d3e; */
 	width: max-content;
 	border-radius: 20px;
-	background: #695057;
+	background: #fff;
 }
 
 .countdown-item {
@@ -33,12 +32,14 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	/* border: 1px solid rebeccapurple; */
 }
 
 .countdownItem-value{
 	font-size: 30px;
 	text-align: center;
 	margin-top: 10px;
+	color: #158FFF;
 }
 
 .countdown-item:first-child {
@@ -59,7 +60,7 @@
 		right-0
 }
 
-.countdown-item-label {
+.countdowtem-label {
 	font-size: clamp(0.7rem, 0.4em, 0.4em);
 	line-height: 0.5em;
 	@apply
@@ -76,4 +77,28 @@
 	@apply
 		mt-[0.3em]
 		mb-[0.5em]
+}
+
+.countdownItem-label{
+	/* border: 1px solid rebeccapurple; */
+	color: #158FFF;
+}
+
+
+@media (max-width: 490px) {
+	.countdownItem-value{
+		font-size: 20px;
+		text-align: center;
+		margin-top: 0px;
+		margin-left: 4px;
+	}
+
+	.countdownItem{
+		width: max-content;
+		padding: 0.5rem;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
 }

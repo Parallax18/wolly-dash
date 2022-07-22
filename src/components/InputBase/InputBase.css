@@ -137,8 +137,8 @@
 
 
 .inputBase{
-	border-bottom: 1px solid #765f71;
+	background: #f5f5f5;
 }
 .inputBase > input::placeholder{
-	color: #765f71;
+	color: #3c3c3c;
 }

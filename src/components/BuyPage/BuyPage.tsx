@@ -322,7 +322,7 @@ const BuyPage: Component = () => {
 						<Button
 							color="primary"
 							className="w-[100%]"
-							rounded
+							// rounded
 							loading={createTransactionRequest.fetching}
 							disabled={currProjectRequest.fetching || activeStageRequest.fetching || minimumAmountRequest.fetching || bonusLoading}
 							style={{background: '#158FFF', color: 'white'}}

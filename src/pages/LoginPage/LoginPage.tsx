@@ -50,7 +50,7 @@ const LoginPage: Component = () => {
 	return (
 		<Page path="/login" title="Login" onlyLoggedOut>
 				<main className="auth-main">
-				<FormPage   title="Login to Your Account">
+				<FormPage  title="Login to Your Account">
 						<Form
 							initialValues={initialValues}
 							onSubmit={onSubmit}
@@ -72,18 +72,18 @@ const LoginPage: Component = () => {
 							/>
 							<Link to="/forgot-password" className="inline-block mb-4 text-right app-link">Forgot password</Link>
 							<div className="login-footer flex-gap-y-4 flex flex-col <xs:mt-8">
-								<Button loading={loginRequest.fetching} className="rounded-full" style={{background: '#158FFF', color: 'white'}}>
+								<Button loading={loginRequest.fetching} className="rounded-md" style={{background: '#158FFF', color: 'white'}}>
 									Login
 								</Button>
 								<div className="flex items-center justify-center">
 									<div className="divider"/>
-									<p className="text-center w-[100%] text-xs">
+									<p className="text-center w-[100%] text-xs" style={{color: '#ccc'}}>
 										Don't have an account? 
 									</p>
 									<div className="divider"/>
 								</div>
 								<Link to="/register" className="w-[100%]" >
-									<Button className="rounded-full secondary-btn w-[100%]" style={{color: 'white'}}>
+									<Button className="rounded-md secondary-btn w-[100%]" style={{color: '#333'}}>
 											Register an account
 									</Button>
 								</Link>

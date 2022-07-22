@@ -69,7 +69,7 @@ const PriceChart: Component = () => {
 									tickFormatter={() => ""}
 									height={20}
 									padding={{left: 0, right: 0}}
-									stroke={'#B65BFF'}
+									stroke={'#158FFF'}
 									dataKey={"date"}
 									tickLine={false}
 									axisLine={false}
@@ -78,7 +78,7 @@ const PriceChart: Component = () => {
 								<Line
 									type="monotone"
 									dataKey="price"
-									stroke={'#B65BFF'}
+									stroke={'#158FFF'}
 									strokeWidth={1}
 									dot={false}
 								/>

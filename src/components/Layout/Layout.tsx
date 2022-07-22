@@ -26,10 +26,12 @@ const Layout: Component = ({ children }) => {
 			<div className={clsx("page-container", {"logged-in": loggedIn})}>
 				{loggedIn && <Banners />}
 				{children}
-				<Footer />
+				{/* {loggedIn && <Footer />} */}
 			</div>
 		</>
 	)
 }
 
 export default Layout
+
+// 08120327691

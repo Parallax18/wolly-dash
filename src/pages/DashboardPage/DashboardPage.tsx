@@ -26,7 +26,7 @@ const DashboardPage: Component = () => {
 
 	return (
 		<Page title="Dashboard" path="/" userRestricted>
-			<div className="dashboard-page gap-6 <md:gap-2 <sm:!p-4">
+			<div className="gap-6 <md:gap-2 <sm:!p-4 bg-dash" style={{backgroundImage: 'url("/public/image/FreeWolly-bg.svg")'}}>
 				<Loader loading={loading}>
 					<div className="flex flex-[2] flex-col flex-gap-y-6">
 						<div className="flex flex-gap-x-6">
@@ -49,7 +49,7 @@ const DashboardPage: Component = () => {
 						</div>
 						{activeStage?.end_date && (
 							<Card className=" p-4">
-								<div className="card-header small">
+								<div className="card-header small" style={{color: '#333', fontWeight: 'semibold'}}>
 									{activeStage?.name} Ends In
 								</div>
 								<Countdown
@@ -63,7 +63,7 @@ const DashboardPage: Component = () => {
 						)}
 						{(activeStage?.type === "dynamic" || loading) && !presaleEnded && <PriceChart />}
 						<div className="dashboard-card">
-							<div className="card-header">
+							<div className="card-header small">
 								Recent Transactions
 							</div>
 							<TransactionList />
