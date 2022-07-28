@@ -150,11 +150,11 @@ export const ReferralStatsCard: Component = () => {
 				<CardBody className="referral-stats flex-gap-x-4">
 					<div className=" referred">
 						<Loadable length={1} component="p" className="referral-stat-value">{referralStats?.referred}</Loadable>
-						<span className="referral-stat-label">Referred</span>
+						<span className="referral-stat-label" style={{color: 'black'}}>Referred</span>
 					</div>
 					<div className="referral-stat dollar">
 						<Loadable length={2} component="p" className="referral-stat-value">${formatLargeNumber((referralStats?.earned_tokens || 0) * (activeStage?.token_price || 0), 1000, 0, 2)}</Loadable>
-						<span className="referral-stat-label">Earned</span>
+						<span className="referral-stat-label" style={{color: 'black'}}>Earned</span>
 					</div>
 				</CardBody>
 			</Card>

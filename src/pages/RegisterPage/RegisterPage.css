@@ -1,4 +1,5 @@
 .register-page .input-root .left-container {
+    border: 1px solid red;
 	@apply
 		w-18
 }
@@ -6,6 +7,7 @@
 .auth-main{
     display: flex;
     padding: 3rem;
+    /* border: 1px solid red */
 }
 
 .auth-img{

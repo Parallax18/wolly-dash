@@ -1,5 +1,4 @@
 .form-page {
-
 	@apply
 		flex flex-col
 		w-full
@@ -25,12 +24,14 @@
 
 .form-card {
 	background: #fff;
+	margin-top: 100px;
+	height: max-content;
 	@apply
 		/* overflow-y-auto */
 		/* max-h-[calc(var(--screen-height)-2rem)] */
 
 		/* <md:max-h-[calc(var(--screen-height)-4rem)] */
-		<xs:max-h-none
+		/* <xs:max-h-none */
 		<xs:w-full
 		<xs:flex-1
 		<xs:rounded-none
